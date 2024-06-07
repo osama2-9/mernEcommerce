@@ -18,6 +18,13 @@ const makeAnOrder = async (req, res) => {
     }
 
     const userOrdered = await User.findById(uid);
+
+    
+    if (userOrdered.address === "") {
+      return res.status(404).json({
+        error: "Please add address from your dashbord to continue",
+      });
+    }
     if (!userOrdered) {
       return res.status(404).json({ error: "No user found" });
     }
