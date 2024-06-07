@@ -1,11 +1,9 @@
 import User from "../model/User.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../utils/jwt.js";
-import Product from "../model/Product.js";
-import Cart from "../model/Cart.js";
 import { Address } from "../model/Address.js";
-import { response } from "express";
-import Order from "../model/Order.js";
+import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
 
 const signup = async (req, res) => {
   try {
@@ -271,9 +269,95 @@ const deleteUser = async (req, res) => {
         error: "User deleted",
       });
     }
-
   } catch (error) {
     console.log(error);
+  }
+};
+const forgetPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const findUser = await User.findOne({ email: email });
+    if (!findUser) {
+      return res.status(404).json({
+        error: "No user found with this email",
+      });
+    }
+    const token = jwt.sign({ uid: findUser._id }, process.env.JWT_SECRET, {
+      expiresIn: 1000 * 60 * 30,
+    });
+
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "osamasarraj67@gmail.com",
+        pass: "ksyl ihhi cjxm sjkb",
+      },
+    });
+
+    var mailOptions = {
+      from: "osamasarraj67@gmail.com",
+      to: findUser.email,
+      subject: "Reset your password",
+      text: ` 
+      Follow This Link To Reset Your Password  
+
+      http://localhost:3000/reset-password/${findUser._id}/${token}`,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({
+          error: "Failed to send email",
+        });
+      } else {
+        return res.status(200).json({
+          message: "Email sent successfully!",
+        });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      error: "An error occurred",
+    });
+  }
+};
+const resetPassword = async (req, res) => {
+  try {
+    const { uid, token } = req.params;
+    const { password } = req.body;
+
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+      if (err) {
+        return res.status(404).json({
+          error: "Invalid or expired token",
+        });
+      } else {
+        const newPasswordHash = await bcrypt.hash(password, 10);
+
+        const user = await User.findById(uid);
+
+        if (!user) {
+          return res.status(404).json({
+            error: "No user found",
+          });
+        }
+
+        user.password = newPasswordHash;
+        await user.save();
+
+        return res.status(201).json({
+          message: "Password updated successfully",
+        });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      error:
+        "An error occurred while updating the password. Please try again later.",
+    });
   }
 };
 
@@ -286,5 +370,7 @@ export {
   addAddress,
   addPayment,
   getUserAddress,
-  deleteUser
+  deleteUser,
+  forgetPassword,
+  resetPassword,
 };

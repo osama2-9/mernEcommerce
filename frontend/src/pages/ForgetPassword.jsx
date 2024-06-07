@@ -1,11 +1,33 @@
-import { Box, Button, Flex, FormControl, FormLabel, Heading, Input, Stack } from "@chakra-ui/react"
-import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Box, Button, Flex, FormControl, FormLabel, Heading, Input, Stack } from "@chakra-ui/react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ForgetPassword = () => {
-    const [email, setEmail] = useState('')
+    const [email, setEmail] = useState('');
 
-
+    const handleSendEmail = async () => {
+        try {
+            const res = await fetch('/api/users/forget-password', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email
+                })
+            });
+            const data = await res.json();
+            if (data.error) {
+                toast.error(data.error);
+            } else {
+                toast.success(data.message);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message);
+        }
+    };
 
     return (
         <Flex align={'center'} justify={'center'}>
@@ -43,9 +65,10 @@ const ForgetPassword = () => {
                                 direction={{ base: 'column', sm: 'row' }}
                                 align={'start'}
                                 justify={'space-between'}>
-                                <Link className='text-blue-400' to={'/register'}> Signup ?</Link>
+                                <Link className='text-blue-400' to={'/register'}>Signup?</Link>
                             </Stack>
                             <Button
+                                onClick={handleSendEmail}
                                 bg={'blue.400'}
                                 color={'white'}
                                 _hover={{
@@ -60,7 +83,7 @@ const ForgetPassword = () => {
                 </Box>
             </Stack>
         </Flex>
-    )
-}
+    );
+};
 
-export default ForgetPassword
+export default ForgetPassword;
