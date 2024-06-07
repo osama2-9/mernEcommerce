@@ -15,7 +15,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://onlineshopping-ruddy.vercel.app"],
+    origin: [""],
     methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true,
   })
