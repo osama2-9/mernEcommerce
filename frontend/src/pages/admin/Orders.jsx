@@ -18,12 +18,15 @@ import {
     ModalFooter,
     ModalBody,
     ModalCloseButton,
+    Flex,
+    Input,
 } from "@chakra-ui/react";
 import useGetOrders from "../../hooks/useGetOrders";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import orderAtom from "../../atoms/orderAtom";
+import { BsTrash } from 'react-icons/bs'
 
 const Orders = () => {
     const setOrder = useSetRecoilState(orderAtom);
@@ -91,10 +94,31 @@ const Orders = () => {
         }
     };
 
+    const [curruntPage, setCurruntPage] = useState(1)
+    const [itemPrePage, setItemPerPage] = useState(7)
+    const indexOfLastItem = curruntPage * itemPrePage;
+    const indexOFFirstItem = indexOfLastItem - itemPrePage;
+    const curruntOrders = orders.slice(indexOFFirstItem, indexOfLastItem);
+
+    const paginate = (pageNumber) => setCurruntPage(pageNumber)
+
+
+
     return (
         <Box bg={"gray.50"} position={"absolute"} top={100} left={260} p={4} borderRadius="md" shadow="md" width="calc(100% - 300px)">
             <TableContainer overflowX="auto">
-                <Table minWidth="800px">
+                <Flex gap={2}>
+                    <Input type="text" _hover={{
+                        border: "2px solid teal"
+
+                    }}
+                       
+
+                        border={'2px solid teal'} placeholder="search by email" />
+                    <Button>Search</Button>
+                </Flex>
+
+                <Table mt={3} minWidth="800px">
                     <Thead>
                         <Tr>
                             <Th>Email</Th>
@@ -109,7 +133,7 @@ const Orders = () => {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {orders.map((order, i) => (
+                        {curruntOrders.map((order, i) => (
                             <Tr key={i}>
                                 <Td>{order.email}</Td>
                                 <Td>{order.productName.length >= 18 ? order.productName.slice(0, 18).concat('...') : order.productName}</Td>
@@ -122,6 +146,9 @@ const Orders = () => {
                                 <Td>
                                     <Button onClick={() => handleSelectedOrder(order)} bg={"blue.500"} color={"white"} >
                                         Update Status
+                                    </Button>
+                                    <Button ml={2} color={'white'} bg={'red.500'}>
+                                        <BsTrash size={22} />
                                     </Button>
                                 </Td>
                             </Tr>
@@ -156,7 +183,22 @@ const Orders = () => {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+            <Flex justifyContent={'center'}>
+
+                <Box mt={8} className="pagination">
+                    <Button onClick={() => paginate(curruntPage - 1)}>Previous</Button>
+                    {orders.length > 0 &&
+                        Array.from({ length: Math.ceil(orders.length / itemPrePage) }, (_, i) => (
+                            <Button ml={2} key={i + 1} onClick={() => paginate(i + 1)}>
+                                {i + 1}
+                            </Button>
+                        ))}
+                    <Button onClick={() => paginate(curruntPage + 1)}>Next</Button>
+                </Box>
+            </Flex>
         </Box>
+
+
     );
 };
 
