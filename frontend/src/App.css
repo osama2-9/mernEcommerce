@@ -1,0 +1,30 @@
+.home {
+    position: absolute;
+    top: 70px;
+
+}
+
+
+body {
+    background-color: white !important;
+    color: black !important;
+}
+
+.slider-container {
+    width: 1500px;
+    position: relative;
+    left: 10px;
+    height: 400px !important;
+}
+
+.slider-image {
+    height: 500px !important;
+    width: 100%;
+}
+
+.productCard {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 10%);
+}
