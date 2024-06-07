@@ -15,7 +15,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: [""],
+    origin: ["https://onlineshop-umber.vercel.app"],
     methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true,
   })
