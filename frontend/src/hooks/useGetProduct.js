@@ -6,7 +6,7 @@ const useGetProduct = () => {
   const [numberOfProduct, setNumberOfProduct] = useState(0);
   const getProducts = async () => {
     try {
-      const res = await fetch("/https://onlineshopping-ruddy.vercel.app/get");
+      const res = await fetch("/api/product/get");
       const data = await res.json();
       const productCount = data.length;
 
