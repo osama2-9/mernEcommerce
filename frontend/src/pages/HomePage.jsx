@@ -19,7 +19,7 @@ const HomePage = () => {
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const res = await fetch(`/api/product/get`);
+                const res = await fetch(`https://onlineshopping-ruddy.vercel.app/get`);
                 const data = await res.json();
                 if (data.error) {
                     toast(data.error, {

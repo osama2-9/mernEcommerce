@@ -5,7 +5,9 @@ const useGetTopSells = () => {
 
   const getTopSellProducts = async () => {
     try {
-      const res = await fetch("/api/order/topSell");
+      const res = await fetch(
+        "https://onlineshopping-ruddy.vercel.app/topSell"
+      );
       const data = await res.json();
       if (data.error) {
         toast.error(data.error);
