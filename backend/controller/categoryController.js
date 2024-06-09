@@ -1,4 +1,5 @@
 import Category from "../model/Category.js";
+import Product from "../model/Product.js";
 
 const createCategory = async (req, res) => {
   try {
@@ -47,5 +48,31 @@ const getAllCategory = async (req, res) => {
     console.log(error);
   }
 };
+const getCategoriesWithProducts = async (req, res) => {
+  try {
+    const categories = await Category.find();
 
-export { createCategory, getAllCategory };
+    const results = [];
+
+    for (const category of categories) {
+      const products = await Product.find({ categoryID: category._id });
+      if (products.length > 0) {
+        const selectedProduct = products[0];
+
+        results.push({
+          categoryName: category.categoryName,
+          productImg: selectedProduct.productImg,
+        });
+      }
+    }
+
+    res.json(results);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
+
+export { createCategory, getAllCategory, getCategoriesWithProducts };

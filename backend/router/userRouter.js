@@ -1,3 +1,4 @@
+import { getAllMessages } from "../controller/messageController.js";
 import {
   addAddress,
   addPayment,
@@ -20,6 +21,7 @@ const userRouter = express.Router();
 userRouter.post("/signup", signup);
 userRouter.post("/login", login);
 userRouter.post("/logout", logout);
+userRouter.get("/messages", isAdmin, getAllMessages);
 userRouter.post("/forget-password", forgetPassword);
 userRouter.post("/addAddress", protectRoute, addAddress);
 userRouter.put("/addpayment", protectRoute, addPayment);

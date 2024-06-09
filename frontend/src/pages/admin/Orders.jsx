@@ -20,6 +20,7 @@ import {
     ModalCloseButton,
     Flex,
     Input,
+    Text,
 } from "@chakra-ui/react";
 import useGetOrders from "../../hooks/useGetOrders";
 import { useState } from "react";
@@ -27,6 +28,7 @@ import { toast } from "react-toastify";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import orderAtom from "../../atoms/orderAtom";
 import { BsTrash } from 'react-icons/bs'
+
 
 const Orders = () => {
     const setOrder = useSetRecoilState(orderAtom);
@@ -101,7 +103,36 @@ const Orders = () => {
     const curruntOrders = orders.slice(indexOFFirstItem, indexOfLastItem);
 
     const paginate = (pageNumber) => setCurruntPage(pageNumber)
+    const handleDeleteOrder = async (id) => {
+        try {
+            const res = await fetch('/api/order/delete', {
+                method: "DELETE",
+                headers: {
+                    'content-type': "application/json"
+                },
 
+                body: JSON.stringify({
+                    orderId: id
+                })
+            })
+            const data = await res.json()
+            if (data.error) {
+                toast.error(data.error)
+            } else {
+                refreshOrders()
+                toast.success(data.message)
+            }
+
+        } catch (error) {
+            console.log(error);
+
+        }
+
+
+
+
+
+    }
 
 
     return (
@@ -112,10 +143,12 @@ const Orders = () => {
                         border: "2px solid teal"
 
                     }}
-                       
+
 
                         border={'2px solid teal'} placeholder="search by email" />
                     <Button>Search</Button>
+
+
                 </Flex>
 
                 <Table mt={3} minWidth="800px">
@@ -147,8 +180,8 @@ const Orders = () => {
                                     <Button onClick={() => handleSelectedOrder(order)} bg={"blue.500"} color={"white"} >
                                         Update Status
                                     </Button>
-                                    <Button ml={2} color={'white'} bg={'red.500'}>
-                                        <BsTrash size={22} />
+                                    <Button onClick={() => handleDeleteOrder(order?._id)} ml={2} color={'white'} bg={'red.500'}>
+                                        Delete
                                     </Button>
                                 </Td>
                             </Tr>
@@ -196,6 +229,7 @@ const Orders = () => {
                     <Button onClick={() => paginate(curruntPage + 1)}>Next</Button>
                 </Box>
             </Flex>
+           
         </Box>
 
 

@@ -2,6 +2,7 @@ import Cart from "../model/Cart.js";
 import Order from "../model/Order.js";
 import Product from "../model/Product.js";
 import User from "../model/User.js";
+import { newMessaeg } from "./messageController.js";
 
 const makeAnOrder = async (req, res) => {
   try {
@@ -13,38 +14,30 @@ const makeAnOrder = async (req, res) => {
     }
     if (!paymentMethod) {
       return res.status(400).json({
-        error: "You missed required fileds payment method  !",
+        error: "You missed required fields payment method!",
       });
     }
 
     const userOrdered = await User.findById(uid);
 
-    
-    if (userOrdered.address === "") {
+    if (!userOrdered || userOrdered.address === "") {
       return res.status(404).json({
-        error: "Please add address from your dashbord to continue",
+        error: "Please add address from your dashboard to continue",
       });
     }
-    if (!userOrdered) {
-      return res.status(404).json({ error: "No user found" });
-    }
-    if (userOrdered.address === null) {
-      return res.status(400).json({
-        error: "Please add an address from your dashbord befor order !",
-      });
-    }
+
     const cartItems = await Cart.find({ uid: uid });
     if (cartItems.length === 0) {
       return res.status(404).json({
-        error: "no items in the cart ",
+        error: "No items in the cart",
       });
     }
-    const newOrder = [];
-    const findProducts = cartItems.map(async (item) => {
+
+    const newOrderPromises = cartItems.map(async (item) => {
       const product = await Product.findById(item.pid);
       if (!product) {
         return res.status(404).json({
-          error: `${product.productName} not found`,
+          error: `${item.productName} not found`,
         });
       }
       if (item.quantity > product.productQuntity) {
@@ -56,7 +49,7 @@ const makeAnOrder = async (req, res) => {
       product.productQuntity -= item.quantity;
       product.sells += item.quantity;
 
-      const newOrders = new Order({
+      const newOrder = new Order({
         uid: uid,
         pid: item.pid,
         email: userOrdered.email,
@@ -70,13 +63,33 @@ const makeAnOrder = async (req, res) => {
         color: item.color || null,
         size: item.size || null,
       });
-      newOrder.push(newOrders.save());
-      return product.save();
+
+      await newOrder.save();
+      await product.save();
+      await newMessaeg(
+        "New Order Created",
+        `A new order has been created for ${userOrdered.email}
+        <br/>
+        <ul>
+        <li>product Name : ${newOrder.productName}</li>
+ <li>Quantity :  ${newOrder.quantity}</li>
+
+        <li>Total Price :${newOrder.price}</li>
+
+ <p><strong>Ordered At:</strong> ${newOrder.createdAt}</p>
+
+        
+        </ul>
+        `
+      );
     });
-    await Promise.all(findProducts.concat(newOrder));
+
+    await Promise.all(newOrderPromises);
+
     await Cart.deleteMany({ uid: uid });
+
     return res.status(201).json({
-      message: "Orderd Successfully",
+      message: "Ordered Successfully",
     });
   } catch (error) {
     console.error(error);
@@ -162,10 +175,45 @@ const getTopSellProducts = async (req, res) => {
     });
   }
 };
+
+const deleteOrder = async (req, res) => {
+  try {
+    const { orderId } = req.body;
+    if (!orderId) {
+      return res.status(400).json({
+        error: "Order ID is required",
+      });
+    }
+
+    const findOrderToDelete = await Order.findByIdAndDelete(orderId);
+
+    if (!findOrderToDelete) {
+      return res.status(404).json({
+        error: "Order not found",
+      });
+    }
+    const productId = findOrderToDelete.pid;
+    const findProduct = await Product.findOne({ _id: productId });
+    if (!findProduct) {
+      return res.status(404).json({
+        error: "Product not found",
+      });
+    }
+    findProduct.productQuntity += findOrderToDelete.quantity;
+    await findProduct.save();
+
+    return res.status(200).json({
+      message: "Order Deleted Successfully",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 export {
   getOrders,
   makeAnOrder,
   getUserOrders,
   updateOrderStatus,
   getTopSellProducts,
+  deleteOrder,
 };

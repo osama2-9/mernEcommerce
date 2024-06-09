@@ -25,11 +25,14 @@ import { MdGroups2 } from "react-icons/md";
 import { Link as RouterLink } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom';
+import Messages from './Messages';
+import { useRef } from 'react';
 const Sidebar = () => {
     const admin = useRecoilValue(userAtom)
+    const message = useRef()
     return (
-        <Box color={'white'} w="250px" h="100vh" bg={'green.900'} p="5"  >
-            <VStack align="start" spacing="8">
+        <Box color={'white'} w="250px" h={770}  bg={'green.900'} p="5"  >
+            <VStack align="start" spacing="10">
                 <Link to={`admin/${admin.uid}`} as={RouterLink} >
                     <Flex alignItems={'center'} gap={2} flexDirection={'row'}>
                         <BiSolidHome size={22} />
@@ -94,6 +97,14 @@ const Sidebar = () => {
                         <Text fontSize="xl" fontWeight="bold">Profile</Text>
 
                     </Flex>
+                </Link>
+                <Link >
+                    <Flex gap={2}>
+                        <Messages />
+
+
+                    </Flex>
+
                 </Link>
                 <Spacer />
                 <Link as={RouterLink} to="admin/logout" mt="auto">

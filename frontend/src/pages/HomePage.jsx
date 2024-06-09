@@ -1,5 +1,5 @@
-import { Box, Button, Flex, Image, Input, Text, } from "@chakra-ui/react"
-import { BsCart2, BsSearch } from "react-icons/bs"
+import { Box, Flex, Image, Text, } from "@chakra-ui/react"
+import { BsCart2 } from "react-icons/bs"
 import { BiBoltCircle } from "react-icons/bi";
 import { AiOutlineFileProtect } from "react-icons/ai";
 import FeatureBox from "../components/FeatureBox";
@@ -11,15 +11,19 @@ import { Link } from "react-router-dom";
 import { toast } from 'react-toastify'
 import { useEffect, useState } from "react";
 import useGetTopSells from "../hooks/useGetTopSells";
+import Categories from "../components/Categories";
 
 const HomePage = () => {
-    const {topSell} = useGetTopSells()
+    const { topSell } = useGetTopSells()
     const [product, setProduct] = useState([])
+
    
+
+
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const res = await fetch(`https://onlineshopping-ruddy.vercel.app/get`);
+                const res = await fetch(`api/product/get`);
                 const data = await res.json();
                 if (data.error) {
                     toast(data.error, {
@@ -38,6 +42,11 @@ const HomePage = () => {
     return (
         <div className="home">
             <Box>
+
+                <Categories />
+
+
+
                 <Box className="shadow-md">
                     <Text position={'absolute'} fontWeight={'800'} width={'250px'} top={'40'} left={{
                         base: "20",
@@ -68,29 +77,13 @@ const HomePage = () => {
             </Text>
             <Box>
 
-                <Flex gap={3} alignItems={'center'} justify={'center'} mb={10}>
-                    <Box>
-                        <Input placeholder="Search for porducts" type="text" />
-                    </Box>
-                    <Box>
-                        <Button>
-                            <BsSearch className="text-purple-500 " />
-                        </Button>
-                    </Box>
-                </Flex>
-
 
                 <ProductContainer >
                     {
-
-
                         product.slice(0, 8).map((product) => (
-
                             <Products key={product._id} product={product} />
                         ))
                     }
-
-
                 </ProductContainer>
 
 

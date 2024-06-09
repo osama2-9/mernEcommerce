@@ -1,4 +1,5 @@
 import Category from "../model/Category.js";
+import Product from "../model/Product.js";
 import Prodcut from "../model/Product.js";
 import { v2 as cloudinary } from "cloudinary";
 const createProduct = async (req, res) => {
@@ -112,6 +113,18 @@ const filterProducts = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+const search = async (req, res) => {
+  try {
+    const { query } = req.params;
+    const products = await Product.find({
+      productName: { $regex: query, $options: "i" },
+    }).limit(5);
+    return res.json(products);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 
 const getProductById = async (req, res) => {
   try {
@@ -139,4 +152,10 @@ const getProductById = async (req, res) => {
   }
 };
 
-export { createProduct, getAllProducts, filterProducts, getProductById };
+export {
+  createProduct,
+  getAllProducts,
+  filterProducts,
+  getProductById,
+  search,
+};

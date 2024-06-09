@@ -1,16 +1,42 @@
-import { BsPerson, BsCart, BsSpeedometer } from 'react-icons/bs';
+import { BsPerson, BsCart, BsSpeedometer, BsSearch } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import userAtom from '../atoms/userAtom';
 import { IoIosLogOut } from 'react-icons/io';
 import { toast } from 'react-toastify';
 import { MdOutlineAdminPanelSettings } from 'react-icons/md';
-import { Box, Flex, Image, List, ListItem, useColorModeValue, IconButton, Tooltip, Spacer } from '@chakra-ui/react';
+import {
+    Box,
+    Flex,
+    Image,
+    useColorModeValue,
+    IconButton,
+    Tooltip,
+    Spacer,
+    Input,
+    Button,
+    Text,
+    Divider,
+    useDisclosure,
+    Drawer,
+    DrawerBody,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerOverlay,
+    DrawerContent,
+    DrawerCloseButton
+} from '@chakra-ui/react';
+import { useState } from 'react';
+import { BiSolidHome } from 'react-icons/bi';
+import { FaBars } from "react-icons/fa";
 
 const Header = () => {
     const Nav = useNavigate();
     const logged = useRecoilValue(userAtom);
     const setUser = useSetRecoilState(userAtom);
+    const [search, setSearch] = useState('');
+    const [searchResult, setSearchResult] = useState([]);
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const handleLogout = async () => {
         try {
@@ -38,36 +64,75 @@ const Header = () => {
         }
     };
 
+    const searchData = async (query) => {
+        try {
+            const res = await fetch(`/api/product/search/${query}`);
+            const data = await res.json();
+            if (Array.isArray(data)) {
+                setSearchResult(data);
+            } else {
+                setSearchResult([]);
+            }
+        } catch (error) {
+            console.log(error);
+            setSearchResult([]);
+        }
+    };
+
+    const handleChange = (e) => {
+        const query = e.target.value;
+        setSearch(query);
+        if (query.trim()) {
+            searchData(query);
+        } else {
+            setSearchResult([]);
+        }
+    };
+
     return (
-        <Box bg={useColorModeValue('gray.100', 'gray.900')} w="100%" h="16" shadow="md">
+        <Box bg={useColorModeValue('gray.50', 'gray.900')} w="100%" h="16" shadow="md">
             <Flex justify="space-between" align="center" h="100%" px={10}>
                 <Link to="/">
-                    <Image src="/logo.png" width={45} alt="Logo" />
+                    <Image src="/logo.png" alt="Logo" w={70}/>
                 </Link>
-                <List display="flex" alignItems="center" gap={10}>
-                    <ListItem>
-                        <Link to="/">Home</Link>
-                    </ListItem>
-                    <ListItem>
-                        <Link to="/men">Men</Link>
-                    </ListItem>
-                    <ListItem>
-                        <Link to="/women">Women</Link>
-                    </ListItem>
-                    <ListItem>
-                        <Link to="/baby">Baby</Link>
-                    </ListItem>
-                    <ListItem>
-                        <Link to="/Phones">Phones</Link>
-                    </ListItem>
-                    <ListItem>
-                        <Link to="/Laptops">Laptops</Link>
-                    </ListItem>
-                    <ListItem>
-                        <Link to="/Perfumes">Perfumes</Link>
-                    </ListItem>
-                </List>
-                <Flex align="center">
+                <Flex justifyContent={'center'}>
+                    <Input
+                        value={search}
+                        onChange={handleChange}
+                        h="35px"
+                        width={{ base: '200px', md: '400px' }}
+                        border="2px solid"
+                        borderColor="gray.300"
+                        placeholder="search for products"
+                        _hover={{
+                            borderColor: 'gray.300',
+                        }}
+                        _focus={{
+                            borderColor: 'gray.300',
+                            boxShadow: 'none',
+                            outline: 'none',
+                        }}
+                        bg={useColorModeValue('white', 'gray.800')}
+                    />
+                    <Button bg="gray.300" h="35px" ml={2} type="submit">
+                        <BsSearch />
+                    </Button>
+                    {searchResult.length > 0 && search !== "" && (
+                        <Flex position={'absolute'} mt={'35px'} zIndex={10}>
+                            <Box w={'400px'} me={10} color={'black'} bg={'gray.50'} rounded={'sm'}>
+                                {searchResult.map((product, i) => (
+                                    <Box key={i} p={2}>
+                                        <Link to={`/product/${product._id}`}>
+                                            <Text>{product.productName}</Text>
+                                        </Link>
+                                        <Divider mt={2} />
+                                    </Box>
+                                ))}
+                            </Box>
+                        </Flex>
+                    )}
+                </Flex>
+                <Flex align="center" display={{ base: 'none', md: 'flex' }}>
                     {!logged ? (
                         <Link to="/login">
                             <Tooltip label="Login" aria-label="Login">
@@ -126,7 +191,126 @@ const Header = () => {
                         </>
                     )}
                 </Flex>
+                <IconButton
+                    icon={<FaBars />}
+                    size="md"
+                    variant="ghost"
+                    aria-label="Menu"
+                    display={{ base: 'flex', md: 'none' }}
+                    onClick={onOpen}
+                />
             </Flex>
+            <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
+                <DrawerOverlay />
+                <DrawerContent>
+                    <DrawerCloseButton />
+                    <DrawerHeader>Menu</DrawerHeader>
+                    <DrawerBody>
+                        <Flex direction="column" align="center">
+                            {!logged ? (
+                                <Link to="/login" onClick={onClose}>
+                                    <Tooltip label="Login" aria-label="Login">
+                                        <IconButton
+                                            icon={<BsPerson />}
+                                            size="md"
+                                            variant="ghost"
+                                            aria-label="Login"
+                                            mb={2}
+                                        />
+                                    </Tooltip>
+                                </Link>
+                            ) : (
+                                <>
+                                    <Link to={`/`} onClick={onClose}>
+                                        Home
+                                        <Tooltip label="Home" aria-label="Home">
+
+                                            <IconButton
+                                                icon={<BiSolidHome />}
+                                                size="md"
+                                                variant="ghost"
+                                                aria-label="Home"
+                                                mb={2}
+                                            />
+                                        </Tooltip>
+                                    </Link>
+                                    <Link to={`/login`} onClick={onClose}>
+                                        Login
+                                        <Tooltip label="login" aria-label="login">
+
+                                            <IconButton
+                                                icon={<BsPerson />}
+                                                size="md"
+                                                variant="ghost"
+                                                aria-label="login"
+                                                mb={2}
+                                            />
+                                        </Tooltip>
+                                    </Link>
+                                    <Link to={`/cart/${logged?.uid}`} onClick={onClose}>
+                                        Cart
+                                        <Tooltip label="Cart" aria-label="Cart">
+
+                                            <IconButton
+                                                icon={<BsCart />}
+                                                size="md"
+                                                variant="ghost"
+                                                aria-label="Cart"
+                                                mb={2}
+                                            />
+                                        </Tooltip>
+                                    </Link>
+                                    {logged.isAdmin && (
+                                        <Link to={`admin/${logged.uid}`} onClick={onClose}>
+                                            Admin
+                                            <Tooltip label="Admin Panel" aria-label="Admin Panel">
+                                                <IconButton
+                                                    icon={<MdOutlineAdminPanelSettings />}
+                                                    size="md"
+                                                    variant="ghost"
+                                                    aria-label="Admin Panel"
+                                                    mb={2}
+                                                />
+                                            </Tooltip>
+
+                                        </Link>
+                                    )}
+                                    <Link to={`/dashbored/${logged?.uid}`} onClick={onClose}>
+                                        Dashbord
+                                        <Tooltip label="Dashboard" aria-label="Dashboard">
+                                            <IconButton
+                                                icon={<BsSpeedometer />}
+                                                size="md"
+                                                variant="ghost"
+                                                aria-label="Dashboard"
+                                                mb={2}
+                                            />
+                                        </Tooltip>
+                                    </Link>
+                                    <Link>
+                                        Logout
+                                        <Tooltip label="Logout" aria-label="Logout">
+                                            <IconButton
+                                                icon={<IoIosLogOut />}
+                                                size="md"
+                                                variant="ghost"
+                                                aria-label="Logout"
+                                                onClick={handleLogout}
+                                                mb={2}
+                                            />
+                                        </Tooltip>
+                                    </Link>
+                                </>
+                            )}
+                        </Flex>
+                    </DrawerBody>
+                    <DrawerFooter>
+                        <Button variant="outline" mr={3} onClick={onClose}>
+                            Close
+                        </Button>
+                    </DrawerFooter>
+                </DrawerContent>
+            </Drawer>
         </Box>
     );
 };

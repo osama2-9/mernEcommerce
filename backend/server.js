@@ -8,18 +8,9 @@ import productRoute from "./router/productRoute.js";
 import { v2 as cloudinary } from "cloudinary";
 import orderRouter from "./router/orderRouter.js";
 import cartRouter from "./router/cartRouter.js";
-import cors from "cors";
 dotenv.config();
 dbConnect();
 const app = express();
-
-app.use(
-  cors({
-    origin: ["https://onlineshopping-ruddy.vercel.app"],
-    methods: ["POST", "GET", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,

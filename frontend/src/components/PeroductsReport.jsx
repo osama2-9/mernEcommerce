@@ -17,7 +17,7 @@ const PeroductsReport = () => {
             <Table variant='simple'>
               <Thead>
                 <Tr>
-                  <Th>Img</Th>
+                  <Th> Img</Th>
                   <Th>User Email</Th>
                   <Th>Product Name</Th>
                   <Th>Quantity</Th>
