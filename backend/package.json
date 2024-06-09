@@ -4,8 +4,12 @@
   "description": "",
   "main": "backend/server.js",
   "type": "module",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "dev": "node server.js"
   },
   "author": "osamasarraj",
   "license": "ISC",
