@@ -31,7 +31,7 @@ const Sidebar = () => {
     const admin = useRecoilValue(userAtom)
     const message = useRef()
     return (
-        <Box color={'white'} w="250px" h={770}  bg={'green.900'} p="5"  >
+        <Box color={'white'} w="250px" h={770} bg={'green.900'} p="5"  >
             <VStack align="start" spacing="10">
                 <Link to={`admin/${admin.uid}`} as={RouterLink} >
                     <Flex alignItems={'center'} gap={2} flexDirection={'row'}>

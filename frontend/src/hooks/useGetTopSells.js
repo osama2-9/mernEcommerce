@@ -5,7 +5,13 @@ const useGetTopSells = () => {
 
   const getTopSellProducts = async () => {
     try {
+<<<<<<< HEAD
       const res = await fetch("/api/order/topSell");
+=======
+      const res = await fetch(
+        "/api/product/topSell"
+      );
+>>>>>>> bca60c26b866647726220ede969a0e6a28b11822
       const data = await res.json();
       if (data.error) {
         toast.error(data.error);
