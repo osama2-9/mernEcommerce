@@ -7,7 +7,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       "/api": {
-        target: "https://api-eta-ochre.vercel.app/",
+        target: "http://localhost:4000/",
         secure: false,
         changeOrigin: true,
       },
