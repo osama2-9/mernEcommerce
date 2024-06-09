@@ -8,8 +8,10 @@ import productRoute from "./router/productRoute.js";
 import { v2 as cloudinary } from "cloudinary";
 import orderRouter from "./router/orderRouter.js";
 import cartRouter from "./router/cartRouter.js";
+
 dotenv.config();
 dbConnect();
+
 const app = express();
 
 cloudinary.config({
@@ -22,7 +24,7 @@ app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
   res.json({
     message: "API Work",
   });
@@ -33,6 +35,10 @@ app.use("/api/category", categoryRoute);
 app.use("/api/product", productRoute);
 app.use("/api/order", orderRouter);
 app.use("/api/cart", cartRouter);
-const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+export default app; 
