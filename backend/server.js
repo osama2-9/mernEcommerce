@@ -12,17 +12,6 @@ dotenv.config();
 dbConnect();
 const app = express();
 
-<<<<<<< HEAD
-=======
-app.use(
-  cors({
-    origin: ["https://onlineshop-umber.vercel.app"],
-    methods: ["POST", "GET", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
-
->>>>>>> bca60c26b866647726220ede969a0e6a28b11822
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_KEY,
