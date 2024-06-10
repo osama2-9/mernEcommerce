@@ -3,7 +3,10 @@ import { Flex } from "@chakra-ui/react"
 
 const ProductContainer = ({ children }) => {
     return (
-        <Flex  flexWrap={'wrap'} mb={'20px'} flexDir={{
+        <Flex  flexWrap={'wrap'} mb={'20px'} me={{
+            lg:"0px",
+            sm:"250px"
+        }} flexDir={{
             base: "row", sm: "column", lg: "row"
         }}
             alignItems={{

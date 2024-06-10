@@ -24,7 +24,9 @@ import {
     DrawerHeader,
     DrawerOverlay,
     DrawerContent,
-    DrawerCloseButton
+    DrawerCloseButton,
+    Skeleton,
+    
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BiSolidHome } from 'react-icons/bi';
@@ -37,7 +39,7 @@ const Header = () => {
     const [search, setSearch] = useState('');
     const [searchResult, setSearchResult] = useState([]);
     const { isOpen, onOpen, onClose } = useDisclosure();
-
+    const [loading, setLoading] = useState(false)
     const handleLogout = async () => {
         try {
             const res = await fetch('/api/users/logout', {
@@ -66,6 +68,7 @@ const Header = () => {
 
     const searchData = async (query) => {
         try {
+            setLoading(true)
             const res = await fetch(`/api/product/search/${query}`);
             const data = await res.json();
             if (Array.isArray(data)) {
@@ -76,6 +79,8 @@ const Header = () => {
         } catch (error) {
             console.log(error);
             setSearchResult([]);
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -93,7 +98,7 @@ const Header = () => {
         <Box bg={useColorModeValue('gray.50', 'gray.900')} w="100%" h="16" shadow="md">
             <Flex justify="space-between" align="center" h="100%" px={10}>
                 <Link to="/">
-                    <Image src="/logo.png" alt="Logo" w={70}/>
+                    <Image src="/logo.png" alt="Logo" w={70} />
                 </Link>
                 <Flex justifyContent={'center'}>
                     <Input
@@ -117,17 +122,32 @@ const Header = () => {
                     <Button bg="gray.300" h="35px" ml={2} type="submit">
                         <BsSearch />
                     </Button>
+
+
                     {searchResult.length > 0 && search !== "" && (
                         <Flex position={'absolute'} mt={'35px'} zIndex={10}>
-                            <Box w={'400px'} me={10} color={'black'} bg={'gray.50'} rounded={'sm'}>
-                                {searchResult.map((product, i) => (
-                                    <Box key={i} p={2}>
-                                        <Link to={`/product/${product._id}`}>
-                                            <Text>{product.productName}</Text>
-                                        </Link>
-                                        <Divider mt={2} />
-                                    </Box>
-                                ))}
+                            <Box p={1} w={'400px'} me={10} color={'black'} bg={'gray.50'} rounded={'sm'}>
+                                {
+                                    loading ? (
+                                        <>
+                                            <Flex flexDir={'column'} gap={2}>
+
+                                                <Skeleton h={'30px'} mb={2} />
+                                                <Skeleton h={'30px'} mb={2} />
+                                                <Skeleton h={'30px'} mb={2} />
+                                            </Flex>
+                                        </>
+                                    ) : (
+                                        searchResult.map((product, i) => (
+                                            <Box onClick={() => setSearch("")} key={i} p={2}>
+                                                <Link to={`/product/${product._id}`}>
+                                                    <Text>{product.productName}</Text>
+                                                </Link>
+                                                <Divider mt={2} />
+                                            </Box>
+                                        ))
+                                    )
+                                }
                             </Box>
                         </Flex>
                     )}

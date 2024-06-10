@@ -2,14 +2,14 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "backend/server.js",
+  "main": "backend/index.js",
   "type": "module",
   "engines": {
-    "node": "14.x"
+    "node": "20.11.1"
   },
   "scripts": {
-    "start": "nodemon server.js",
-    "dev": "node server.js"
+    "start": "nodemon index.js",
+    "dev": "node index.js"
   },
   "author": "osamasarraj",
   "license": "ISC",

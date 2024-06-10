@@ -57,11 +57,20 @@ const HomePage = () => {
                         lg: "40"
                     }} >Start explore our collections</Text>
 
-                    <Image src="/hero.avif" height={500} width={1535} />
+                    <Image src="/hero.avif" height={500} width={{
+                        lg: 1535,
+                        sm:500
+                    }} />
                 </Box>
 
             </Box>
-            <Box alignItems={'center'} display={'flex'} justifyContent={'space-evenly'} flexDir={{
+            <Box alignItems={'center'} me={{
+                lg:"0px",
+                sm:"250px"
+            }} display={'flex'} justifyContent={{
+                lg:"space-evenly",
+                sm:"center"
+            }} flexDir={{
                 base: "column",
                 lg: "row",
                 sm: "column"
@@ -72,7 +81,10 @@ const HomePage = () => {
                 <FeatureBox icon={<AiOutlineFileProtect size={30} />} title={"100% Secure Payment"} description={"Payment is secure and you can also pay upon receipt"} />
             </Box>
 
-            <Text ml={20} mt={10} fontSize={'40px'} fontWeight={'bold'}>
+            <Text ml={20} mt={10} mb={{
+                lg:"0px",
+                sm:"20px"
+            }} fontSize={'40px'} fontWeight={'bold'}>
                 Prodcuts
             </Text>
             <Box>
@@ -98,21 +110,50 @@ const HomePage = () => {
                 }} maxW={'700'} justifyContent={'center'}  >
 
 
-                    <Box mb={'5'} w={'800px'} h={'300px'} bgColor={'gray.100'} className="shadow-md" rounded={'lg'}>
-                        <Box>
-
-                            <Image src="/shopping.jpeg" height={'300'} width={300} />
-                            <Box maxW={'300'} position={'relative'} top={'-270px'} left={'350px'}>
-                                <Flex flexDir={'column'}>
-                                    <Text mb={'5px'} fontSize={'30px'} fontWeight={'bold'}>Explore Your Self</Text>
-                                    <Text color={'gray.400'}>Shop with ease and enjoy the convenience of free shipping on all orders  No need to worry about additional costs at checkout. Simply add your favorite items to your cart and experience the satisfaction of free delivery straight to your doorstep. Its our way of thanking you for choosing our Store</Text>
+                    <Box
+                        mb={5}
+                        me={{
+                            lg:"0",
+                            sm:"250"
+                        }}
+                        w={{ base: "90%", md: "800px",sm:"300px" }}
+                        h={{lg:"400px" ,base: "auto", md: "300px" }}
+                        bgColor="gray.100"
+                        className="shadow-md"
+                        rounded="lg"
+                        p={5}
+                    >
+                        <Flex direction={{ base: "column", md: "row" }} alignItems="center">
+                            <Image
+                            rounded={'md'}
+                                src="/shopping.jpeg"
+                                height={{lg:"350px", base: "auto", md: "300px" }}
+                                width={{lg:"350px", base: "100%", md: "300px", sm:"300px"}}
+                                objectFit="cover"
+                            />
+                            <Box
+                                maxW={{ base: "100%", md: "300px" }}
+                                ml={{ base: 0, md: 10 }}
+                                mt={{ base: 5, md: 0 }}
+                                textAlign={{ base: "center", md: "left" }}
+                            >
+                                <Flex direction="column">
+                                    <Text mb={5} fontSize={{ base: "24px", md: "30px" }} fontWeight="bold">
+                                        Explore Yourself
+                                    </Text>
+                                    <Text color="gray.400">
+                                        Shop with ease and enjoy the convenience of free shipping on all orders. No need to worry about additional costs at checkout. Simply add your favorite items to your cart and experience the satisfaction of free delivery straight to your doorstep. It’s our way of thanking you for choosing our store.
+                                    </Text>
                                 </Flex>
                             </Box>
-                        </Box>
-
+                        </Flex>
                     </Box>
+
                 </Flex>
-                <Flex id="" justifyContent={'center'} me={'100px'} mb={'10px'}>
+                <Flex id="" justifyContent={'center'}  me={{
+                    lg:"100px",
+                    sm:"250"
+                }} mb={'10px'}>
                     <Text mb={'10px'} fontSize={'30px'} fontWeight={'bold'} color={'gray.400'}>New Arrivals</Text>
                 </Flex>
 
@@ -132,9 +173,17 @@ const HomePage = () => {
 
                 <Flex justifyContent={'center'} flexDir={'row'}>
                     <Box shadow={'md'} me={2}>
-                        <Image className="rounded-lg" h={520} w={600} src="main.png" />
+                        <Image me={{
+                            lg:"0",
+                            sm:"250px"
+                        }} className="rounded-lg" h={520} w={{
+                            sm:400
+                        }} src="main.png" />
                     </Box>
-                    <Flex flexDir={'column'}>
+                    <Flex display={{
+                        lg:"block",
+                        sm:"none"
+                    }} flexDir={'column'}>
                         <Box>
                             <Image className="rounded-lg" h={300} w={300} src="w1.png" />
                         </Box>
@@ -148,7 +197,10 @@ const HomePage = () => {
                 </Flex>
 
 
-                <Flex id="" justifyContent={'center'} me={'100px'} mt={'20px'}>
+                <Flex id="" justifyContent={'center'} me={{
+                    lg: "100px",
+                    sm: "250"
+                }} mt={'20px'}>
                     <Text mb={'10px'} fontSize={'30px'} fontWeight={'bold'} color={'gray.400'}>Best Sells</Text>
                 </Flex>
 
@@ -173,7 +225,7 @@ const HomePage = () => {
 
 
                 {/* FOTTER */}
-                <Box w={{ base: "750px", lg: "1519px" }}
+                <Box w={{  base: "750px", lg: "1519px" ,sm:"500px" }}
                     h={'300'}
                     bg={'gray.200'} borderTopRadius={'5'}
 
@@ -189,7 +241,7 @@ const HomePage = () => {
                             lg: "20%"
                         }}>
                             <Text mb={'5'} fontSize={'30'}>Were Always Here To Help</Text>
-                            <Flex justifyContent={'space-between'}>
+                            <Flex  justifyContent={'space-between'}>
 
                                 <Flex fontSize={'20'} color={'gray.500'} flexDir={'column'} >
                                     <Box mb={'5'}>

@@ -46,7 +46,7 @@ const newMessaeg = async (title, description) => {
 
 const getAllMessages = async (req, res) => {
   try {
-    const messages = await Message.find();
+    const messages = await Message.find().sort({ createdAt: -1 });
     if (messages.length === 0) {
       return res.status(400).json({
         error: "No Messagess available",
@@ -57,4 +57,4 @@ const getAllMessages = async (req, res) => {
     console.log(error);
   }
 };
-export { newMessaeg ,getAllMessages};
+export { newMessaeg, getAllMessages };
