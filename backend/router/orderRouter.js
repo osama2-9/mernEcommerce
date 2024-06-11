@@ -3,6 +3,7 @@ import { protectRoute } from "../middleware/protectRoute.js";
 import { isAdmin } from "../middleware/isAdmin.js";
 import {
   deleteOrder,
+  deleteOrderByUser,
   getOrders,
   getTopSellProducts,
   getUserOrders,
@@ -15,6 +16,7 @@ orderRouter.get("/userOrder/:uid", protectRoute, getUserOrders);
 orderRouter.get("/order", isAdmin, protectRoute, getOrders);
 orderRouter.put("/updateStatus", isAdmin, protectRoute, updateOrderStatus);
 orderRouter.get("/topSell", getTopSellProducts);
-orderRouter.delete('/delete', isAdmin,protectRoute ,deleteOrder)
+orderRouter.delete("/delete", isAdmin, protectRoute, deleteOrder);
+orderRouter.delete("/deleteUserOrder", protectRoute, deleteOrderByUser);
 
 export default orderRouter;

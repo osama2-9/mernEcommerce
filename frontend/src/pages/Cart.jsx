@@ -28,7 +28,7 @@ const Cart = () => {
         getCartItems()
     }, [uid])
 
-    const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+    const subtotal = cartItems?.reduce((total, item) => total + item.price * item.quantity, 0)
     const shipping = 5;
     const totalPrice = subtotal + shipping;
 
@@ -108,11 +108,12 @@ const Cart = () => {
                             <Radio value="Cash">Cash</Radio>
                         </Stack>
                     </RadioGroup>
+                    <Text fontSize="sm" color="gray.500" mt={2}>You will pay when you receive your order.</Text>
                 </Box>
-                <Button onClick={handleCheckout} colorScheme="purple" size="lg" mt={5} width="100%">Checkout</Button>
+                <Button onClick={handleCheckout} bg={'black'} size="lg" mt={5} color={'white'} width="100%">Checkout</Button>
             </Box>
         </Box>
     )
 }
 
-export default Cart
+export default Cart;

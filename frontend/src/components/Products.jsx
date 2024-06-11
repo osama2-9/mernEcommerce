@@ -1,21 +1,22 @@
 /* eslint-disable react/prop-types */
-import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Text, Center } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 const Products = ({ product }) => {
     return (
         <>
             {product && (
-                <Box
+                <Box 
+                ml={2}
                     flex={{ base: "0 1 100%", sm: "0 1 100%", md: "0 1 48%", lg: "0 1 22%" }}
                     mb={{ sm: "10px", md: "10px" }}
                     w={{ base: "250px" }}
-                    className="bg-gray-100 shadow-md p-1 rounded-md"
+                    className={`bg-white shadow-md p-1 rounded-md ${product?.productQuntity === 0 ? 'opacity-50' : ''}`}
                 >
                     <Box>
                         <Link to={`/product/${product._id}`}>
                             <Box>
-                                <Image className="rounded-sm" src={product?.productImg} width={320} height={250} alt="" />
+                                <Image className="rounded-sm" src={product?.productImg} width={'500px'} height={250} alt="" />
                             </Box>
                             <Box>
                                 <Text textAlign="center" mt={1} fontSize="xl" fontWeight="500" lineHeight="short">
@@ -23,17 +24,20 @@ const Products = ({ product }) => {
                                 </Text>
                             </Box>
                         </Link>
-                        <Flex justifyContent="space-around" flexDir="column" textAlign="center">
+                        <Flex mb={2} justifyContent="space-around" flexDir="column" textAlign="center">
                             <Text fontSize="lg" fontWeight="bold" mt={3}>{product?.productPrice}$</Text>
-                            <Button
-                                mt={3}
-                                size="md"
-                                colorScheme="blue"
-                                variant="outline"
-                                _hover={{ bg: "blue.500", color: "white" }}
-                            >
-                                Add to Cart
-                            </Button>
+                            <Center mt={3}>
+                                <Button
+                                    w={'200px'}
+                                    size="md"
+                                    colorScheme="black"
+                                    variant="outline"
+                                    _hover={{ bg: "black", color: "white" }}
+                                    disabled={product.quantity === 0}
+                                >
+                                    Add to Cart
+                                </Button>
+                            </Center>
                         </Flex>
                     </Box>
                 </Box>

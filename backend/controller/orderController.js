@@ -4,6 +4,13 @@ import Product from "../model/Product.js";
 import User from "../model/User.js";
 import { newMessaeg } from "./messageController.js";
 
+const OrderStatus = {
+  PENDING: "Pending",
+  PROCESSING: "Processing",
+  SHIPPED: "Shipped",
+  DELIVERED: "Delivered",
+  CANCELLED: "Cancelled",
+};
 const makeAnOrder = async (req, res) => {
   try {
     const { uid, paymentMethod } = req.body;
@@ -108,7 +115,9 @@ const getUserOrders = async (req, res) => {
         error: "no user found",
       });
     }
-    const userOrders = await Order.find({ uid: uid }).limit(5);
+    const userOrders = await Order.find({ uid: uid })
+      .limit(5)
+      .sort({ createdAt: -1 });
 
     if (userOrders.length === 0) {
       return res.status(404).json({
@@ -209,6 +218,55 @@ const deleteOrder = async (req, res) => {
     console.log(error);
   }
 };
+
+const deleteOrderByUser = async (req, res) => {
+  try {
+    const { uid, oid } = req.body;
+
+    if (!uid || !oid) {
+      return res.status(404).json({
+        error: "User or Order ID is missing",
+      });
+    }
+
+    const order = await Order.findOne({ _id: oid, uid: uid });
+    if (!order) {
+      return res.status(404).json({
+        error: "Order not found",
+      });
+    }
+
+    if (
+      order.orderStatus === OrderStatus.SHIPPED ||
+      order.orderStatus === OrderStatus.DELIVERED
+    ) {
+      return res.status(400).json({
+        error: `You cannot delete an order when it is ${order.orderStatus}`,
+      });
+    }
+
+    const product = await Product.findById(order.pid);
+    if (!product) {
+      return res.status(404).json({
+        error: "Product not found",
+      });
+    }
+
+    await Order.findByIdAndDelete(oid);
+
+    product.productQuntity += order.quantity;
+    await product.save();
+
+    return res.status(200).json({
+      message: "Order deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "An error occurred. Please try again later.",
+    });
+  }
+};
+
 export {
   getOrders,
   makeAnOrder,
@@ -216,4 +274,5 @@ export {
   updateOrderStatus,
   getTopSellProducts,
   deleteOrder,
+  deleteOrderByUser,
 };

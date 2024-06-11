@@ -71,11 +71,9 @@ const createProduct = async (req, res) => {
   }
 };
 
-export default createProduct;
-
 const getAllProducts = async (req, res) => {
   try {
-    const getProducts = await Prodcut.find();
+    const getProducts = await Prodcut.find({});
 
     if (getProducts.length === 0) {
       return res.status(404).json({
@@ -152,10 +150,21 @@ const getProductById = async (req, res) => {
   }
 };
 
+const getRelatedProducts = async(req, res) => {
+  const { categoryID, productID } = req.params;
+  try {
+    const relatedProducts = await Prodcut.getRelatedProducts(categoryID, productID);
+    return res.status(200).json(relatedProducts);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   createProduct,
   getAllProducts,
   filterProducts,
   getProductById,
   search,
+  getRelatedProducts,
 };

@@ -41,7 +41,22 @@ const productSchema = new mongoose.Schema({
     default: 0,
   },
 });
+productSchema.statics.getRelatedProducts = async function (
+  categoryID,
+  excludeProductID,
+  limit = 4
+) {
+  try {
+    const relatedProducts = await this.find({
+      categoryID: categoryID,
+      _id: { $ne: excludeProductID },
+    }).limit(limit);
 
+    return relatedProducts;
+  } catch (error) {
+    throw new Error("Error fetching related products");
+  }
+};
 const Product = mongoose.model("product", productSchema);
 
 export default Product;

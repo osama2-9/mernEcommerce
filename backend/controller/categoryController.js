@@ -72,7 +72,35 @@ const getCategoriesWithProducts = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+const getSpecificProduct = async (req, res) => {
+  try {
+    const { categoryName } = req.params;
+    if (!categoryName) {
+      return res.status(400).json({
+        error: "Category name is required",
+      });
+    }
 
+    const category = await Category.findOne({ categoryName });
+    if (!category) {
+      return res.status(404).json({
+        error: "Category not found",
+      });
+    }
 
+    const products = await Product.find({ categoryID: category._id });
+    return res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+};
 
-export { createCategory, getAllCategory, getCategoriesWithProducts };
+export {
+  createCategory,
+  getAllCategory,
+  getCategoriesWithProducts,
+  getSpecificProduct,
+};

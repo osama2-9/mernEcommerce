@@ -1,30 +1,22 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import {
-    Badge,
-    Box,
     Button,
     Center,
-    Checkbox,
-    CheckboxGroup,
     Flex,
-    HStack,
     Heading,
     Image,
-    Link,
     Radio,
     RadioGroup,
     Select,
     Stack,
     Text,
-    useColorModeValue,
+    Divider,
+    Badge,
 } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { BsFolder } from 'react-icons/bs';
-
 
 import userAtom from '../atoms/userAtom';
 
@@ -53,12 +45,14 @@ const Product = () => {
                 }
                 setSelectedProduct(productData);
                 setCategory(categoryName)
+
+
             } catch (error) {
                 console.log(error);
             }
         };
         getProductById();
-    }, [pid]);
+    }, [pid, category._id]);
 
     const handleQuantityChange = (e) => {
         setQuantity(parseInt(e.target.value));
@@ -72,7 +66,10 @@ const Product = () => {
         setSize(value);
     };
 
+
+
     const handleAddToCart = async () => {
+
         try {
             const res = await fetch(`/api/cart/cart/${selectedProduct?._id}`, {
                 method: "POST",
@@ -83,7 +80,7 @@ const Product = () => {
                     uid: logged.uid,
                     quantity: quantity,
                     color: color,
-                    size: size
+                    size: size,
                 })
             });
             const data = await res.json();
@@ -112,68 +109,74 @@ const Product = () => {
             {selectedProduct && (
                 <Center py={6}>
                     <Stack
-                        borderWidth="1px"
-                        borderRadius="lg"
-                        w={{ sm: '100%', md: '840px', lg: "1000px" }}
-                        height={{ sm: '950px', md: '50rem', lg: "600px" }}
                         direction={{ md: 'row', lg: "row", sm: "column" }}
-                        boxShadow={'2xl'}
-                        padding={4}
+                        spacing={6}
                     >
                         <Flex flex={1}>
-
                             <Image
-                                width={400}
-                                height={{ sm: "400" }}
+                                p={1}
+                                width={{ sm: "100%", md: "600px" }}
+                                height={{ sm: "auto", md: "500px" }}
                                 src={selectedProduct.productImg}
                             />
                         </Flex>
                         <Stack
-                            flex={1}
-                            flexDirection="column"
+                            flex={2}
                             justifyContent="center"
-                            alignItems="center"
-                            p={1}
+                            alignItems="flex-start"
+                            p={4}
                             pt={2}
+                            spacing={4}
                         >
-                            <Flex flexDirection={'row'} gap={2} color={'gray.500'} justifyContent={'center'}>
-                                <BsFolder className='mt-1' size={22}/>
-                                <Text fontWeight={'bold'} fontSize={'20'}> {category.categoryName}</Text>
+                            <Flex justifyContent="space-between" alignItems="center" width="100%">
+                                <Heading fontSize={'2xl'} fontFamily={'body'}>
+                                    {selectedProduct.productName}
+                                </Heading>
+                                {selectedProduct.productQuntity <= 3 && (
+
+                                    <Text>
+                                        <Badge p={1} bg={'black'} color={'white'} h={'30px'} textAlign={'center'} >#In Stock {selectedProduct.productQuntity}</Badge>
+                                    </Text>
+                                )}
+
+                                <Text fontWeight={700} color={'gray.800'}>
+                                    ${selectedProduct.productPrice}
+                                </Text>
                             </Flex>
-                            <Heading fontSize={'2xl'} fontFamily={'body'}>
-                                {selectedProduct.productName}
-                            </Heading>
-                            <Text fontWeight={600} color={'gray.500'} size="sm" mb={4}>
+                            <Flex flexDirection={'row'} gap={2} color={'gray.500'} alignItems="center">
+                                <BsFolder className='mt-1' size={22} />
+                                <Text fontWeight={'bold'} fontSize={'lg'}> {category.categoryName}</Text>
+                            </Flex>
+                            <Divider orientation="horizontal" borderColor="black" />
+                            <Text fontWeight={600} color={'gray.500'} size="sm">
                                 {selectedProduct.productDesc}
                             </Text>
-                            <Text fontSize={'xl'} fontWeight={700} color={'gray.800'}>
-                                ${selectedProduct.productPrice}
-                            </Text>
-                            <Badge textAlign={'center'}></Badge>
-                            <Flex flexDir={'column'}>
+                            <Divider orientation="horizontal" borderColor="black" />
+                            <Stack spacing={4} width="100%">
                                 {selectedProduct.prodcutSize?.length > 0 && (
-                                    <Flex key={1} gap={3} justifyContent={'start'}>
-                                        <Text textAlign={'center'} fontWeight={'bold'} color={'gray.500'} px={3}>Sizes</Text>
+                                    <Stack spacing={1}>
+                                        <Text fontWeight={'bold'} color={'gray.500'}>Sizes</Text>
                                         <RadioGroup onChange={handleSizeChange}>
-                                            {selectedProduct.prodcutSize?.map((product, i) => (
+                                            {selectedProduct.prodcutSize.map((product, i) => (
                                                 <Radio ml={2} key={i} value={product}>{product}</Radio>
                                             ))}
                                         </RadioGroup>
-                                    </Flex>
+                                    </Stack>
                                 )}
                                 {selectedProduct.productColors?.length > 0 && (
-                                    <Flex mt={5} gap={3}>
-                                        <Text textAlign={'center'} fontWeight={'bold'} color={'gray.500'} px={3}>Colors</Text>
-                                        <RadioGroup onChange={handleColorChange} mt={'5.2px'}>
-                                            {selectedProduct.productColors?.map((c, i) => (
-                                                <Radio key={i} bg={c} ml={8} value={c}></Radio>
+                                    <Stack spacing={1}>
+                                        <Text fontWeight={'bold'} color={'gray.500'}>Colors</Text>
+                                        <RadioGroup onChange={handleColorChange}>
+                                            {selectedProduct.productColors.map((c, i) => (
+                                                <Radio ml={2} key={i} bg={c} value={c}></Radio>
                                             ))}
                                         </RadioGroup>
-                                    </Flex>
+                                    </Stack>
                                 )}
-                                <Flex mt={5} gap={3}>
-                                    <Text textAlign={'center'} fontWeight={'bold'} color={'gray.500'} px={3}>Quantity</Text>
+                                <Flex alignItems="center">
+                                    <Text fontWeight={'bold'} color={'gray.500'}>Quantity</Text>
                                     <Select
+                                        ml={4}
                                         value={quantity}
                                         onChange={handleQuantityChange}
                                         width="70px"
@@ -182,38 +185,34 @@ const Product = () => {
                                             <option key={i + 1} value={i + 1}>{i + 1}</option>
                                         ))}
                                     </Select>
+
                                 </Flex>
-                            </Flex>
-                            <Stack
-                                width={'100%'}
-                                mt={'2rem'}
-                                direction={'row'}
-                                padding={2}
-                                justifyContent={'space-between'}
-                                alignItems={'center'}
-                            >
-                                <Button
-                                    onClick={handleAddToCart}
-                                    flex={1}
-                                    w={'200px'}
-                                    fontSize={'sm'}
-                                    rounded={'full'}
-                                    bg={'blue.400'}
-                                    color={'white'}
-                                    _hover={{
-                                        bg: 'blue.500',
-                                    }}
-                                    _focus={{
-                                        bg: 'blue.500',
-                                    }}
-                                >
-                                    Add to Cart
-                                </Button>
+
                             </Stack>
+                            <Button
+                                onClick={handleAddToCart}
+                                w={'200px'}
+                                fontSize={'sm'}
+                                rounded={'full'}
+                                bg={'black'}
+                                color={'white'}
+                                _hover={{
+                                    bg: 'blue.500',
+                                }}
+                                _focus={{
+                                    bg: 'blue.500',
+                                }}
+                            >
+                                Add to Cart
+                            </Button>
                         </Stack>
                     </Stack>
+
                 </Center>
+
             )}
+           
+
         </>
     );
 };

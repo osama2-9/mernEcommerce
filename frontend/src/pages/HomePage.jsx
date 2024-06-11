@@ -17,7 +17,7 @@ const HomePage = () => {
     const { topSell } = useGetTopSells()
     const [product, setProduct] = useState([])
 
-   
+
 
 
     useEffect(() => {
@@ -32,7 +32,6 @@ const HomePage = () => {
                     })
                 }
                 setProduct(data)
-                console.log(data);
             } catch (error) {
                 console.log(error);
             }
@@ -59,17 +58,17 @@ const HomePage = () => {
 
                     <Image src="/hero.avif" height={500} width={{
                         lg: 1535,
-                        sm:500
+                        sm: 500
                     }} />
                 </Box>
 
             </Box>
             <Box alignItems={'center'} me={{
-                lg:"0px",
-                sm:"250px"
+                lg: "0px",
+                sm: "250px"
             }} display={'flex'} justifyContent={{
-                lg:"space-evenly",
-                sm:"center"
+                lg: "space-evenly",
+                sm: "center"
             }} flexDir={{
                 base: "column",
                 lg: "row",
@@ -82,8 +81,8 @@ const HomePage = () => {
             </Box>
 
             <Text ml={20} mt={10} mb={{
-                lg:"0px",
-                sm:"20px"
+                lg: "0px",
+                sm: "20px"
             }} fontSize={'40px'} fontWeight={'bold'}>
                 Prodcuts
             </Text>
@@ -113,11 +112,11 @@ const HomePage = () => {
                     <Box
                         mb={5}
                         me={{
-                            lg:"0",
-                            sm:"250"
+                            lg: "0",
+                            sm: "250"
                         }}
-                        w={{ base: "90%", md: "800px",sm:"300px" }}
-                        h={{lg:"400px" ,base: "auto", md: "300px" }}
+                        w={{ base: "90%", md: "800px", sm: "300px" }}
+                        h={{ lg: "400px", base: "auto", md: "300px" }}
                         bgColor="gray.100"
                         className="shadow-md"
                         rounded="lg"
@@ -125,10 +124,10 @@ const HomePage = () => {
                     >
                         <Flex direction={{ base: "column", md: "row" }} alignItems="center">
                             <Image
-                            rounded={'md'}
+                                rounded={'md'}
                                 src="/shopping.jpeg"
-                                height={{lg:"350px", base: "auto", md: "300px" }}
-                                width={{lg:"350px", base: "100%", md: "300px", sm:"300px"}}
+                                height={{ lg: "350px", base: "auto", md: "300px" }}
+                                width={{ lg: "350px", base: "100%", md: "300px", sm: "300px" }}
                                 objectFit="cover"
                             />
                             <Box
@@ -150,9 +149,9 @@ const HomePage = () => {
                     </Box>
 
                 </Flex>
-                <Flex id="" justifyContent={'center'}  me={{
-                    lg:"100px",
-                    sm:"250"
+                <Flex id="" justifyContent={'center'} me={{
+                    lg: "100px",
+                    sm: "250"
                 }} mb={'10px'}>
                     <Text mb={'10px'} fontSize={'30px'} fontWeight={'bold'} color={'gray.400'}>New Arrivals</Text>
                 </Flex>
@@ -174,15 +173,15 @@ const HomePage = () => {
                 <Flex justifyContent={'center'} flexDir={'row'}>
                     <Box shadow={'md'} me={2}>
                         <Image me={{
-                            lg:"0",
-                            sm:"250px"
+                            lg: "0",
+                            sm: "250px"
                         }} className="rounded-lg" h={520} w={{
-                            sm:400
+                            sm: 400
                         }} src="main.png" />
                     </Box>
                     <Flex display={{
-                        lg:"block",
-                        sm:"none"
+                        lg: "block",
+                        sm: "none"
                     }} flexDir={'column'}>
                         <Box>
                             <Image className="rounded-lg" h={300} w={300} src="w1.png" />
@@ -225,7 +224,7 @@ const HomePage = () => {
 
 
                 {/* FOTTER */}
-                <Box w={{  base: "750px", lg: "1519px" ,sm:"500px" }}
+                <Box w={{ base: "750px", lg: "1519px", sm: "500px" }}
                     h={'300'}
                     bg={'gray.200'} borderTopRadius={'5'}
 
@@ -241,7 +240,7 @@ const HomePage = () => {
                             lg: "20%"
                         }}>
                             <Text mb={'5'} fontSize={'30'}>Were Always Here To Help</Text>
-                            <Flex  justifyContent={'space-between'}>
+                            <Flex justifyContent={'space-between'}>
 
                                 <Flex fontSize={'20'} color={'gray.500'} flexDir={'column'} >
                                     <Box mb={'5'}>

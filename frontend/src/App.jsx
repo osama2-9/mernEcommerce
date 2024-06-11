@@ -22,6 +22,7 @@ import Address from './pages/Address'
 import Orders from './pages/admin/Orders'
 import ForgetPassword from './pages/ForgetPassword'
 import ResetPassword from './pages/ResetPassword'
+import SpecificProducts from './pages/SpecificProducts'
 
 function App() {
   const user = useRecoilValue(userAtom)
@@ -41,7 +42,6 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/forget-password' element={<ForgetPassword />} />
         <Route path='/reset-password/:uid/:token' element={<ResetPassword />} />
-
         <Route path='/register' element={<Signup />} />
         <Route path='/product/:pid' element={<Product />} />
         <Route path='/cart/:uid' element={user && <Cart />} />
@@ -51,6 +51,7 @@ function App() {
         <Route path='/admin/product/show' element={user?.isAdmin && <ShowProduct />} />
         <Route path='/admin/category/create' element={user?.isAdmin && <CreateCategory />} />
         <Route path='/admin/category/show' element={user?.isAdmin && <ShowCategory />} />
+        <Route path="/products/:categoryName" element={<SpecificProducts />} />
         <Route path='/admin/customer' element={user?.isAdmin && <Customer />} />
         <Route path='/admin/profile/:uid' element={user?.isAdmin && <Profile />} />
         <Route path='/admin/order/' element={user?.isAdmin && <Orders />} />

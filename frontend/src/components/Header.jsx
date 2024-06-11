@@ -95,7 +95,7 @@ const Header = () => {
     };
 
     return (
-        <Box bg={useColorModeValue('gray.50', 'gray.900')} w="100%" h="16" shadow="md">
+        <Box w="100%" h="16" shadow="sm">
             <Flex justify="space-between" align="center" h="100%" px={10}>
                 <Link to="/">
                     <Image src="/logo.png" alt="Logo" w={70} />
@@ -111,12 +111,12 @@ const Header = () => {
                         placeholder="search for products"
                         _hover={{
                             borderColor: 'gray.300',
-                        }}
+                            }}
                         _focus={{
                             borderColor: 'gray.300',
                             boxShadow: 'none',
                             outline: 'none',
-                        }}
+                            }}
                         bg={useColorModeValue('white', 'gray.800')}
                     />
                     <Button bg="gray.300" h="35px" ml={2} type="submit">

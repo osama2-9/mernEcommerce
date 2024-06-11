@@ -14,8 +14,10 @@ import {
     TableContainer,
     useColorModeValue,
     Badge,
+    Button,
 
 } from "@chakra-ui/react";
+import { BsTrash } from "react-icons/bs";
 
 const UserlastOrders = () => {
     const [orders, setOrders] = useState([]);
@@ -40,6 +42,34 @@ const UserlastOrders = () => {
         getUserOrders();
     }, [logged.uid]);
 
+    const deleteOrder = async (orderId) => {
+        try {
+            const res = await fetch('/api/order/deleteUserOrder', {
+                method: "DELETE",
+                headers: {
+                    'content-type': "application/json"
+                },
+                body: JSON.stringify({
+                    uid: logged.uid,
+                    oid: orderId
+
+                })
+            })
+            const data =await res.json();
+            if(data.error){
+                toast.error(data.error)
+            }else{
+                toast.success(data.message)
+            }
+
+
+
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
     const bg = useColorModeValue("white", "gray.800");
 
     return (
@@ -56,6 +86,7 @@ const UserlastOrders = () => {
                                 <Th>Quantity</Th>
                                 <Th>Price</Th>
                                 <Th>Order Status</Th>
+                                <Th>Action</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
@@ -66,6 +97,11 @@ const UserlastOrders = () => {
                                     <Td>{order.quantity}</Td>
                                     <Td>${order.price.toFixed(2)}</Td>
                                     <Td>{order.orderStatus}</Td>
+                                    <Td>
+                                        <Button onClick={()=>deleteOrder(order._id)} bg={'red.500'}>
+                                            <BsTrash color="white" size={22}/>
+                                        </Button>
+                                    </Td>
                                 </Tr>
                             ))}
                         </Tbody>
