@@ -18,17 +18,16 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+    unique: true,
   },
   phone: {
     type: Number,
     unique: true,
+    minLength: 9,
+    maxLength: 11,
   },
   address: addressSchema,
 
-  paymentmethod: {
-    type: String,
-    default: "",
-  },
   isAdmin: {
     type: Boolean,
     default: false,

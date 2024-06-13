@@ -68,7 +68,7 @@ const Messages = () => {
 
                     <DrawerBody>
                         {messages.map((message, index) => (
-                            <Box key={index} mb={4} p={4} borderWidth="1px" borderRadius="md" onClick={() => handleOpenMessage(message)}>
+                            <Box className='transition-all hover:bg-gray-100 cursor-pointer' key={index} mb={4} p={4} borderWidth="1px" borderRadius="md" onClick={() => handleOpenMessage(message)}>
                                 <Text>{message.messageTitle}</Text>
                             </Box>
                         ))}
@@ -88,7 +88,7 @@ const Messages = () => {
                     <ModalHeader>{selectedMessage?.messageTitle}</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <Box bg={'gray.100'} rounded={'md'} p={2} dangerouslySetInnerHTML={{ __html: selectedMessage?.messageDescription }} />
+                        <Box bg={'gray.100'} rounded={'md'} p={4} mb={4} dangerouslySetInnerHTML={{ __html: selectedMessage?.messageDescription }} />
                     </ModalBody>
                 </ModalContent>
             </Modal>

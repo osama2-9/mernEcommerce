@@ -19,6 +19,7 @@ const Tabs = () => {
     return (
         <>
 
+                <Text></Text>
             <Flex flexDirection={'row'} gap={50} position={'absolute'} left={'300px'} ml={4} p={1} top={"120px"} justifyContent={'space-around'} >
                 <Box w={'350px'} h={'150px'} className="rounded-md shadow-md" bg={'gray.50'}>
                     <Flex justifyContent={'space-evenly'} p={2}>

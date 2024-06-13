@@ -1,7 +1,15 @@
 import Cart from "../model/Cart.js";
 import Product from "../model/Product.js";
 import User from "../model/User.js";
-
+async function checkSlaes(product) {
+  if (product.sale > 0) {
+    return (
+      (await product.productPrice) - product.productPrice * (product.sale / 100)
+    );
+  } else {
+    return await product.productPrice;
+  }
+}
 const addToCart = async (req, res) => {
   try {
     const { pid } = req.params;
@@ -49,12 +57,12 @@ const addToCart = async (req, res) => {
         error: `You can't order more than the available quantity : ${productOrdered.productQuntity}`,
       });
     }
-
+    const price = await checkSlaes(productOrdered);
     const newCartItem = new Cart({
       uid: uid,
       pid: pid,
       productName: productOrdered.productName,
-      price: productOrdered.productPrice,
+      price: price,
       quantity,
       prodcutImg: productOrdered.productImg,
       color: color || null,
@@ -99,4 +107,30 @@ const getCartItems = async (req, res) => {
   }
 };
 
-export { addToCart, getCartItems };
+const removeFromCart = async (req, res) => {
+  try {
+    const { pid, uid } = req.body;
+    if (!pid) {
+      return res.status(404).json({
+        error: "No product found",
+      });
+    }
+    if (!uid) {
+      return res.status(404).json({
+        error: "No user found",
+      });
+    }
+    const findProduct = await Cart.findOne({ pid: pid, uid: uid });
+    if (!findProduct) {
+      return res.status(404).json({
+        error: "Error while get products",
+      });
+    }
+    const deleteProduct = await Cart.findByIdAndDelete(findProduct?._id);
+    if (deleteProduct) {
+      return;
+    }
+  } catch (error) {}
+};
+
+export { addToCart, getCartItems ,removeFromCart};

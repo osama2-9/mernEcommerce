@@ -28,6 +28,7 @@ const Cart = () => {
         getCartItems()
     }, [uid])
 
+
     const subtotal = cartItems?.reduce((total, item) => total + item.price * item.quantity, 0)
     const shipping = 5;
     const totalPrice = subtotal + shipping;
@@ -63,6 +64,33 @@ const Cart = () => {
         }
     };
 
+    const removeProduct = async (pid, iid) => {
+        try {
+            if (!iid) {
+                toast.error("Product Not Found")
+            }
+            const res = await fetch('/api/cart/cart/delete', {
+                method: "DELETE",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({
+                    pid: pid,
+                    uid: logged.uid
+                })
+            })
+            const data = await res.json()
+            if (data.error) {
+                toast.error(data.error)
+            }
+        } catch (error) {
+            console.log(error);
+
+        }
+
+
+    }
+
     return (
         <Box p={5}>
             <Text fontSize="2xl" mb={5}>Shopping Cart ({cartItems.length}) ({logged.email})</Text>
@@ -82,7 +110,7 @@ const Cart = () => {
                             ))}
                         </Select>
                         <Text fontSize="lg">${item.price * item.quantity}</Text>
-                        <Button variant="link" colorScheme="purple">Delete</Button>
+                        <Button onClick={() => removeProduct(item?.pid, item?._id)} variant="link" colorScheme="purple">Delete</Button>
                     </Flex>
                 ))}
             </Stack>

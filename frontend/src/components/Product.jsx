@@ -1,6 +1,10 @@
+/* eslint-disable react/prop-types */
 import {
+    Badge,
+    Box,
     Button,
     Center,
+    Divider,
     Flex,
     Heading,
     Image,
@@ -9,8 +13,6 @@ import {
     Select,
     Stack,
     Text,
-    Divider,
-    Badge,
 } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
@@ -19,10 +21,11 @@ import { useRecoilValue } from 'recoil';
 import { BsFolder } from 'react-icons/bs';
 
 import userAtom from '../atoms/userAtom';
+import RelatedProducts from './RelatedProducts';
 
 const Product = () => {
     const [selectedProduct, setSelectedProduct] = useState({});
-    const [category, setCategory] = useState("")
+    const [category, setCategory] = useState("");
     const [quantity, setQuantity] = useState(1);
     const [color, setColor] = useState("");
     const [size, setSize] = useState("");
@@ -34,8 +37,8 @@ const Product = () => {
             try {
                 const res = await fetch(`/api/product/target/${pid}`);
                 const data = await res.json();
-                const productData = data.data[0]
-                const categoryName = data.data[1]
+                const productData = data.data[0];
+                const categoryName = data.data[1];
 
                 if (data.error) {
                     toast(data.error, {
@@ -44,8 +47,7 @@ const Product = () => {
                     });
                 }
                 setSelectedProduct(productData);
-                setCategory(categoryName)
-
+                setCategory(categoryName);
 
             } catch (error) {
                 console.log(error);
@@ -66,10 +68,7 @@ const Product = () => {
         setSize(value);
     };
 
-
-
     const handleAddToCart = async () => {
-
         try {
             const res = await fetch(`/api/cart/cart/${selectedProduct?._id}`, {
                 method: "POST",
@@ -104,16 +103,23 @@ const Product = () => {
         }
     };
 
+    const hasSale  = selectedProduct.sale  > 0 ? true :false 
+
+    const Discount = (price, discount) => {
+        return price - (price * (discount / 100));
+    };
+
     return (
         <>
             {selectedProduct && (
                 <Center py={6}>
                     <Stack
-                        direction={{ md: 'row', lg: "row", sm: "column" }}
+                        direction={{ md: 'row', lg: 'row', sm: 'column' }}
                         spacing={6}
                     >
                         <Flex flex={1}>
                             <Image
+
                                 p={1}
                                 width={{ sm: "100%", md: "600px" }}
                                 height={{ sm: "auto", md: "500px" }}
@@ -129,19 +135,30 @@ const Product = () => {
                             spacing={4}
                         >
                             <Flex justifyContent="space-between" alignItems="center" width="100%">
-                                <Heading fontSize={'2xl'} fontFamily={'body'}>
+                                <Heading letterSpacing={1} fontSize={'3xl'} fontFamily={'body'}>
                                     {selectedProduct.productName}
                                 </Heading>
                                 {selectedProduct.productQuntity <= 3 && (
-
                                     <Text>
-                                        <Badge p={1} bg={'black'} color={'white'} h={'30px'} textAlign={'center'} >#In Stock {selectedProduct.productQuntity}</Badge>
+                                        <Badge p={1} bg={'black'} color={'white'} h={'30px'} textAlign={'center'} >
+                                            In Stock {selectedProduct.productQuntity}
+                                        </Badge>
                                     </Text>
                                 )}
-
-                                <Text fontWeight={700} color={'gray.800'}>
-                                    ${selectedProduct.productPrice}
-                                </Text>
+                                {selectedProduct.sale > 0 ? (
+                                    <>
+                                        <Text fontWeight={700} color={'red.500'}>
+                                            ${Discount(selectedProduct.productPrice, selectedProduct.sale).toFixed(2)}
+                                        </Text>
+                                        <Text as="s" fontWeight={700} color={'gray.800'}>
+                                            ${selectedProduct.productPrice}
+                                        </Text>
+                                    </>
+                                ) : (
+                                    <Text fontWeight={700} fontSize={'20px'} color={'gray.800'}>
+                                        ${selectedProduct.productPrice}
+                                    </Text>
+                                )}
                             </Flex>
                             <Flex flexDirection={'row'} gap={2} color={'gray.500'} alignItems="center">
                                 <BsFolder className='mt-1' size={22} />
@@ -152,24 +169,79 @@ const Product = () => {
                                 {selectedProduct.productDesc}
                             </Text>
                             <Divider orientation="horizontal" borderColor="black" />
+                            <Box>
+                                {
+                                    hasSale && (
+                                        <Badge bg={'red.500'} color={'white'} p={2}>
+                                            On Sale
+
+                                </Badge>
+                                    )
+                                }
+
+
+                            </Box>
                             <Stack spacing={4} width="100%">
                                 {selectedProduct.prodcutSize?.length > 0 && (
                                     <Stack spacing={1}>
                                         <Text fontWeight={'bold'} color={'gray.500'}>Sizes</Text>
-                                        <RadioGroup onChange={handleSizeChange}>
-                                            {selectedProduct.prodcutSize.map((product, i) => (
-                                                <Radio ml={2} key={i} value={product}>{product}</Radio>
-                                            ))}
+                                        <RadioGroup value={size} onChange={handleSizeChange}>
+                                            <Stack direction="row" spacing={4}>
+                                                {selectedProduct.prodcutSize.map((product, i) => (
+                                                    <Radio
+                                                        key={i}
+                                                        value={product}
+                                                        bg={size === product ? 'black' : 'gray.200'}
+                                                        color={size === product ? 'white' : 'black'}
+                                                        borderRadius="full"
+                                                        border="1px"
+                                                        borderColor="gray.300"
+                                                        _checked={{
+                                                            bg: 'black',
+                                                            color: 'white',
+                                                            borderColor: 'black',
+                                                        }}
+                                                        _hover={{
+                                                            bg: size === product ? 'black' : 'gray.300',
+                                                        }}
+                                                        _focus={{
+                                                            boxShadow: 'outline',
+                                                        }}
+                                                        p={2}
+                                                    >
+                                                        {product.toUpperCase()}
+                                                    </Radio>
+                                                ))}
+                                            </Stack>
                                         </RadioGroup>
                                     </Stack>
                                 )}
                                 {selectedProduct.productColors?.length > 0 && (
                                     <Stack spacing={1}>
                                         <Text fontWeight={'bold'} color={'gray.500'}>Colors</Text>
-                                        <RadioGroup onChange={handleColorChange}>
-                                            {selectedProduct.productColors.map((c, i) => (
-                                                <Radio ml={2} key={i} bg={c} value={c}></Radio>
-                                            ))}
+                                        <RadioGroup value={color} onChange={handleColorChange}>
+                                            <Stack direction="row" spacing={4}>
+                                                {selectedProduct.productColors.map((c, i) => (
+                                                    <Radio
+                                                        key={i}
+                                                        value={c}
+                                                        bg={c}
+                                                        border="1px"
+                                                        borderColor="gray.300"
+                                                        borderRadius="full"
+                                                        _checked={{
+                                                            boxShadow: '0 0 0 2px white, 0 0 0 4px black',
+                                                        }}
+                                                        _hover={{
+                                                            boxShadow: '0 0 0 2px white, 0 0 0 4px gray',
+                                                        }}
+                                                        _focus={{
+                                                            boxShadow: 'outline',
+                                                        }}
+                                                        size="lg"
+                                                    />
+                                                ))}
+                                            </Stack>
                                         </RadioGroup>
                                     </Stack>
                                 )}
@@ -185,9 +257,7 @@ const Product = () => {
                                             <option key={i + 1} value={i + 1}>{i + 1}</option>
                                         ))}
                                     </Select>
-
                                 </Flex>
-
                             </Stack>
                             <Button
                                 onClick={handleAddToCart}
@@ -207,12 +277,9 @@ const Product = () => {
                             </Button>
                         </Stack>
                     </Stack>
-
                 </Center>
-
             )}
-           
-
+            <RelatedProducts pid={pid} categoryId={category._id} />
         </>
     );
 };

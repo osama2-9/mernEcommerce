@@ -27,7 +27,7 @@ const useGetProduct = () => {
     getProducts();
   });
 
-  return { products, numberOfProduct };
+  return { products, numberOfProduct, refresh: getProducts() };
 };
 
 export default useGetProduct;

@@ -40,6 +40,10 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  sale: {
+    type: Number,
+    default: 0,
+  },
 });
 productSchema.statics.getRelatedProducts = async function (
   categoryID,

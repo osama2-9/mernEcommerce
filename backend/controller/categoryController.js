@@ -97,10 +97,46 @@ const getSpecificProduct = async (req, res) => {
     });
   }
 };
+const deleteCategory = async (req, res) => {
+  const { cid } = req.body;
+
+  if (!cid) {
+    return res.status(400).json({
+      error: "Category Id is required",
+    });
+  }
+
+  try {
+    const findCategory = await Category.findById(cid);
+
+    if (!findCategory) {
+      return res.status(404).json({
+        error: "No category found",
+      });
+    }
+
+    const findProductInCategory = await Product.find({ categoryID: cid });
+
+    await Promise.all([
+      ...findProductInCategory.map((p) => p.deleteOne()),
+      findCategory.deleteOne(),
+    ]);
+
+    return res.status(200).json({
+      message: "Category and associated products deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error:
+        "An error occurred while deleting the category and associated products",
+    });
+  }
+};
 
 export {
   createCategory,
   getAllCategory,
   getCategoriesWithProducts,
   getSpecificProduct,
+  deleteCategory,
 };

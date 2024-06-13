@@ -1,19 +1,18 @@
-/* eslint-disable no-unused-vars */
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import ProductContainer from "../components/ProductContainer";
-import Products from "../components/Products"; // Import the Products component
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Products from '../components/Products';
+import ProductContainer from '../components/ProductContainer';
+import FilterProducts from '../components/FilterProducts';
 
 const SpecificProducts = () => {
-    const { categoryName } = useParams();
+    const { categoryName, categoryId } = useParams();
     const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const getProductsInCategory = async () => {
             try {
-                const res = await fetch(`/api/category/products/${categoryName}`);
+                const res = await fetch(`/api/category/products/${categoryName}/${categoryId}`);
                 const data = await res.json();
                 if (res.status !== 200) {
                     toast.error(data.error || "Failed to fetch products");
@@ -21,25 +20,26 @@ const SpecificProducts = () => {
                     setProducts(data);
                 }
             } catch (error) {
-                toast.error("An error occurred while fetching products");
                 console.error(error);
-            } finally {
-                setLoading(false);
             }
         };
         getProductsInCategory();
-    }, [categoryName]);
+    }, [categoryName, categoryId]);
 
     return (
-        <ProductContainer mt={18}>
-            {loading ? (
-                <p>Loading...</p>
-            ) : (
-                products.map((product, index) => (
-                    <Products key={index} product={product} />
-                ))
-            )}
-        </ProductContainer>
+        <>
+            <FilterProducts cateogryId={products?.cateogryID} />
+
+            <ProductContainer top={'100'} position={'absolute'} left={280}>
+
+
+                {products.map((p) => (
+                    <Products key={p._id} product={p} />
+
+                ))}
+            </ProductContainer>
+
+        </>
     );
 };
 

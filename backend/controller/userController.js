@@ -38,6 +38,7 @@ const signup = async (req, res) => {
 
       res.status(201).json({
         uid: newUser._id,
+        phone: newUser.phone,
         fname: newUser.fname,
         lname: newUser.lname,
         email: newUser.email,
@@ -93,6 +94,8 @@ const login = async (req, res) => {
       fname: user.fname,
       lname: user.lname,
       email: user.email,
+      phone: user.phone,
+
       isAdmin: user.isAdmin,
     });
   } catch (error) {
@@ -361,6 +364,42 @@ const resetPassword = async (req, res) => {
   }
 };
 
+const updateUserData = async (req, res) => {
+  try {
+    const { uid, fname, lname, email, phone } = req.body;
+    if (!uid) {
+      return res.status(404).json({
+        error: "User not found",
+      });
+    }
+    const user = await User.findById(uid);
+    if (!user) {
+      return res.status(404).json({
+        error: "Error while get user data",
+      });
+    }
+
+    user.fname = fname || user.fname;
+    user.lname = lname || user.lname;
+    user.email = email || user.email;
+    user.phone = phone || user.phone;
+    user.isAdmin = user.isAdmin;
+
+    await user.save();
+    user.password = null;
+    return res.status(200).json({
+      uid: user._id,
+      fname: user.fname,
+      lname: user.lname,
+      email: user.email,
+      phone: user.phone,
+      isAdmin: user.isAdmin,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   signup,
   login,
@@ -373,4 +412,5 @@ export {
   deleteUser,
   forgetPassword,
   resetPassword,
+  updateUserData,
 };

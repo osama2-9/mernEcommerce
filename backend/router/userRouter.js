@@ -11,6 +11,7 @@ import {
   logout,
   resetPassword,
   signup,
+  updateUserData,
 } from "../controller/userController.js";
 import { isAdmin } from "../middleware/isAdmin.js";
 import { protectRoute } from "../middleware/protectRoute.js";
@@ -23,12 +24,13 @@ userRouter.post("/login", login);
 userRouter.post("/logout", logout);
 userRouter.get("/messages", isAdmin, getAllMessages);
 userRouter.post("/forget-password", forgetPassword);
+userRouter.post("/reset-password/:uid/:token", resetPassword);
 userRouter.post("/addAddress", protectRoute, addAddress);
 userRouter.put("/addpayment", protectRoute, addPayment);
+userRouter.put('/updateUserData', protectRoute ,updateUserData)
 userRouter.get("/getAddress", protectRoute, getUserAddress);
 userRouter.get("/user/", getUserById);
 userRouter.get("/get", isAdmin, protectRoute, getAllUsers);
 userRouter.delete("/delete", protectRoute, deleteUser);
-userRouter.post("/reset-password/:uid/:token", resetPassword);
 
 export default userRouter;

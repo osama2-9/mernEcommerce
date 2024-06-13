@@ -81,7 +81,7 @@ const makeAnOrder = async (req, res) => {
         <li>product Name : ${newOrder.productName}</li>
  <li>Quantity :  ${newOrder.quantity}</li>
 
-        <li>Total Price :${newOrder.price}</li>
+        <li>Total Price :$${newOrder.price}</li>
 
  <p><strong>Ordered At:</strong> ${newOrder.createdAt}</p>
 
@@ -173,7 +173,7 @@ const getTopSellProducts = async (req, res) => {
     const getProducts = await Product.find();
 
     const sortedProducts = getProducts.sort((a, b) => b.sells - a.sells);
-    const topProducts = sortedProducts.slice(0, 3);
+    const topProducts = sortedProducts.slice(0, 4);
 
     return res.status(200).json(topProducts);
   } catch (error) {

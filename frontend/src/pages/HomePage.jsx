@@ -16,10 +16,7 @@ import Categories from "../components/Categories";
 const HomePage = () => {
     const { topSell } = useGetTopSells()
     const [product, setProduct] = useState([])
-
-
-
-
+    const [onSale, setOnSale] = useState([])
     useEffect(() => {
         const getProducts = async () => {
             try {
@@ -38,6 +35,25 @@ const HomePage = () => {
         }
         getProducts()
     }, [])
+
+
+    useEffect(() => {
+        const getOnSale = async () => {
+            try {
+                const res = await fetch('/api/product/on-sale');
+                const data = await res.json();
+                setOnSale(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        getOnSale();
+    }, []);
+
+
+
+
     return (
         <div className="home">
             <Box>
@@ -91,7 +107,7 @@ const HomePage = () => {
 
                 <ProductContainer >
                     {
-                        product.slice(0, 8).map((product) => (
+                        product.slice(0, 12).map((product) => (
                             <Products key={product._id} product={product} />
                         ))
                     }
@@ -150,23 +166,21 @@ const HomePage = () => {
 
                 </Flex>
                 <Flex id="" justifyContent={'center'} me={{
-                    lg: "100px",
+                    lg: "30px",
                     sm: "250"
-                }} mb={'10px'}>
-                    <Text mb={'10px'} fontSize={'30px'} fontWeight={'bold'} color={'gray.400'}>New Arrivals</Text>
+                }} mb={'10px'}
+
+                >
+                    <Text mb={'10px'} fontSize={'40px'} fontWeight={'bold'} color={'black'}>New Arrivals</Text>
                 </Flex>
 
                 <ProductContainer>
 
                     {
-                        product.slice(-3).map((p) => (
+                        product.slice(-4).map((p) => (
                             <Products key={p._id} product={p} />
                         ))
                     }
-
-
-
-
                 </ProductContainer>
 
 
@@ -190,38 +204,41 @@ const HomePage = () => {
                             <Image className="rounded-lg" h={212} w={300} src="w2.jpg" />
                         </Box>
                     </Flex>
-
-
-
                 </Flex>
-
-
                 <Flex id="" justifyContent={'center'} me={{
-                    lg: "100px",
+                    lg: "30px",
                     sm: "250"
                 }} mt={'20px'}>
-                    <Text mb={'10px'} fontSize={'30px'} fontWeight={'bold'} color={'gray.400'}>Best Sells</Text>
+                    <Text mb={'10px'} fontSize={'40px'} fontWeight={'bold'} color={'black'}>Best Sells</Text>
                 </Flex>
 
                 <ProductContainer>
-
                     {
                         topSell.map((p) => (
                             <Products key={p._id} product={p} />
                         ))
                     }
 
-
-
-
                 </ProductContainer>
 
 
 
+                <Flex id="" mb={5} justifyContent={'center'} me={{
+                    lg: "30px",
+                    sm: "250"
+                }} mt={'20px'}>
+                    <Text mb={'10px'} fontSize={'40px'} fontWeight={'bold'} color={'black'}>On Sale</Text>
+                </Flex>
 
 
+                <ProductContainer>
+                    {
+                        onSale.slice(0, 4).map((p) => (
+                            <Products key={p._id} product={p} />
+                        ))
+                    }
 
-
+                </ProductContainer>
 
                 {/* FOTTER */}
                 <Box w={{ base: "750px", lg: "1519px", sm: "500px" }}

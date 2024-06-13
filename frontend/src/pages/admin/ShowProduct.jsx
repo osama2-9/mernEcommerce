@@ -4,26 +4,87 @@ import useGetProduct from "../../hooks/useGetProduct";
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { MdEditNote } from "react-icons/md";
+import { toast } from "react-toastify";
 
 const ShowProduct = () => {
-    const { products } = useGetProduct();
+    const { products, refresh } = useGetProduct();
+    const [inputs, setInputs] = useState({
+
+    })
+
+
+    const deleteProducts = async (pid) => {
+        try {
+            const res = await fetch('/api/product/delete', {
+                method: "DELETE",
+                headers: {
+                    'content-type': "application/json"
+                },
+                body: JSON.stringify({
+                    pid: pid
+                })
+            })
+
+            const data = await res.json();
+            if (data.error) {
+                toast.error(data.error)
+            } else {
+                refresh()
+                toast.success(data.message)
+            }
+
+
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
+    const updateProductData = async (pid) => {
+        try {
+            const res = await fetch('/api/product/update', {
+                method: "PUT",
+                headers: {
+                    'content-type': "application/json"
+                },
+                body: JSON.stringify({
+                    ...inputs,
+                    pid: pid
+                })
+            })
+            const data = await res.json();
+            if (data.error) {
+                toast.error(data.error)
+            } else {
+                refresh()
+                toast.success(data.message);
+            }
+
+        } catch (error) {
+            console.log(error);
+
+        }
+
+    }
+
+
 
     const [currentPage, setCurrentPage] = useState(1);
     const [productsPerPage, setProductsPerPage] = useState(6);
-    
+
     const getstartIndex = () => {
         return (currentPage - 1) * productsPerPage;
     };
-    
+
     const getendIndex = () => {
         return Math.min(currentPage * productsPerPage, products.length);
     };
-    
+
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
-    
-    if(currentPage === 0){
+
+    if (currentPage === 0) {
         setCurrentPage(1)
     }
     const displayedProducts = products.slice(getstartIndex(), getendIndex());
@@ -32,7 +93,7 @@ const ShowProduct = () => {
         <Box position="absolute" top="80px" left="300px">
             {
                 products.length > productsPerPage && (
-                    <Box  mb={'30px'}>
+                    <Box mb={'30px'}>
                         <Button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
                             Previous
                         </Button>
@@ -42,7 +103,7 @@ const ShowProduct = () => {
                     </Box>
                 )
             }
-            
+
             <TableContainer>
                 <Table variant="striped" w={'1200px'}>
                     <TableCaption>Product Inventory (Page {currentPage})</TableCaption>
@@ -73,10 +134,10 @@ const ShowProduct = () => {
                                 <Td>
                                     <Flex className="" gap={3}>
                                         <Box>
-                                            <MdEditNote className="text-blue-600" size={30}/>
+                                            <MdEditNote className="text-blue-600" size={30} />
                                         </Box>
-                                        <Box>
-                                            <MdDelete className="text-red-500" size={30}/>
+                                        <Box onClick={() => deleteProducts(product._id)}>
+                                            <MdDelete className="text-red-500" size={30} />
                                         </Box>
 
                                     </Flex>
@@ -87,7 +148,7 @@ const ShowProduct = () => {
                 </Table>
             </TableContainer>
 
-           
+
         </Box>
     );
 };
