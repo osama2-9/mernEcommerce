@@ -160,17 +160,27 @@ const FilterProducts = ({ categoryId, products, setFilterdProducts }) => {
                     <Text fontSize={'18px'} fontWeight={'500'} mb={2}>
                         On Sale
                     </Text>
-                    <Switch isChecked={onClickSale} onChange={handleClickOnSale} size="md" />
+                    <Switch disabled={onSale.length === 0 ? true : false} isChecked={onClickSale} onChange={handleClickOnSale} size="md" />
+                    {onSale.length === 0 && (
+                        <Text mt={2} color={'red.500'} fontSize={'14px'}>Theres No Sales </Text>
+
+                    )}
                 </Box>
 
-                <Box p={4} rounded={'md'} bg={'gray.100'}>
+                <Box p={4}  rounded={'md'} bg={'gray.100'}>
                     <Text fontSize={'18px'} fontWeight={'500'} mb={2}>No Less Quantity</Text>
                     <Switch
+                    disabled={noLessQuantity.length < 10 ?false :true }
+                    
                         isChecked={onClickNLQ}
                         colorScheme="teal"
                         size="md"
                         onChange={handleToggleNoLessQuantity}
                     />
+                    {noLessQuantity.length === 0 && (
+                        <Text mt={2} color={'red.500'} fontSize={'14px'}>Theres No Sales </Text>
+
+                    )}
                 </Box>
             </Stack>
         </Box>
