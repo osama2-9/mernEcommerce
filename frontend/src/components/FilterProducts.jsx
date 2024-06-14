@@ -1,53 +1,68 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { Box, IconButton, List, ListItem, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Stack, Text, Switch } from "@chakra-ui/react";
-import { useState } from "react";
+import { Box, IconButton, List, ListItem, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Stack, Text, Switch, Tooltip } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
+import PropTypes from 'prop-types';
 
-const FilterProducts = ({ cateogryId }) => {
+const FilterProducts = ({ categoryId, products, setFilterdProducts }) => {
     const [showMoreColors, setShowMoreColors] = useState(false);
     const [selectedSizes, setSelectedSizes] = useState([]);
-    const [price, setPrice] = useState(50);
-    const [onSale, setOnSale] = useState(false);
-    const [noLessQuantity, setNoLessQuantity] = useState(false);
+    const [selectedColors, setSelectedColors] = useState([]);
+
+    const [onSale, setOnSale] = useState([]);
+    const [onClickSale, setOnClickSale] = useState(false)
+    const [onClickNLQ, setOnClickNLQ] = useState(false)
+    const [noLessQuantity, setNoLessQuantity] = useState(true);
+    const [sizes, setSizes] = useState([]);
+    const [colors, setColors] = useState([]);
+
+
 
     const handleToggleColors = () => {
         setShowMoreColors(!showMoreColors);
     };
 
-    // const filter = async () => {
-    //     try {
-    //         const res = await fetch('/api/product/filter/products')
+    useEffect(() => {
+        const filter = async () => {
+            try {
+                const res = await fetch(`/api/product/filter/products/${categoryId}`);
+                const data = await res.json();
+                setSizes(data.sizes);
+                setColors(data.colors);
+                setOnSale(data.onSale);
+                setNoLessQuantity(data.quantity);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        filter();
+    }, [categoryId, products]);
 
-    //     } catch (error) {
 
-    //     }
-
-    // }
 
     const handleSizeClick = (size) => {
-        setSelectedSizes((prevSizes) =>
-            prevSizes.includes(size)
-                ? prevSizes.filter((s) => s !== size)
-                : [...prevSizes, size]
-        );
+        setSelectedSizes(size);
+        const filteredProductsBySize = products.filter((p) => p.prodcutSize.includes(size));
+        setFilterdProducts(filteredProductsBySize);
     };
 
-    let sizes
-
-    const handlePriceChange = (value) => {
-        setPrice(value);
+    const handleColorClick = (color) => {
+        setSelectedColors(color);
+        const filteredProductsByColor = products.filter((p) => p.productColors.includes(color));
+        setFilterdProducts(filteredProductsByColor);
     };
 
-    const handleToggleOnSale = () => {
-        setOnSale(!onSale);
+
+    const handleClickOnSale = () => {
+        setOnClickSale(onClickSale === false ? true : false)
+        setFilterdProducts(onClickSale === true ? products : onSale);
     };
 
     const handleToggleNoLessQuantity = () => {
-        setNoLessQuantity(!noLessQuantity);
+        setOnClickNLQ(onClickNLQ === false ? true : false);
+        setFilterdProducts(onClickNLQ === true ? products : noLessQuantity)
     };
-
-
 
     return (
         <Box
@@ -65,21 +80,31 @@ const FilterProducts = ({ cateogryId }) => {
             <Text ml={2} fontSize={'25px'} fontWeight={'600'} mt={2}>Filter Products</Text>
             <Stack spacing={6} mt={4}>
                 <Box p={4} rounded={'md'} bg={'gray.100'} position={'relative'}>
-                    <IconButton
-                        icon={<FaPlus />}
-                        size={'sm'}
-                        position={'absolute'}
-                        top={2}
-                        right={2}
-                        onClick={handleToggleColors}
-                        aria-label={'Toggle colors'}
-                    />
+                    {colors.length > 4 && (
+                        <IconButton
+                            icon={<FaPlus />}
+                            size={'sm'}
+                            position={'absolute'}
+                            top={2}
+                            right={2}
+                            onClick={handleToggleColors}
+                            aria-label={'Toggle colors'}
+                        />
+                    )}
                     <Text fontSize={'18px'} fontWeight={'500'} mb={2}>Colors</Text>
                     <List display={'flex'} justifyContent={'space-evenly'} flexWrap={'nowrap'} mb={2}>
-                        <ListItem bg={'purple'} w={'30px'} rounded={'full'} h={'30px'} transition={'opacity 0.3s ease-in-out'}></ListItem>
-                        <ListItem bg={'green'} w={'30px'} rounded={'full'} h={'30px'} transition={'opacity 0.3s ease-in-out'}></ListItem>
-                        <ListItem bg={'black'} w={'30px'} rounded={'full'} h={'30px'} transition={'opacity 0.3s ease-in-out'}></ListItem>
-                        <ListItem bg={'pink'} w={'30px'} rounded={'full'} h={'30px'} transition={'opacity 0.3s ease-in-out'}></ListItem>
+                        {colors.slice(0, 4).map((color, index) => (
+                            <ListItem
+                                key={index}
+                                bg={color}
+                                w={'30px'}
+                                rounded={'full'}
+                                h={'30px'}
+                                transition={'opacity 0.3s ease-in-out'}
+                                onClick={() => handleColorClick(color)}
+                                cursor={'pointer'}
+                            ></ListItem>
+                        ))}
                     </List>
                     <List
                         display={'flex'}
@@ -90,17 +115,24 @@ const FilterProducts = ({ cateogryId }) => {
                         overflow={'hidden'}
                         transition={'opacity 0.3s ease-in-out, max-height 0.3s ease-in-out'}
                     >
-                        <ListItem bg={'blue'} w={'30px'} rounded={'full'} h={'30px'}></ListItem>
-                        <ListItem bg={'yellow'} w={'30px'} rounded={'full'} h={'30px'}></ListItem>
-                        <ListItem bg={'red'} w={'30px'} rounded={'full'} h={'30px'}></ListItem>
-                        <ListItem bg={'orange'} w={'30px'} rounded={'full'} h={'30px'}></ListItem>
+                        {colors.slice(4).map((color, index) => (
+                            <ListItem
+                                key={index}
+                                bg={color}
+                                w={'30px'}
+                                rounded={'full'}
+                                h={'30px'}
+                                onClick={() => handleColorClick(color)}
+                                cursor={'pointer'}
+                            ></ListItem>
+                        ))}
                     </List>
                 </Box>
 
                 <Box p={4} rounded={'md'} bg={'gray.100'}>
                     <Text fontSize={'18px'} fontWeight={'500'} mb={2}>Sizes</Text>
                     <List display={'flex'} justifyContent={'space-evenly'} flexWrap={'wrap'}>
-                        {sizes?.map((size) => (
+                        {sizes.map((size) => (
                             <ListItem
                                 key={size}
                                 bg={selectedSizes.includes(size) ? 'blue.500' : 'gray.200'}
@@ -116,47 +148,27 @@ const FilterProducts = ({ cateogryId }) => {
                                 transition={'background-color 0.3s ease-in-out'}
                                 m={1}
                             >
-                                {size}
+                                {size.toUpperCase()}
                             </ListItem>
                         ))}
                     </List>
                 </Box>
 
-                <Box p={4} rounded={'md'} bg={'gray.100'}>
-                    <Text fontSize={'18px'} fontWeight={'500'}>Price Range</Text>
-                    <Slider
-                        aria-label='price-slider'
-                        defaultValue={50}
-                        min={0}
-                        max={100}
-                        onChange={handlePriceChange}
-                        value={price}
-                        mt={4}
-                    >
-                        <SliderTrack>
-                            <SliderFilledTrack />
-                        </SliderTrack>
-                        <SliderThumb />
-                    </Slider>
-                    <Text ml={2} mt={2}>${price}</Text>
-                </Box>
+
 
                 <Box p={4} rounded={'md'} bg={'gray.100'}>
-                    <Text fontSize={'18px'} fontWeight={'500'} mb={2}>On Sale</Text>
-                    <Switch
-                        colorScheme="teal"
-                        size="md"
-                        isChecked={onSale}
-                        onChange={handleToggleOnSale}
-                    />
+                    <Text fontSize={'18px'} fontWeight={'500'} mb={2}>
+                        On Sale
+                    </Text>
+                    <Switch isChecked={onClickSale} onChange={handleClickOnSale} size="md" />
                 </Box>
 
                 <Box p={4} rounded={'md'} bg={'gray.100'}>
                     <Text fontSize={'18px'} fontWeight={'500'} mb={2}>No Less Quantity</Text>
                     <Switch
+                        isChecked={onClickNLQ}
                         colorScheme="teal"
                         size="md"
-                        isChecked={noLessQuantity}
                         onChange={handleToggleNoLessQuantity}
                     />
                 </Box>
@@ -165,4 +177,12 @@ const FilterProducts = ({ cateogryId }) => {
     );
 };
 
+FilterProducts.propTypes = {
+    categoryId: PropTypes.string.isRequired,
+    products: PropTypes.array.isRequired,
+    setFilterdProducts: PropTypes.func.isRequired,
+};
+
 export default FilterProducts;
+
+

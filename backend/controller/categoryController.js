@@ -60,6 +60,7 @@ const getCategoriesWithProducts = async (req, res) => {
         const selectedProduct = products[0];
 
         results.push({
+          cid: category._id,
           categoryName: category.categoryName,
           productImg: selectedProduct.productImg,
         });

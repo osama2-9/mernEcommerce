@@ -296,7 +296,7 @@ const updateProductData = async (req, res) => {
 };
 
 const getFilterdProducts = async (req, res) => {
-  const { cid } = req.body;
+  const { cid } = req.params;
 
   if (!cid) {
     return res.status(400).json({
@@ -339,7 +339,7 @@ const getFilterdProducts = async (req, res) => {
     }
   });
   products.forEach((product) => {
-    prices.push(product.productPrice, product._id);
+    prices.push(product.productPrice);
   });
   products.forEach((product) => {
     if (product.productQuntity >= 10) {

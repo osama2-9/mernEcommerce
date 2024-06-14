@@ -38,7 +38,7 @@ const Categories = () => {
                 ))
             ) : (
                 categories.map((category, i) => (
-                    <Link key={i} to={`/products/${category.categoryName}/${category?._id}`}>
+                    <Link key={i} to={`/products/${category.categoryName}/${category?.cid}`}>
                         <Box textAlign="center">
                             <Img src={category.productImg} bg={'gray.50'} p={2} rounded={'full'} h={'80px'} width="80px" />
                             <Text mt={2}>{category.categoryName}</Text>

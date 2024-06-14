@@ -27,6 +27,6 @@ productRoute.get("/search/:query", search);
 productRoute.get("/related/:categoryID/:pid", getRelatedProducts);
 productRoute.delete("/delete", isAdmin, protectRoute, deleteProduct);
 productRoute.put("/update", isAdmin, protectRoute, updateProductData);
-productRoute.get("/filter/products", getFilterdProducts);
+productRoute.get("/filter/products/:cid", getFilterdProducts);
 
 export default productRoute;

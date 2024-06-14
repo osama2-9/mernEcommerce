@@ -8,6 +8,7 @@ import FilterProducts from '../components/FilterProducts';
 const SpecificProducts = () => {
     const { categoryName, categoryId } = useParams();
     const [products, setProducts] = useState([]);
+    const [filteredProducts, setFilterdProducts] = useState([])
 
     useEffect(() => {
         const getProductsInCategory = async () => {
@@ -18,7 +19,10 @@ const SpecificProducts = () => {
                     toast.error(data.error || "Failed to fetch products");
                 } else {
                     setProducts(data);
+                    setFilterdProducts(data)
                 }
+
+
             } catch (error) {
                 console.error(error);
             }
@@ -26,19 +30,18 @@ const SpecificProducts = () => {
         getProductsInCategory();
     }, [categoryName, categoryId]);
 
+    const updateData = (filtered) => {
+        setFilterdProducts(filtered)
+    }
+
     return (
         <>
-            <FilterProducts cateogryId={products?.cateogryID} />
-
+            <FilterProducts categoryId={categoryId} products={products} setFilterdProducts={updateData} />
             <ProductContainer top={'100'} position={'absolute'} left={280}>
-
-
-                {products.map((p) => (
+                {filteredProducts.map((p) => (
                     <Products key={p._id} product={p} />
-
                 ))}
             </ProductContainer>
-
         </>
     );
 };
