@@ -8,8 +8,7 @@ import productRoute from "./router/productRoute.js";
 import { v2 as cloudinary } from "cloudinary";
 import orderRouter from "./router/orderRouter.js";
 import cartRouter from "./router/cartRouter.js";
-import Product from "./model/Product.js";
-import Category from "./model/Category.js";
+
 
 
 dotenv.config();
