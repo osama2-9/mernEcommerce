@@ -14,6 +14,7 @@ const ShowProduct = () => {
     const [productsPerPage] = useState(6);
     const [selectedProduct, setSelectedProduct] = useState({});
     const [inputs, setInputs] = useState({});
+    const [searchTerm, setSearchTerm] = useState("");
 
     const deleteProducts = async (pid) => {
         try {
@@ -50,13 +51,13 @@ const ShowProduct = () => {
                 toast.error(data.error);
             } else {
                 toast.success(data.message);
+                refresh();
                 onClose();
             }
         } catch (error) {
             console.log(error);
         }
     }
-
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -80,21 +81,35 @@ const ShowProduct = () => {
 
     if (currentPage === 0) setCurrentPage(1);
 
-    const displayedProducts = products.slice(getStartIndex(), getEndIndex());
+    const filteredProducts = products.filter(product =>
+        product.productName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const displayedProducts = filteredProducts.slice(getStartIndex(), getEndIndex());
 
     return (
         <>
             <Box position="absolute" top="80px" left="300px">
-                {products.length > productsPerPage && (
-                    <Box mb="30px">
-                        <Button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-                            Previous
-                        </Button>
-                        <Button bg="gray.400" ml={3} onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= Math.ceil(products.length / productsPerPage)}>
-                            Next
-                        </Button>
-                    </Box>
-                )}
+                <Flex mb={4}>
+                    <Input
+                        type="text"
+                        placeholder="Search by product name"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        border={'2px solid teal'}
+                        mr={3}
+                    />
+                    {filteredProducts.length > productsPerPage && (
+                        <>
+                            <Button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+                                Previous
+                            </Button>
+                            <Button bg="gray.400" ml={3} onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= Math.ceil(filteredProducts.length / productsPerPage)}>
+                                Next
+                            </Button>
+                        </>
+                    )}
+                </Flex>
                 <TableContainer>
                     <Table variant="striped" w="1200px">
                         <TableCaption>Product Inventory (Page {currentPage})</TableCaption>

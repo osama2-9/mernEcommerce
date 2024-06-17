@@ -12,6 +12,7 @@ import { toast } from 'react-toastify'
 import { useEffect, useState } from "react";
 import useGetTopSells from "../hooks/useGetTopSells";
 import Categories from "../components/Categories";
+import Slider from "../components/Slider";
 
 const HomePage = () => {
     const { topSell } = useGetTopSells()
@@ -62,21 +63,7 @@ const HomePage = () => {
 
 
 
-                <Box className="shadow-md">
-                    <Text position={'absolute'} fontWeight={'800'} width={'250px'} top={'40'} left={{
-                        base: "20",
-                        lg: "40"
-                    }} fontSize={'40'} fontFamily={"sans-serif"}  > Summer Collection</Text>
-                    <Text position={'absolute'} top={290} left={{
-                        base: "20",
-                        lg: "40"
-                    }} >Start explore our collections</Text>
-
-                    <Image src="/hero.avif" height={500} width={{
-                        lg: 1535,
-                        sm: 500
-                    }} />
-                </Box>
+                <Slider />
 
             </Box>
             <Box alignItems={'center'} me={{

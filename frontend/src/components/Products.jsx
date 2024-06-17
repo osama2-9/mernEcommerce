@@ -36,7 +36,6 @@ const Products = ({ product }) => {
                                 {product.productName.length >= 18 ? product.productName.slice(0, 18).concat('...') : product.productName}
                             </Text>
                         </Box>
-                    </Link>
                     <Flex mb={2} justifyContent="space-around" flexDir="column" textAlign="center">
                         <Flex mt={1} gap={4} flexDir={'row'} justifyContent="center" alignItems="center">
                             {hasSale && (
@@ -68,6 +67,7 @@ const Products = ({ product }) => {
                             </Button>
                         </Center>
                     </Flex>
+                    </Link>
                 </Box>
             )}
         </>

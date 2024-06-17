@@ -37,7 +37,6 @@ const Orders = () => {
     const [orderStatus, setOrderStatus] = useState('Pending');
     const [searchTerm, setSearchTerm] = useState("");
 
-
     const handleOrderStatusChange = (e) => {
         setOrderStatus(e.target.value);
     };
@@ -46,7 +45,6 @@ const Orders = () => {
         onOpen();
         setOrder({ orderId: order._id });
     };
-
 
     const handleUpdateStatus = async () => {
         try {
@@ -73,7 +71,6 @@ const Orders = () => {
             toast.error("An error occurred while updating status. Please try again later.");
         }
     };
-
 
     const handleDeleteOrder = async (id) => {
         try {
@@ -122,7 +119,15 @@ const Orders = () => {
     const [itemPrePage, setItemPerPage] = useState(7);
     const indexOfLastItem = curruntPage * itemPrePage;
     const indexOFFirstItem = indexOfLastItem - itemPrePage;
-    const curruntOrders = orders.slice(indexOFFirstItem, indexOfLastItem);
+
+    // Filter and sort orders based on the search term and date
+    const filteredOrders = orders
+        .filter(order =>
+            order.email.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    const curruntOrders = filteredOrders.slice(indexOFFirstItem, indexOfLastItem);
 
     const paginate = (pageNumber) => setCurruntPage(pageNumber);
 
@@ -208,14 +213,13 @@ const Orders = () => {
 
             <Flex justifyContent={'center'} mt={4}>
                 <Box className="pagination">
-                    <Button onClick={() => paginate(curruntPage - 1)}>Previous</Button>
-                    {orders.length > 0 &&
-                        Array.from({ length: Math.ceil(orders.length / itemPrePage) }, (_, i) => (
-                            <Button ml={2} key={i + 1} onClick={() => paginate(i + 1)}>
-                                {i + 1}
-                            </Button>
-                        ))}
-                    <Button onClick={() => paginate(curruntPage + 1)}>Next</Button>
+                    <Button onClick={() => paginate(curruntPage - 1)} disabled={curruntPage === 1}>Previous</Button>
+                    {Array.from({ length: Math.ceil(filteredOrders.length / itemPrePage) }, (_, i) => (
+                        <Button ml={2} key={i + 1} onClick={() => paginate(i + 1)}>
+                            {i + 1}
+                        </Button>
+                    ))}
+                    <Button onClick={() => paginate(curruntPage + 1)} disabled={curruntPage === Math.ceil(filteredOrders.length / itemPrePage)}>Next</Button>
                 </Box>
             </Flex>
         </Box>

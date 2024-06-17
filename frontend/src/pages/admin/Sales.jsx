@@ -36,6 +36,7 @@ const Sales = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const productsPerPage = 6;
+    const [searchTerm, setSearchTerm] = useState("");
 
     const handleDiscountChange = (e) => {
         setSelectedDiscount(parseFloat(e.target.value));
@@ -62,15 +63,20 @@ const Sales = () => {
         onOpen();
     };
 
-    const getstartIndex = () => {
+    const getStartIndex = () => {
         return (currentPage - 1) * productsPerPage;
     };
 
-    const getendIndex = () => {
+    const getEndIndex = () => {
         return Math.min(currentPage * productsPerPage, products.length);
     };
 
-    const displayedProducts = products.slice(getstartIndex(), getendIndex());
+    // Filter products based on the search term
+    const filteredProducts = products.filter(product =>
+        product.productName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const displayedProducts = filteredProducts.slice(getStartIndex(), getEndIndex());
 
     const createSale = async () => {
         try {
@@ -101,16 +107,26 @@ const Sales = () => {
     return (
         <>
             <Box position="absolute" top="80px" left="300px">
-                {products.length > productsPerPage && (
-                    <Box mb={'30px'}>
-                        <Button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-                            Previous
-                        </Button>
-                        <Button bg={'gray.400'} ml={3} onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= Math.ceil(products.length / productsPerPage)}>
-                            Next
-                        </Button>
-                    </Box>
-                )}
+                <Flex mb={4}>
+                    <Input
+                        type="text"
+                        placeholder="Search by product name"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        border={'2px solid teal'}
+                        mr={3}
+                    />
+                    {filteredProducts.length > productsPerPage && (
+                        <>
+                            <Button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+                                Previous
+                            </Button>
+                            <Button bg={'gray.400'} ml={3} onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= Math.ceil(filteredProducts.length / productsPerPage)}>
+                                Next
+                            </Button>
+                        </>
+                    )}
+                </Flex>
 
                 <TableContainer>
                     <Table variant="striped" w={'1200px'}>

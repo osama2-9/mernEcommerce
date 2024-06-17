@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import countries from 'world-countries';
-import { Box, Button, FormControl, FormLabel, Input, useColorModeValue } from '@chakra-ui/react';
-import USidebar from '../components/USidebar';
+import { Box, Button, FormControl, FormLabel, Input, useColorModeValue, Text, Heading } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import { useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom';
@@ -27,6 +26,18 @@ const Address = () => {
     const [street, setStreet] = useState('');
     const [apartmentFloor, setApartmentFloor] = useState('');
     const [apartmentNumber, setApartmentNumber] = useState('');
+    const [showUpdateForm, setShowUpdateForm] = useState(false);
+
+    useEffect(() => {
+        if (logged && logged.address) {
+            setSelectedAddressName(addressNameOptions.find(option => option.value === logged.address.addressName));
+            setSelectedCountry(countryOptions.find(option => option.label === logged.address.country));
+            setCity(logged.address.city);
+            setStreet(logged.address.street);
+            setApartmentFloor(logged.address.apartmentFloor);
+            setApartmentNumber(logged.address.apartmentNumber);
+        }
+    }, [logged]);
 
     const handleCountryChange = (selectedOption) => {
         setSelectedCountry(selectedOption);
@@ -56,11 +67,24 @@ const Address = () => {
             });
 
             const data = await res.json();
+            const updatedUser = {
+                ...logged,
+                address: {
+                    addressName: selectedAddressName ? selectedAddressName.value : null,
+                    country: selectedCountry ? selectedCountry.label : null,
+                    city: city,
+                    street: street,
+                    apartmentFloor: apartmentFloor,
+                    apartmentNumber: apartmentNumber
+                }
+            };
 
             if (data.error) {
                 toast.error(data.error);
             } else {
+                localStorage.setItem('user', JSON.stringify(updatedUser));
                 toast.success("Your address has been updated");
+                setShowUpdateForm(false);
             }
         } catch (error) {
             console.log(error);
@@ -69,17 +93,27 @@ const Address = () => {
     };
 
     return (
-        <>
-            <USidebar />
-            <Box
-                mt={'30px'} ml={'30px'}
-                bg={useColorModeValue('white', 'gray.800')}
-                p={8}
-                borderRadius="lg"
-                shadow="md"
-                maxWidth="600px"
-                mx="auto"
-            >
+        <Box
+            bg={useColorModeValue('white', 'gray.800')}
+            p={8}
+            borderRadius="lg"
+            shadow="md"
+        >
+            {!showUpdateForm && logged && logged.address && (
+                <>
+                    <Heading as="h2" size="lg" mb={4}>Your Address</Heading>
+                    <Text><strong>Address Name:</strong> {logged.address.addressName}</Text>
+                    <Text><strong>Country:</strong> {logged.address.country}</Text>
+                    <Text><strong>City:</strong> {logged.address.city}</Text>
+                    <Text><strong>Street:</strong> {logged.address.street}</Text>
+                    <Text><strong>Apartment Floor:</strong> {logged.address.apartmentFloor || 'N/A'}</Text>
+                    <Text><strong>Apartment Number:</strong> {logged.address.apartmentNumber || 'N/A'}</Text>
+                    <Button mt={4} colorScheme="teal" onClick={() => setShowUpdateForm(true)}>
+                        Update Address
+                    </Button>
+                </>
+            )}
+            {showUpdateForm && (
                 <form onSubmit={handleSubmit}>
                     <FormControl mb={4}>
                         <FormLabel>Address Name</FormLabel>
@@ -138,9 +172,12 @@ const Address = () => {
                     <Button type="submit" colorScheme="teal">
                         Submit
                     </Button>
+                    <Button ml={4} onClick={() => setShowUpdateForm(false)}>
+                        Cancel
+                    </Button>
                 </form>
-            </Box>
-        </>
+            )}
+        </Box>
     );
 };
 
