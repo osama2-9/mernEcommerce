@@ -43,7 +43,68 @@ const newMessaeg = async (title, description) => {
     console.log(error);
   }
 };
+const sendDeletionEmail = async (deletedOrders) => {
+  try {
+    const ordersTable = `
+      <table style="border-collapse: collapse; width: 100%;">
+        <thead>
+          <tr>
+            <th style="border: 1px solid #e2e8f0; padding: 8px; text-align: left; background-color: #f1f5f9;">Product Name</th>
+            <th style="border: 1px solid #e2e8f0; padding: 8px; text-align: left; background-color: #f1f5f9;">Order ID</th>
+            <th style="border: 1px solid #e2e8f0; padding: 8px; text-align: left; background-color: #f1f5f9;">Product ID</th>
+            <th style="border: 1px solid #e2e8f0; padding: 8px; text-align: left; background-color: #f1f5f9;">Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${deletedOrders
+            .map(
+              (order) => `
+            <tr>
+              <td style="border: 1px solid #e2e8f0; padding: 8px;">${order.productName}</td>
+              <td style="border: 1px solid #e2e8f0; padding: 8px;">${order._id}</td>
+              <td style="border: 1px solid #e2e8f0; padding: 8px;">${order.pid}</td>
+              <td style="border: 1px solid #e2e8f0; padding: 8px;">${order.quantity}</td>
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      </table>
+      <br/>
+      <h1>Your Account has been Deleted, Goodbye 👋</h1>
+    `;
 
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "osamasarraj67@gmail.com",
+        pass: "ksyl ihhi cjxm sjkb",
+      },
+    });
+
+    var mailOptions = {
+      from: "osamasarraj67@gmail.com",
+      to: deletedOrders[0].email,
+      subject: "User Deletion Notification",
+      html: `
+        <h1>User Deletion Notification</h1>
+        <br/>
+        <p>The following orders have been deleted:</p>
+        ${ordersTable}
+      `,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 const getAllMessages = async (req, res) => {
   try {
     const messages = await Message.find().sort({ createdAt: -1 });
@@ -57,4 +118,5 @@ const getAllMessages = async (req, res) => {
     console.log(error);
   }
 };
-export { newMessaeg, getAllMessages };
+
+export { newMessaeg, getAllMessages, sendDeletionEmail };

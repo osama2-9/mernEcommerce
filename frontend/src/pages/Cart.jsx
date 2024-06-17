@@ -1,46 +1,49 @@
-import { Box, Button, Flex, Image, Select, Stack, Text, Radio, RadioGroup } from '@chakra-ui/react';
+import { Box, Button, Flex, Image, Select, Stack, Text, Radio, RadioGroup, Link } from '@chakra-ui/react';
 import { useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom';
-import { useParams } from 'react-router-dom';
+import { useParams, Link as RouterLink } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 
 const Cart = () => {
-    const logged = useRecoilValue(userAtom)
-    const [cartItems, setCartItems] = useState([])
+    const logged = useRecoilValue(userAtom);
+    console.log(logged);
+    const [cartItems, setCartItems] = useState([]);
     const [paymentMethod, setPaymentMethod] = useState('');
-    const { uid } = useParams()
+    const { uid } = useParams();
 
     useEffect(() => {
         const getCartItems = async () => {
             try {
                 const res = await fetch(`/api/cart/cart/${uid}`);
-                const data = await res.json()
+                const data = await res.json();
                 if (data.error) {
-                    toast.error(data.error)
+                    toast.error(data.error);
                 }
                 setCartItems(data);
             } catch (error) {
                 console.log(error);
             }
-        }
-
-        getCartItems()
-    }, [uid])
+        };
 
 
-    const subtotal = cartItems?.reduce((total, item) => total + item.price * item.quantity, 0)
+        getCartItems();
+    }, [uid]);
+
+    const subtotal = cartItems?.reduce((total, item) => total + item.price * item.quantity, 0);
     const shipping = 5;
     const totalPrice = subtotal + shipping;
 
     const handleCheckout = async () => {
+
+
         try {
             const res = await fetch('/api/order/order', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ uid: logged.uid, paymentMethod: paymentMethod })
+                body: JSON.stringify({ uid: logged.uid, paymentMethod: paymentMethod }),
             });
 
             const data = await res.json();
@@ -67,29 +70,28 @@ const Cart = () => {
     const removeProduct = async (pid, iid) => {
         try {
             if (!iid) {
-                toast.error("Product Not Found")
+                toast.error("Product Not Found");
             }
             const res = await fetch('/api/cart/cart/delete', {
                 method: "DELETE",
                 headers: {
-                    "content-type": "application/json"
+                    "content-type": "application/json",
                 },
                 body: JSON.stringify({
                     pid: pid,
-                    uid: logged.uid
-                })
-            })
-            const data = await res.json()
+                    uid: logged.uid,
+                }),
+            });
+            const data = await res.json();
             if (data.error) {
-                toast.error(data.error)
+                toast.error(data.error);
+            } else {
+                setCartItems(cartItems.filter(item => item._id !== iid));
             }
         } catch (error) {
             console.log(error);
-
         }
-
-
-    }
+    };
 
     return (
         <Box p={5}>
@@ -138,10 +140,16 @@ const Cart = () => {
                     </RadioGroup>
                     <Text fontSize="sm" color="gray.500" mt={2}>You will pay when you receive your order.</Text>
                 </Box>
+                {!logged.address && (
+                    <Box mt={5} color="red.500">
+                        <Text mb={2}>Please add a delivery location before proceeding to checkout.</Text>
+                        <Link as={RouterLink} to="/address" color="blue.500">Add Delivery Location</Link>
+                    </Box>
+                )}
                 <Button onClick={handleCheckout} bg={'black'} size="lg" mt={5} color={'white'} width="100%">Checkout</Button>
             </Box>
         </Box>
-    )
-}
+    );
+};
 
 export default Cart;

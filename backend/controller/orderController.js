@@ -26,12 +26,12 @@ const makeAnOrder = async (req, res) => {
     }
 
     const userOrdered = await User.findById(uid);
-
-    if (!userOrdered || userOrdered.address === "") {
+    if (!userOrdered) {
       return res.status(404).json({
-        error: "Please add address from your dashboard to continue",
+        error: "user not found",
       });
     }
+
 
     const cartItems = await Cart.find({ uid: uid });
     if (cartItems.length === 0) {
@@ -120,9 +120,7 @@ const getUserOrders = async (req, res) => {
       .sort({ createdAt: -1 });
 
     if (userOrders.length === 0) {
-      return res.status(404).json({
-        error: "you not order anything yet",
-      });
+      return;
     }
 
     res.status(200).json(userOrders);
@@ -267,6 +265,25 @@ const deleteOrderByUser = async (req, res) => {
   }
 };
 
+const searchByEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const users = await User.find({ email: { $regex: email, $options: "i" } });
+
+    if (!users.length) {
+      return res.status(404).json({ message: "No users found" });
+    }
+
+    return res.status(200).json({ users });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
 export {
   getOrders,
   makeAnOrder,
@@ -275,4 +292,5 @@ export {
   getTopSellProducts,
   deleteOrder,
   deleteOrderByUser,
+  searchByEmail,
 };

@@ -9,6 +9,7 @@ import {
   getUserOrders,
   makeAnOrder,
   updateOrderStatus,
+  searchByEmail
 } from "../controller/orderController.js";
 const orderRouter = express.Router();
 orderRouter.post("/order", protectRoute, makeAnOrder);
@@ -17,6 +18,7 @@ orderRouter.get("/order", isAdmin, protectRoute, getOrders);
 orderRouter.put("/updateStatus", isAdmin, protectRoute, updateOrderStatus);
 orderRouter.get("/topSell", getTopSellProducts);
 orderRouter.delete("/delete", isAdmin, protectRoute, deleteOrder);
+orderRouter.post("/searchByEmail/:email", isAdmin, protectRoute, searchByEmail);
 orderRouter.delete("/deleteUserOrder", protectRoute, deleteOrderByUser);
 
 export default orderRouter;

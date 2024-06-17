@@ -3,6 +3,7 @@ import {
   addAddress,
   addPayment,
   deleteUser,
+  deleteUserByAdmin,
   forgetPassword,
   getAllUsers,
   getUserAddress,
@@ -10,6 +11,7 @@ import {
   login,
   logout,
   resetPassword,
+
   signup,
   updateUserData,
 } from "../controller/userController.js";
@@ -27,10 +29,12 @@ userRouter.post("/forget-password", forgetPassword);
 userRouter.post("/reset-password/:uid/:token", resetPassword);
 userRouter.post("/addAddress", protectRoute, addAddress);
 userRouter.put("/addpayment", protectRoute, addPayment);
-userRouter.put('/updateUserData', protectRoute ,updateUserData)
+userRouter.put("/updateUserData", protectRoute, updateUserData);
 userRouter.get("/getAddress", protectRoute, getUserAddress);
 userRouter.get("/user/", getUserById);
 userRouter.get("/get", isAdmin, protectRoute, getAllUsers);
 userRouter.delete("/delete", protectRoute, deleteUser);
+userRouter.delete("/deleteByAdmin", isAdmin, protectRoute, deleteUserByAdmin);
+
 
 export default userRouter;

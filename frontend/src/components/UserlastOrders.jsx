@@ -15,7 +15,7 @@ import {
     useColorModeValue,
     Badge,
     Button,
-
+    Flex,
 } from "@chakra-ui/react";
 import { BsTrash } from "react-icons/bs";
 
@@ -47,38 +47,41 @@ const UserlastOrders = () => {
             const res = await fetch('/api/order/deleteUserOrder', {
                 method: "DELETE",
                 headers: {
-                    'content-type': "application/json"
+                    'content-type': "application/json",
                 },
                 body: JSON.stringify({
                     uid: logged.uid,
-                    oid: orderId
+                    oid: orderId,
+                }),
+            });
+            const data = await res.json();
+            if (data.error) {
+                toast.error(data.error);
+            } else {
+                setOrders(prevOrders => prevOrders
+                    .filter(order => order._id !== orderId)
 
-                })
-            })
-            const data =await res.json();
-            if(data.error){
-                toast.error(data.error)
-            }else{
-                toast.success(data.message)
+                );
+                toast.success(data.message);
             }
-
-
-
         } catch (error) {
             console.log(error);
-
+            toast.error('An error occurred while deleting the order.');
         }
-    }
+    };
 
     const bg = useColorModeValue("white", "gray.800");
 
     return (
-        <Box position={'absolute'} left={'400'} top={'200'} mt="30px" ml="30px">
-            <Text >
-                <Badge fontSize="2xl" bg={'teal.500'} color={'white'} mb="10px">Your Last Orders</Badge>
-            </Text>
-            {orders.length > 0 ? (
-                <TableContainer w={'1000px'} borderRadius="md" bg={bg} shadow="md" p={4}>
+        <Box p={4} mt="120px">
+            <Flex justify="space-between" align="center" mb={5}>
+                <Text fontSize="2xl" fontWeight="bold">
+                    <Badge fontSize="2xl" bg={'teal.500'} color={'white'}>Your Last Orders</Badge>
+                </Text>
+                {orders.length === 0 && <Text>No orders found.</Text>}
+            </Flex>
+            {orders.length > 0 && (
+                <TableContainer borderRadius="md" bg={bg} shadow="md">
                     <Table variant="simple">
                         <Thead>
                             <Tr>
@@ -91,15 +94,14 @@ const UserlastOrders = () => {
                         </Thead>
                         <Tbody>
                             {orders.map((order) => (
-                                <Tr key={order._id}>
-
+                                <Tr key={order._id} _hover={{ bg: "gray.100" }}>
                                     <Td>{order.productName}</Td>
                                     <Td>{order.quantity}</Td>
                                     <Td>${order.price.toFixed(2)}</Td>
                                     <Td>{order.orderStatus}</Td>
                                     <Td>
-                                        <Button onClick={()=>deleteOrder(order._id)} bg={'red.500'}>
-                                            <BsTrash color="white" size={22}/>
+                                        <Button onClick={() => deleteOrder(order._id)} bg={'red.500'} _hover={{ bg: "red.600" }} size="sm">
+                                            <BsTrash color="white" size={20} />
                                         </Button>
                                     </Td>
                                 </Tr>
@@ -107,8 +109,6 @@ const UserlastOrders = () => {
                         </Tbody>
                     </Table>
                 </TableContainer>
-            ) : (
-                <Text>No orders found.</Text>
             )}
         </Box>
     );

@@ -15,7 +15,6 @@ const DashBored = () => {
         <>
             <UserTabs />
             <UserlastOrders />
-            <USidebar />
 
 
 

@@ -43,12 +43,9 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/forget-password' element={<ForgetPassword />} />
         <Route path='/reset-password/:uid/:token' element={<ResetPassword />} />
-
         <Route path='/register' element={<Signup />} />
         <Route path='/product/:pid' element={<Product />} />
-
-
-        <Route path='/cart/:uid' element={user && <Cart /> } />
+        <Route path='/cart/:uid' element={user && <Cart />} />
         <Route path='/dashbored/:uid' element={<DashBored />} />
         <Route path='/admin/:uid' element={user?.isAdmin && <Admin />} />
         <Route path='/admin/product/create' element={user?.isAdmin && <CreateProduct />} />

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { Box, IconButton, List, ListItem, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Stack, Text, Switch, Tooltip } from "@chakra-ui/react";
+import { Box, IconButton, List, ListItem, Switch, Stack, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import PropTypes from 'prop-types';
@@ -9,15 +9,12 @@ const FilterProducts = ({ categoryId, products, setFilterdProducts }) => {
     const [showMoreColors, setShowMoreColors] = useState(false);
     const [selectedSizes, setSelectedSizes] = useState([]);
     const [selectedColors, setSelectedColors] = useState([]);
-
     const [onSale, setOnSale] = useState([]);
-    const [onClickSale, setOnClickSale] = useState(false)
-    const [onClickNLQ, setOnClickNLQ] = useState(false)
+    const [onClickSale, setOnClickSale] = useState(false);
+    const [onClickNLQ, setOnClickNLQ] = useState(false);
     const [noLessQuantity, setNoLessQuantity] = useState(true);
     const [sizes, setSizes] = useState([]);
     const [colors, setColors] = useState([]);
-
-
 
     const handleToggleColors = () => {
         setShowMoreColors(!showMoreColors);
@@ -39,29 +36,44 @@ const FilterProducts = ({ categoryId, products, setFilterdProducts }) => {
         filter();
     }, [categoryId, products]);
 
-
-
     const handleSizeClick = (size) => {
-        setSelectedSizes(size);
-        const filteredProductsBySize = products.filter((p) => p.prodcutSize.includes(size));
+        setSelectedSizes((prevSelectedSizes) => {
+            if (prevSelectedSizes.includes(size)) {
+                return prevSelectedSizes.filter((s) => s !== size);
+            } else {
+                return [...prevSelectedSizes, size];
+            }
+        });
+
+        const filteredProductsBySize = products.filter((p) =>
+            selectedSizes.includes(size) ? !p.prodcutSize.includes(size) : p.prodcutSize.includes(size)
+        );
         setFilterdProducts(filteredProductsBySize);
     };
 
     const handleColorClick = (color) => {
-        setSelectedColors(color);
-        const filteredProductsByColor = products.filter((p) => p.productColors.includes(color));
+        setSelectedColors((prevSelectedColors) => {
+            if (prevSelectedColors.includes(color)) {
+                return prevSelectedColors.filter((c) => c !== color);
+            } else {
+                return [...prevSelectedColors, color];
+            }
+        });
+
+        const filteredProductsByColor = products.filter((p) =>
+            selectedColors.includes(color) ? !p.productColors.includes(color) : p.productColors.includes(color)
+        );
         setFilterdProducts(filteredProductsByColor);
     };
 
-
     const handleClickOnSale = () => {
-        setOnClickSale(onClickSale === false ? true : false)
-        setFilterdProducts(onClickSale === true ? products : onSale);
+        setOnClickSale(!onClickSale);
+        setFilterdProducts(onClickSale ? products : onSale);
     };
 
     const handleToggleNoLessQuantity = () => {
-        setOnClickNLQ(onClickNLQ === false ? true : false);
-        setFilterdProducts(onClickNLQ === true ? products : noLessQuantity)
+        setOnClickNLQ(!onClickNLQ);
+        setFilterdProducts(onClickNLQ ? products : noLessQuantity);
     };
 
     return (
@@ -154,32 +166,25 @@ const FilterProducts = ({ categoryId, products, setFilterdProducts }) => {
                     </List>
                 </Box>
 
-
-
                 <Box p={4} rounded={'md'} bg={'gray.100'}>
-                    <Text fontSize={'18px'} fontWeight={'500'} mb={2}>
-                        On Sale
-                    </Text>
-                    <Switch disabled={onSale.length === 0 ? true : false} isChecked={onClickSale} onChange={handleClickOnSale} size="md" />
+                    <Text fontSize={'18px'} fontWeight={'500'} mb={2}>On Sale</Text>
+                    <Switch disabled={onSale.length === 0} isChecked={onClickSale} onChange={handleClickOnSale} size="md" />
                     {onSale.length === 0 && (
-                        <Text mt={2} color={'red.500'} fontSize={'14px'}>Theres No Sales </Text>
-
+                        <Text mt={2} color={'red.500'} fontSize={'14px'}>Theres No Sales</Text>
                     )}
                 </Box>
 
-                <Box p={4}  rounded={'md'} bg={'gray.100'}>
+                <Box p={4} rounded={'md'} bg={'gray.100'}>
                     <Text fontSize={'18px'} fontWeight={'500'} mb={2}>No Less Quantity</Text>
                     <Switch
-                    disabled={noLessQuantity.length < 10 ?false :true }
-                    
+                        disabled={noLessQuantity.length < 10}
                         isChecked={onClickNLQ}
                         colorScheme="teal"
                         size="md"
                         onChange={handleToggleNoLessQuantity}
                     />
                     {noLessQuantity.length === 0 && (
-                        <Text mt={2} color={'red.500'} fontSize={'14px'}>Theres No Sales </Text>
-
+                        <Text mt={2} color={'red.500'} fontSize={'14px'}>Theres No Sales</Text>
                     )}
                 </Box>
             </Stack>
@@ -194,5 +199,3 @@ FilterProducts.propTypes = {
 };
 
 export default FilterProducts;
-
-

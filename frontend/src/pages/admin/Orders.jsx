@@ -23,25 +23,28 @@ import {
     Text,
 } from "@chakra-ui/react";
 import useGetOrders from "../../hooks/useGetOrders";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import orderAtom from "../../atoms/orderAtom";
-import { BsTrash } from 'react-icons/bs'
-
+import { BsTrash } from 'react-icons/bs';
 
 const Orders = () => {
     const setOrder = useSetRecoilState(orderAtom);
     const orderId = useRecoilValue(orderAtom);
     const { orders, refreshOrders } = useGetOrders();
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [orderStatus, setOrderStatus] = useState('Pending')
+    const [orderStatus, setOrderStatus] = useState('Pending');
+    const [searchTerm, setSearchTerm] = useState("");
+
+
     const handleOrderStatusChange = (e) => {
         setOrderStatus(e.target.value);
-    }
+    };
+
     const handleSelectedOrder = (order) => {
-        onOpen()
-        setOrder({ orderId: order._id })
+        onOpen();
+        setOrder({ orderId: order._id });
     };
 
 
@@ -56,26 +59,45 @@ const Orders = () => {
                     orderId: orderId.orderId,
                     orderStatus: orderStatus
                 })
-            })
-            const data = await res.json()
+            });
+            const data = await res.json();
             if (data.error) {
-                toast.error(data.error)
+                toast.error(data.error);
             } else {
-                refreshOrders()
-
-                setOrder({ orderId: "" })
-                onClose()
-                toast.success(data.message)
+                refreshOrders();
+                setOrder({ orderId: "" });
+                onClose();
+                toast.success(data.message);
             }
-
-
         } catch (error) {
-            toast.error("error occurd While Updateing Status ,try again later")
-
+            toast.error("An error occurred while updating status. Please try again later.");
         }
-    }
+    };
 
 
+    const handleDeleteOrder = async (id) => {
+        try {
+            const res = await fetch('/api/order/delete', {
+                method: "DELETE",
+                headers: {
+                    'content-type': "application/json"
+                },
+                body: JSON.stringify({
+                    orderId: id
+                })
+            });
+            const data = await res.json();
+            if (data.error) {
+                toast.error(data.error);
+            } else {
+                refreshOrders();
+                toast.success(data.message);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error("An error occurred while deleting the order.");
+        }
+    };
 
     const getStatusColor = (status) => {
         switch (status) {
@@ -96,61 +118,27 @@ const Orders = () => {
         }
     };
 
-    const [curruntPage, setCurruntPage] = useState(1)
-    const [itemPrePage, setItemPerPage] = useState(7)
+    const [curruntPage, setCurruntPage] = useState(1);
+    const [itemPrePage, setItemPerPage] = useState(7);
     const indexOfLastItem = curruntPage * itemPrePage;
     const indexOFFirstItem = indexOfLastItem - itemPrePage;
     const curruntOrders = orders.slice(indexOFFirstItem, indexOfLastItem);
 
-    const paginate = (pageNumber) => setCurruntPage(pageNumber)
-    const handleDeleteOrder = async (id) => {
-        try {
-            const res = await fetch('/api/order/delete', {
-                method: "DELETE",
-                headers: {
-                    'content-type': "application/json"
-                },
-
-                body: JSON.stringify({
-                    orderId: id
-                })
-            })
-            const data = await res.json()
-            if (data.error) {
-                toast.error(data.error)
-            } else {
-                refreshOrders()
-                toast.success(data.message)
-            }
-
-        } catch (error) {
-            console.log(error);
-
-        }
-
-
-
-
-
-    }
-
+    const paginate = (pageNumber) => setCurruntPage(pageNumber);
 
     return (
         <Box bg={"gray.50"} position={"absolute"} top={100} left={260} p={4} borderRadius="md" shadow="md" width="calc(100% - 300px)">
+            <Flex gap={2} mb={4}>
+                <Input
+                    type="text"
+                    border={'2px solid teal'}
+                    placeholder="Search by email"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+            </Flex>
+
             <TableContainer overflowX="auto">
-                <Flex gap={2}>
-                    <Input type="text" _hover={{
-                        border: "2px solid teal"
-
-                    }}
-
-
-                        border={'2px solid teal'} placeholder="search by email" />
-                    <Button>Search</Button>
-
-
-                </Flex>
-
                 <Table mt={3} minWidth="800px">
                     <Thead>
                         <Tr>
@@ -180,7 +168,7 @@ const Orders = () => {
                                     <Button onClick={() => handleSelectedOrder(order)} bg={"blue.500"} color={"white"} >
                                         Update Status
                                     </Button>
-                                    <Button onClick={() => handleDeleteOrder(order?._id)} ml={2} color={'white'} bg={'red.500'}>
+                                    <Button onClick={() => handleDeleteOrder(order._id)} ml={2} color={'white'} bg={'red.500'}>
                                         Delete
                                     </Button>
                                 </Td>
@@ -197,6 +185,7 @@ const Orders = () => {
                     <ModalCloseButton />
                     <ModalBody>
                         <Select
+                            value={orderStatus}
                             onChange={handleOrderStatusChange}
                         >
                             <option value="Pending">Pending</option>
@@ -216,9 +205,9 @@ const Orders = () => {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-            <Flex justifyContent={'center'}>
 
-                <Box mt={8} className="pagination">
+            <Flex justifyContent={'center'} mt={4}>
+                <Box className="pagination">
                     <Button onClick={() => paginate(curruntPage - 1)}>Previous</Button>
                     {orders.length > 0 &&
                         Array.from({ length: Math.ceil(orders.length / itemPrePage) }, (_, i) => (
@@ -229,10 +218,7 @@ const Orders = () => {
                     <Button onClick={() => paginate(curruntPage + 1)}>Next</Button>
                 </Box>
             </Flex>
-           
         </Box>
-
-
     );
 };
 

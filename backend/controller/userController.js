@@ -4,6 +4,9 @@ import { generateToken } from "../utils/jwt.js";
 import { Address } from "../model/Address.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import Order from "../model/Order.js";
+import Product from "../model/Product.js";
+import { newMessaeg, sendDeletionEmail } from "./messageController.js";
 
 const signup = async (req, res) => {
   try {
@@ -43,6 +46,7 @@ const signup = async (req, res) => {
         lname: newUser.lname,
         email: newUser.email,
         isAdmin: newUser.isAdmin,
+        address: newUser.address,
       });
     } else {
       return res.status(404).json({
@@ -95,7 +99,7 @@ const login = async (req, res) => {
       lname: user.lname,
       email: user.email,
       phone: user.phone,
-
+      address: user.address,
       isAdmin: user.isAdmin,
     });
   } catch (error) {
@@ -399,6 +403,70 @@ const updateUserData = async (req, res) => {
     console.log(error);
   }
 };
+const deleteUserByAdmin = async (req, res) => {
+  try {
+    const { uid } = req.body;
+    if (!uid) {
+      return res.status(400).json({
+        error: "User Id is required",
+      });
+    }
+
+    const findUser = await User.findById(uid);
+    if (!findUser) {
+      return res.status(404).json({
+        error: "User not found",
+      });
+    }
+
+    const userOrders = await Order.find({ uid: uid });
+    if (userOrders.length > 0) {
+      const findUnProcessedOrders = userOrders.filter(
+        (order) => order.orderStatus === "Pending"
+      );
+
+      if (findUnProcessedOrders.length > 0) {
+        const productIds = findUnProcessedOrders.map((order) => order.pid);
+
+        const getInOrderProducts = await Product.find({
+          _id: { $in: productIds },
+        });
+
+        await Promise.all(
+          getInOrderProducts.map(async (product) => {
+            const correspondingOrders = findUnProcessedOrders.filter(
+              (order) => order.pid.toString() === product._id.toString()
+            );
+
+            let totalQuantity = 0;
+
+            correspondingOrders.forEach((order) => {
+              totalQuantity += order.quantity;
+            });
+
+            product.productQuntity += totalQuantity;
+            product.sells -= totalQuantity;
+
+            await product.save();
+          })
+        );
+      }
+    }
+    await User.findByIdAndDelete(uid);
+    await sendDeletionEmail(userOrders);
+    await Order.deleteMany({ uid: uid, orderStatus: "Pending" });
+
+    return res.status(200).json({
+      message: "User and their pending orders  have been deleted",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      error: "An error occurred while deleting the user",
+    });
+  }
+};
+
 
 export {
   signup,
@@ -413,4 +481,6 @@ export {
   forgetPassword,
   resetPassword,
   updateUserData,
+  deleteUserByAdmin,
+  
 };
