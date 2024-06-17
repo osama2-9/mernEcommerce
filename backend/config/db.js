@@ -5,8 +5,6 @@ const dbConnect = async () => {
     .connect(
       "mongodb+srv://osamaalsrraj3:osama@e-commerce.qrqncvk.mongodb.net/",
       {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
         serverSelectionTimeoutMS: 15000,
         socketTimeoutMS: 45000,
       }
@@ -17,7 +15,6 @@ const dbConnect = async () => {
     .catch((err) => {
       console.log(err);
     });
-    mongoose.set('debug', true);
 };
 
 export { dbConnect };
