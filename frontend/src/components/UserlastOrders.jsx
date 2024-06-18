@@ -73,7 +73,7 @@ const UserlastOrders = () => {
     const bg = useColorModeValue("white", "gray.800");
 
     return (
-        <Box p={4} mt="120px">
+        <Box p={4} mt="150px">
             <Flex justify="space-between" align="center" mb={5}>
                 <Text fontSize="2xl" fontWeight="bold">
                     <Badge fontSize="2xl" bg={'teal.500'} color={'white'}>Your Last Orders</Badge>

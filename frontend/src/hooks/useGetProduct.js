@@ -18,7 +18,7 @@ const useGetProduct = () => {
       setProducts(data);
       setNumberOfProduct(productCount);
     } catch (error) {
-      toast(error.message);
+      // toast(error.message);
       console.log(error);
     }
   };

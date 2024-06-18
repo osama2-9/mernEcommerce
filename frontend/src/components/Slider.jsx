@@ -37,25 +37,39 @@ const Slider = () => {
             </Text>
             <Carousel
                 autoPlay
-                interval={3000} 
+                interval={3000}
                 infiniteLoop
                 showStatus={false}
                 showThumbs={false}
                 showArrows={false}
             >
                 <div>
-                    <Image height={'500px'} width={{
-                        lg: 1535,
-                        sm: 500
-                    }} src="/hero.avif" alt="Slide 1" />
+                    <Image
+                        height="600px"
+                        width="100%"
+                        objectFit="cover"
+                        src="/her1.png"
+                        alt="Slide 1"
+                    />
                 </div>
                 <div>
-                    <Image height={'500px'} width={{
-                        lg: 1535,
-                        sm: 500
-                    }} src="/hero2.jpg" alt="Slide 2" />
+                    <Image
+                        height="600px"
+                        width="100%"
+                        objectFit="cover"
+                        src="/her2.png"
+                        alt="Slide 2"
+                    />
                 </div>
-                
+                <div>
+                    <Image
+                        height="600px"
+                        width="100%"
+                        objectFit="cover"
+                        src="/her3.png"
+                        alt="Slide 3"
+                    />
+                </div>
             </Carousel>
         </Box>
     );

@@ -6,7 +6,7 @@ const UserTabs = () => {
         <Flex position={'absolute'} left={'400px'} direction="row"  p={4} m={4}>
 
             <Box
-                w={'500px'}
+                w={'400px'}
 
                 flex="1"
                 bg={useColorModeValue('white', 'gray.800')}

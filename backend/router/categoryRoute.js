@@ -5,6 +5,7 @@ import {
   getAllCategory,
   getCategoriesWithProducts,
   getSpecificProduct,
+  updateCategory,
 } from "../controller/categoryController.js";
 import { isAdmin } from "../middleware/isAdmin.js";
 import { protectRoute } from "../middleware/protectRoute.js";
@@ -16,5 +17,6 @@ categoryRoute.get("/", isAdmin, getAllCategory);
 categoryRoute.get("/getCategories", getCategoriesWithProducts);
 categoryRoute.get("/products/:categoryName/:categoryId", getSpecificProduct);
 categoryRoute.delete("/delete", isAdmin, protectRoute, deleteCategory);
+categoryRoute.put("/update", isAdmin, protectRoute, updateCategory);
 
 export default categoryRoute;

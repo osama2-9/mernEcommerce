@@ -10,12 +10,29 @@ import {
   Box,
   Flex,
   IconButton,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  useDisclosure
 } from '@chakra-ui/react';
 import { MdDelete, MdEditNote } from "react-icons/md";
 import useGetCategories from '../../hooks/useGetCategories';
 import { toast } from 'react-toastify';
+import { useState } from 'react';
 
 const ShowCategory = () => {
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [categoryName, setCategoryName] = useState('');
+  const [categoryDesc, setCategoryDesc] = useState('');
 
   const deleteCategory = async (cid) => {
     try {
@@ -37,6 +54,39 @@ const ShowCategory = () => {
     }
   };
 
+  const updateCategory = async () => {
+    try {
+      const res = await fetch('/api/category/update', {
+        method: "PUT",
+        headers: {
+          'content-type': "application/json"
+        },
+        body: JSON.stringify({
+          cid: selectedCategory,
+          categoryName,
+          categoryDesc
+        })
+      })
+      const data = await res.json();
+      if (data.error) {
+        toast.error(data.error)
+      } else {
+        setSelectedCategory(null)
+        toast.success(data.message)
+        onClose();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const onClickUpdate = (category) => {
+    setSelectedCategory(category._id);
+    setCategoryName(category.categoryName);
+    setCategoryDesc(category.categoryDesc);
+    onOpen();
+  }
+
   const { categories } = useGetCategories();
 
   return (
@@ -56,7 +106,7 @@ const ShowCategory = () => {
             {categories?.map((category, i) => (
               <Tr key={category._id}>
                 <Td>{i}</Td>
-                <Td>{category.categoryName}</Td>
+                <Td fontWeight={'bold'}>{category.categoryName}</Td>
                 <Td>{category.categoryDesc}</Td>
                 <Td>
                   <Flex gap={3}>
@@ -64,7 +114,7 @@ const ShowCategory = () => {
                       aria-label="Edit category"
                       icon={<MdEditNote className="text-blue-600" size={30} />}
                       variant="ghost"
-                      onClick={() => {/* Handle edit action */ }}
+                      onClick={() => onClickUpdate(category)}
                     />
                     <IconButton
                       aria-label="Delete category"
@@ -79,6 +129,37 @@ const ShowCategory = () => {
           </Tbody>
         </Table>
       </TableContainer>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Edit Category</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl>
+              <FormLabel>Category Name</FormLabel>
+              <Input
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+              />
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Category Description</FormLabel>
+              <Input
+                value={categoryDesc}
+                onChange={(e) => setCategoryDesc(e.target.value)}
+              />
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={updateCategory}>
+              Save
+            </Button>
+            <Button variant="ghost" onClick={onClose}>Cancel</Button>
+
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };

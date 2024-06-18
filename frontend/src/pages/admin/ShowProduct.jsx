@@ -1,20 +1,48 @@
 /* eslint-disable no-unused-vars */
-import { Box, Button, Flex, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Table, TableCaption, TableContainer, Tbody, Td, Textarea, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
+import {
+    Box, Button, Flex, FormControl, FormLabel, Input, Modal,
+    ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader,
+    ModalOverlay, Select, Table, TableCaption, TableContainer, Tbody, Td,
+    Textarea, Th, Thead, Tr, useDisclosure
+} from "@chakra-ui/react";
 import useGetProduct from "../../hooks/useGetProduct";
 import { useState, useEffect } from "react";
 import { MdDelete, MdEditNote } from "react-icons/md";
 import { toast } from "react-toastify";
 import useGetCategories from '../../hooks/useGetCategories';
+import useImgPreview from "../../hooks/useImgPreview";
 
 const ShowProduct = () => {
+    const { img, setImg, handleImgChange } = useImgPreview()
     const { products, refresh } = useGetProduct();
     const { categories } = useGetCategories();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [currentPage, setCurrentPage] = useState(1);
     const [productsPerPage] = useState(6);
     const [selectedProduct, setSelectedProduct] = useState({});
-    const [inputs, setInputs] = useState({});
+    const [inputs, setInputs] = useState({
+        productName: '',
+        productQuntity: '',
+        productPrice: '',
+        prodcutSize: '',
+        productColors: '',
+        productDesc: '',
+        categoryID: '',
+    });
     const [searchTerm, setSearchTerm] = useState("");
+
+    useEffect(() => {
+        setInputs({
+            pid: selectedProduct._id,
+            productName: selectedProduct.productName,
+            productQuntity: selectedProduct.productQuntity,
+            productPrice: selectedProduct.productPrice,
+            prodcutSize: selectedProduct.prodcutSize ? selectedProduct.prodcutSize.join(',') : '',
+            productColors: selectedProduct.productColors ? selectedProduct.productColors.join(',') : '',
+            productDesc: selectedProduct.productDesc,
+            categoryID: selectedProduct.categoryID,
+        });
+    }, [selectedProduct]);
 
     const deleteProducts = async (pid) => {
         try {
@@ -37,14 +65,24 @@ const ShowProduct = () => {
         }
     }
 
-    const updateProductData = async (pid) => {
+    const updateProductData = async () => {
         try {
             const res = await fetch('/api/product/update', {
                 method: "PUT",
                 headers: {
                     'content-type': "application/json"
                 },
-                body: JSON.stringify({ ...inputs, pid: pid })
+                body: JSON.stringify({
+                    pid: selectedProduct._id,
+                    productName: inputs.productName,
+                    productQuntity: inputs.productQuntity,
+                    productPrice: inputs.productPrice,
+                    prodcutSize: inputs.prodcutSize.split(',').map(size => size.trim()),
+                    productColors: inputs.productColors.split(',').map(color => color.trim()),
+                    productDesc: inputs.productDesc,
+                    categoryID: inputs.categoryID,
+                    productImg: img
+                })
             });
             const data = await res.json();
             if (data.error) {
@@ -66,13 +104,12 @@ const ShowProduct = () => {
 
     const handleEditClick = (product) => {
         setSelectedProduct(product);
-        setInputs(product);
         onOpen();
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        updateProductData(selectedProduct._id);
+        updateProductData();
     }
 
     const getStartIndex = () => (currentPage - 1) * productsPerPage;
@@ -180,7 +217,7 @@ const ShowProduct = () => {
                             </FormControl>
                             <FormControl mt={4}>
                                 <FormLabel>Product Image</FormLabel>
-                                <Input name="productImg" type="file" onChange={handleInputChange} />
+                                <Input name="productImg" type="file" onChange={handleImgChange} />
                             </FormControl>
                             <FormControl mt={4}>
                                 <FormLabel>Category</FormLabel>

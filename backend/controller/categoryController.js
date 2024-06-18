@@ -134,10 +134,37 @@ const deleteCategory = async (req, res) => {
   }
 };
 
+const updateCategory = async (req, res) => {
+  try {
+    const { cid, categoryName, categoryDesc } = req.body;
+    if (!cid) {
+      return res.status(400).json({
+        error: "Category Id is required",
+      });
+    }
+    const findCategroy = await Category.findById(cid);
+    if (!findCategroy) {
+      return res.status(404).json({
+        error: "Category not found",
+      });
+    }
+
+    findCategroy.categoryName = categoryName || findCategroy.categoryName;
+    findCategroy.categoryDesc = categoryDesc || findCategroy.categoryDesc;
+    await findCategroy.save();
+    return res.status(200).json({
+      message: "Category Updated",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   createCategory,
   getAllCategory,
   getCategoriesWithProducts,
   getSpecificProduct,
   deleteCategory,
+  updateCategory
 };

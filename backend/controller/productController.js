@@ -216,83 +216,100 @@ const getProductsOnSale = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
-  const { pid } = req.body;
-  if (!pid) {
-    return res.status(400).json({
-      error: "Product Id is required",
-    });
-  }
-  const findProduct = await Prodcut.findById(pid);
-  if (!findProduct) {
-    return res.status(404).json({
-      error: "No product found",
-    });
-  }
+  try {
+    const { pid } = req.body;
+    if (!pid) {
+      return res.status(400).json({
+        error: "Product Id is required",
+      });
+    }
+    const findProduct = await Product.findById(pid);
+    if (!findProduct) {
+      return res.status(404).json({
+        error: "No product found",
+      });
+    }
 
-  if (findProduct.productImg) {
-    const imgId = findProduct.productImg.split("/").pop().split(".")[0];
-    await cloudinary.uploader.destroy(imgId);
-  }
-
-  await Prodcut.findByIdAndDelete(pid);
-
-  return res.status(200).json({
-    message: "Product deleted",
-  });
-};
-
-const updateProductData = async (req, res) => {
-  const {
-    pid,
-    productName,
-    productQuntity,
-    productPrice,
-    prodcutSize,
-    productColors,
-    productDesc,
-    categoryID,
-  } = req.body;
-  let { productImg } = req.body;
-  if (!pid) {
-    return res.status(400).json({
-      error: "Product Id is required",
-    });
-  }
-
-  const findProduct = await Prodcut.findById(pid);
-
-  if (!findProduct) {
-    return res.status(404).json({
-      error: "No product found",
-    });
-  }
-
-  if (productImg) {
     if (findProduct.productImg) {
       const imgId = findProduct.productImg.split("/").pop().split(".")[0];
       await cloudinary.uploader.destroy(imgId);
     }
-    const uploadedResponse = await cloudinary.uploader.upload(productImg);
-    productImg = uploadedResponse.secure_url;
+
+    await Product.findByIdAndDelete(pid);
+
+    return res.status(200).json({
+      message: "Product deleted",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "An error occurred while deleting the product",
+    });
   }
+};
 
-  findProduct.productName = productName || findProduct.productName;
-  findProduct.productPrice = productPrice || findProduct.productPrice;
-  findProduct.productQuntity = productQuntity || findProduct.productQuntity;
-  findProduct.productDesc = productDesc || findProduct.productDesc;
-  findProduct.prodcutSize = prodcutSize;
-  findProduct.categoryID =
-    categoryID || findProduct.categoryID
-      ? prodcutSize.split(",").map((size) => size.trim())
-      : findProduct.prodcutSize;
-  findProduct.productColors = productColors
-    ? productColors.split(",").map((color) => color.trim())
-    : findProduct.productColors;
+const updateProductData = async (req, res) => {
+  try {
+    const {
+      pid,
+      productName,
+      productQuntity,
+      productPrice,
+      prodcutSize,
+      productColors,
+      productDesc,
+      categoryID,
+    } = req.body;
+    let { productImg } = req.body;
 
-  await findProduct.save();
-  return res.status(200).json({
-    message: "Product data updated",
-  });
+    if (!pid) {
+      return res.status(400).json({
+        error: "Product Id is required",
+      });
+    }
+
+    const findProduct = await Product.findById(pid);
+
+    if (!findProduct) {
+      return res.status(404).json({
+        error: "No product found",
+      });
+    }
+
+    if (productImg) {
+      if (findProduct.productImg) {
+        const imgId = findProduct.productImg.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(imgId);
+      }
+      const uploadedResponse = await cloudinary.uploader.upload(productImg);
+      productImg = uploadedResponse.secure_url;
+    }
+
+    findProduct.productName = productName || findProduct.productName;
+    findProduct.productPrice = productPrice || findProduct.productPrice;
+    findProduct.productQuntity = productQuntity || findProduct.productQuntity;
+    findProduct.productDesc = productDesc || findProduct.productDesc;
+    findProduct.prodcutSize =
+      prodcutSize && prodcutSize.length > 0
+        ? prodcutSize
+        : findProduct.prodcutSize;
+    findProduct.categoryID = categoryID || findProduct.categoryID;
+    findProduct.productColors =
+      productColors && productColors.length > 0
+        ? productColors
+        : findProduct.productColors;
+
+    await findProduct.save();
+
+    return res.status(200).json({
+      message: "Product data updated",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "An error occurred while updating the product data",
+    });
+  }
 };
 
 const getFilterdProducts = async (req, res) => {

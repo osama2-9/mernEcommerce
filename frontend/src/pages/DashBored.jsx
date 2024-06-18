@@ -5,6 +5,7 @@ import userAtom from "../atoms/userAtom"
 import USidebar from "../components/USidebar"
 import UserTabs from "../components/UserTabs"
 import UserlastOrders from "../components/UserlastOrders"
+import Address from "./Address"
 
 
 const DashBored = () => {
@@ -13,8 +14,10 @@ const DashBored = () => {
 
     return (
         <>
+            <USidebar />
             <UserTabs />
             <UserlastOrders />
+            <Address />
 
 
 
