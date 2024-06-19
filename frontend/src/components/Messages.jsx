@@ -68,11 +68,26 @@ const Messages = () => {
 
                     <DrawerBody>
                         {messages.map((message, index) => (
-                            <Box className='transition-all hover:bg-gray-100 cursor-pointer' key={index} mb={4} p={4} borderWidth="1px" borderRadius="md" onClick={() => handleOpenMessage(message)}>
-                                <Text>{message.messageTitle}</Text>
+                            <Box
+                                key={index}
+                                className="transition-all hover:bg-gray-100 cursor-pointer"
+                                mb={4}
+                                p={4}
+                                borderWidth="1px"
+                                borderRadius="md"
+                                onClick={() => handleOpenMessage(message)}
+                                bg="white"
+                            >
+                                <Flex justifyContent="space-between" alignItems="center">
+                                    <Text className="font-semibold text-lg">{message.messageTitle}</Text>
+                                    <Text className="text-sm ml-1 text-gray-500">
+                                        {new Date(message.createdAt).toLocaleDateString()}
+                                    </Text>
+                                </Flex>
                             </Box>
                         ))}
                     </DrawerBody>
+                  
 
                     <DrawerFooter>
                         <Button variant="outline" mr={3} onClick={onDrawerClose}>
@@ -85,7 +100,9 @@ const Messages = () => {
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>{selectedMessage?.messageTitle}</ModalHeader>
+                    <ModalHeader>{selectedMessage?.messageTitle}
+
+                    </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         <Box bg={'gray.100'} rounded={'md'} p={4} mb={4} dangerouslySetInnerHTML={{ __html: selectedMessage?.messageDescription }} />

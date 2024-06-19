@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import countries from 'world-countries';
-import { Box, Button, FormControl, FormLabel, Input, useColorModeValue, Text, Heading } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormLabel, Input, useColorModeValue } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import { useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom';
@@ -26,7 +26,6 @@ const Address = () => {
     const [street, setStreet] = useState('');
     const [apartmentFloor, setApartmentFloor] = useState('');
     const [apartmentNumber, setApartmentNumber] = useState('');
-    const [showUpdateForm, setShowUpdateForm] = useState(false);
 
     useEffect(() => {
         if (logged && logged.address) {
@@ -84,7 +83,7 @@ const Address = () => {
             } else {
                 localStorage.setItem('user', JSON.stringify(updatedUser));
                 toast.success("Your address has been updated");
-                setShowUpdateForm(false);
+
             }
         } catch (error) {
             console.log(error);
@@ -99,21 +98,8 @@ const Address = () => {
             borderRadius="lg"
             shadow="md"
         >
-            {!showUpdateForm && logged && logged.address && (
-                <>
-                    <Heading as="h2" size="lg" mb={4}>Your Address</Heading>
-                    <Text><strong>Address Name:</strong> {logged.address.addressName}</Text>
-                    <Text><strong>Country:</strong> {logged.address.country}</Text>
-                    <Text><strong>City:</strong> {logged.address.city}</Text>
-                    <Text><strong>Street:</strong> {logged.address.street}</Text>
-                    <Text><strong>Apartment Floor:</strong> {logged.address.apartmentFloor || 'N/A'}</Text>
-                    <Text><strong>Apartment Number:</strong> {logged.address.apartmentNumber || 'N/A'}</Text>
-                    <Button mt={4} colorScheme="teal" onClick={() => setShowUpdateForm(true)}>
-                        Update Address
-                    </Button>
-                </>
-            )}
-            {showUpdateForm && (
+            
+            
                 <form onSubmit={handleSubmit}>
                     <FormControl mb={4}>
                         <FormLabel>Address Name</FormLabel>
@@ -172,11 +158,11 @@ const Address = () => {
                     <Button type="submit" colorScheme="teal">
                         Submit
                     </Button>
-                    <Button ml={4} onClick={() => setShowUpdateForm(false)}>
+                    <Button ml={4} >
                         Cancel
                     </Button>
                 </form>
-            )}
+            
         </Box>
     );
 };

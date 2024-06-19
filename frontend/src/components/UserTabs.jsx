@@ -1,9 +1,17 @@
 import { Box, Flex, Text, Icon, useColorModeValue } from '@chakra-ui/react';
 import { FaBoxOpen } from 'react-icons/fa';
+import useGetOrders from '../hooks/useGetOrders'
+import { useRecoilValue } from 'recoil';
+import userAtom from '../atoms/userAtom';
 
 const UserTabs = () => {
+    const logged = useRecoilValue(userAtom)
+    const { orders } = useGetOrders()
+    const filter = orders.filter((o) => o?.uid === logged?.uid)
+
+    console.log('filterd :\n', filter);
     return (
-        <Flex position={'absolute'} left={'400px'} direction="row"  p={4} m={4}>
+        <Flex position={'absolute'} left={'400px'} direction="row" p={4} m={4}>
 
             <Box
                 w={'400px'}
@@ -23,7 +31,7 @@ const UserTabs = () => {
                 <Icon as={FaBoxOpen} boxSize={10} mr={4} color="teal.500" />
                 <Flex gap={1} flexDirection={'column'}>
                     <Text fontSize="lg" fontWeight="bold">My Orders</Text>
-                    <Text fontSize="lg" fontWeight="bold" textAlign={'center'}>2</Text>
+                    <Text fontSize="lg" fontWeight="bold" textAlign={'center'}>{filter.length}</Text>
 
                 </Flex>
             </Box>

@@ -1,3 +1,4 @@
+import { response } from "express";
 import Category from "../model/Category.js";
 import Product from "../model/Product.js";
 import Prodcut from "../model/Product.js";
@@ -375,6 +376,37 @@ const getFilterdProducts = async (req, res) => {
   return res.json({ sizes, colors, onSale, prices, quantity });
 };
 
+const removeSale = async (req, res) => {
+  try {
+    const { pid } = req.body;
+    if (!pid) {
+      return res.status(400).json({
+        error: "Product Id is required",
+      });
+    }
+    const product = await Prodcut.findById(pid);
+    if (!product) {
+      return res.status(404).json({
+        error: "No prodcut found",
+      });
+    }
+    if (product.sale === 0) {
+      return res.status(400).json({
+        error: "Product not have any sales to remove",
+      });
+    }
+
+    if (product.sale > 0) {
+      product.sale = 0;
+    }
+    product.save();
+    return res.status(200).json({
+      message: "Product data updated"
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 export {
   createProduct,
   getAllProducts,
@@ -387,4 +419,5 @@ export {
   deleteProduct,
   updateProductData,
   getFilterdProducts,
+  removeSale
 };

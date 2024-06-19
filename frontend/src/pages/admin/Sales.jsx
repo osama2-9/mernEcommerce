@@ -27,6 +27,7 @@ import {
 } from "@chakra-ui/react";
 import { TbPencilDollar } from "react-icons/tb";
 import { toast } from "react-toastify";
+import { TbHomeDollar } from "react-icons/tb";
 
 const Sales = () => {
     const { products } = useGetProduct();
@@ -71,7 +72,7 @@ const Sales = () => {
         return Math.min(currentPage * productsPerPage, products.length);
     };
 
-    // Filter products based on the search term
+
     const filteredProducts = products.filter(product =>
         product.productName.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -103,7 +104,31 @@ const Sales = () => {
             console.log(error);
         }
     };
+    const removeSale = async (pid) => {
+        try {
+            const res = await fetch('/api/product/removeSale', {
+                method: "PUT",
+                headers: {
+                    'content-type': "application/json"
+                },
+                body: JSON.stringify({
+                    pid: pid
+                })
+            })
+            const data = await res.json();
+            if (data.error) {
+                toast.error(data.error)
+            } else {
+                toast.success(data.message);
 
+            }
+
+        } catch (error) {
+            console.log(error);
+
+        }
+
+    }
     return (
         <>
             <Box position="absolute" top="80px" left="300px">
@@ -161,7 +186,10 @@ const Sales = () => {
                                         <Flex gap={3}>
                                             <Box>
                                                 <Button onClick={() => handleOpenModal(product)} bg={'blue.500'} color={'white'}>
-                                                    <TbPencilDollar size={22} />
+                                                    <TbPencilDollar size={20} />
+                                                </Button>
+                                                <Button ml={2} onClick={() => removeSale(product._id)} bg={'red.500'} color={'white'}>
+                                                    <TbHomeDollar size={20} />
                                                 </Button>
                                             </Box>
                                         </Flex>

@@ -11,6 +11,7 @@ import {
   deleteProduct,
   updateProductData,
   getFilterdProducts,
+  removeSale,
 } from "../controller/productController.js";
 import { isAdmin } from "../middleware/isAdmin.js";
 import { protectRoute } from "../middleware/protectRoute.js";
@@ -28,5 +29,6 @@ productRoute.get("/related/:categoryID/:pid", getRelatedProducts);
 productRoute.delete("/delete", isAdmin, protectRoute, deleteProduct);
 productRoute.put("/update", isAdmin, protectRoute, updateProductData);
 productRoute.get("/filter/products/:cid", getFilterdProducts);
+productRoute.put('/removeSale' , isAdmin ,protectRoute ,removeSale)
 
 export default productRoute;

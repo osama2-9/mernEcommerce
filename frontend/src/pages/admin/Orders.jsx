@@ -21,21 +21,21 @@ import {
     Flex,
     Input,
     Text,
+    Image,
+    VStack,
+    HStack,
 } from "@chakra-ui/react";
 import useGetOrders from "../../hooks/useGetOrders";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
-import { useSetRecoilState, useRecoilValue } from "recoil";
-import orderAtom from "../../atoms/orderAtom";
 import { BsTrash } from 'react-icons/bs';
 
 const Orders = () => {
-    const setOrder = useSetRecoilState(orderAtom);
-    const orderId = useRecoilValue(orderAtom);
     const { orders, refreshOrders } = useGetOrders();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [orderStatus, setOrderStatus] = useState('Pending');
     const [searchTerm, setSearchTerm] = useState("");
+    const [selectedOrder, setSelectedOrder] = useState(null);
 
     const handleOrderStatusChange = (e) => {
         setOrderStatus(e.target.value);
@@ -43,7 +43,7 @@ const Orders = () => {
 
     const handleSelectedOrder = (order) => {
         onOpen();
-        setOrder({ orderId: order._id });
+        setSelectedOrder(order);
     };
 
     const handleUpdateStatus = async () => {
@@ -54,7 +54,7 @@ const Orders = () => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    orderId: orderId.orderId,
+                    orderId: selectedOrder._id,
                     orderStatus: orderStatus
                 })
             });
@@ -63,7 +63,7 @@ const Orders = () => {
                 toast.error(data.error);
             } else {
                 refreshOrders();
-                setOrder({ orderId: "" });
+                setSelectedOrder(null);
                 onClose();
                 toast.success(data.message);
             }
@@ -115,21 +115,20 @@ const Orders = () => {
         }
     };
 
-    const [curruntPage, setCurruntPage] = useState(1);
-    const [itemPrePage, setItemPerPage] = useState(7);
-    const indexOfLastItem = curruntPage * itemPrePage;
-    const indexOFFirstItem = indexOfLastItem - itemPrePage;
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 7;
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-    // Filter and sort orders based on the search term and date
     const filteredOrders = orders
         .filter(order =>
             order.email.toLowerCase().includes(searchTerm.toLowerCase())
         )
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-    const curruntOrders = filteredOrders.slice(indexOFFirstItem, indexOfLastItem);
+    const currentOrders = filteredOrders.slice(indexOfFirstItem, indexOfLastItem);
 
-    const paginate = (pageNumber) => setCurruntPage(pageNumber);
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     return (
         <Box bg={"gray.50"} position={"absolute"} top={100} left={260} p={4} borderRadius="md" shadow="md" width="calc(100% - 300px)">
@@ -159,8 +158,8 @@ const Orders = () => {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {curruntOrders.map((order, i) => (
-                            <Tr key={i}>
+                        {currentOrders.map((order, i) => (
+                            <Tr key={i} onClick={() => handleSelectedOrder(order)} cursor="pointer">
                                 <Td>{order.email}</Td>
                                 <Td>{order.productName.length >= 18 ? order.productName.slice(0, 18).concat('...') : order.productName}</Td>
                                 <Td>${order.price}</Td>
@@ -170,10 +169,7 @@ const Orders = () => {
                                 <Td>{new Date(order.createdAt).toLocaleString()}</Td>
                                 <Td color={getStatusColor(order.orderStatus)}>{order.orderStatus || "Pending"}</Td>
                                 <Td>
-                                    <Button onClick={() => handleSelectedOrder(order)} bg={"blue.500"} color={"white"} >
-                                        Update Status
-                                    </Button>
-                                    <Button onClick={() => handleDeleteOrder(order._id)} ml={2} color={'white'} bg={'red.500'}>
+                                    <Button onClick={(e) => { e.stopPropagation(); handleDeleteOrder(order._id); }} ml={2} color={'white'} bg={'red.500'}>
                                         Delete
                                     </Button>
                                 </Td>
@@ -186,22 +182,70 @@ const Orders = () => {
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Update Order Status</ModalHeader>
+                    <ModalHeader>Order Details</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <Select
-                            value={orderStatus}
-                            onChange={handleOrderStatusChange}
-                        >
-                            <option value="Pending">Pending</option>
-                            <option value="Processing">Processing</option>
-                            <option value="Shipped">Shipped</option>
-                            <option value="Delivered">Delivered</option>
-                            <option value="Cancelled">Cancelled</option>
-                        </Select>
+                        {selectedOrder && (
+                            <VStack align="start" spacing={3}>
+                                <HStack>
+                                    <Text fontWeight="bold">Order ID:</Text>
+                                    <Text>{selectedOrder._id}</Text>
+                                </HStack>
+                                <Image src={selectedOrder.prodcutImg} alt={selectedOrder.productName} boxSize="100px" borderRadius="md" />
+                                <HStack>
+                                    <Text fontWeight="bold">Email:</Text>
+                                    <Text>{selectedOrder.email}</Text>
+                                </HStack>
+                                <HStack>
+                                    <Text fontWeight="bold">Phone:</Text>
+                                    <Text>{selectedOrder.phone}</Text>
+                                </HStack>
+                                <HStack>
+                                    <Text fontWeight="bold">Product Name:</Text>
+                                    <Text>{selectedOrder.productName}</Text>
+                                </HStack>
+                                <HStack>
+                                    <Text fontWeight="bold">Quantity:</Text>
+                                    <Text>{selectedOrder.quantity}</Text>
+                                </HStack>
+                                <HStack>
+                                    <Text fontWeight="bold">Price:</Text>
+                                    <Text>${selectedOrder.price}</Text>
+                                </HStack>
+                                <HStack>
+                                    <Text fontWeight="bold">Total:</Text>
+                                    <Text>${selectedOrder.price * selectedOrder.quantity}</Text>
+                                </HStack>
+                                <HStack>
+                                    <Text fontWeight="bold">Payment Method:</Text>
+                                    <Text>{selectedOrder.paymentMethod}</Text>
+                                </HStack>
+                                <HStack>
+                                    <Text fontWeight="bold">Order Status:</Text>
+                                    <Text>{selectedOrder.orderStatus}</Text>
+                                </HStack>
+                                <Box>
+                                    <Text fontWeight="bold">Address:</Text>
+                                    <Text>{selectedOrder.address.addressName}</Text>
+                                    <Text>{selectedOrder.address.street}, {selectedOrder.address.city}</Text>
+                                    <Text>{selectedOrder.address.country}</Text>
+                                </Box>
+                                <Select
+                                    mt={3}
+                                    value={orderStatus}
+                                    onChange={handleOrderStatusChange}
+                                >
+                                    <option value="Pending">Pending</option>
+                                    <option value="Processing">Processing</option>
+                                    <option value="Shipped">Shipped</option>
+                                    <option value="Delivered">Delivered</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </Select>
+                            </VStack>
+                        )}
                     </ModalBody>
                     <ModalFooter>
-                        <Button onClick={handleUpdateStatus} colorScheme="blue" mr={3} >
+                        <Button onClick={handleUpdateStatus} colorScheme="blue" mr={3}>
                             Save
                         </Button>
                         <Button variant="ghost" onClick={onClose}>
@@ -213,13 +257,13 @@ const Orders = () => {
 
             <Flex justifyContent={'center'} mt={4}>
                 <Box className="pagination">
-                    <Button onClick={() => paginate(curruntPage - 1)} disabled={curruntPage === 1}>Previous</Button>
-                    {Array.from({ length: Math.ceil(filteredOrders.length / itemPrePage) }, (_, i) => (
+                    <Button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>Previous</Button>
+                    {Array.from({ length: Math.ceil(filteredOrders.length / itemsPerPage) }, (_, i) => (
                         <Button ml={2} key={i + 1} onClick={() => paginate(i + 1)}>
                             {i + 1}
                         </Button>
                     ))}
-                    <Button onClick={() => paginate(curruntPage + 1)} disabled={curruntPage === Math.ceil(filteredOrders.length / itemPrePage)}>Next</Button>
+                    <Button onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(filteredOrders.length / itemsPerPage)}>Next</Button>
                 </Box>
             </Flex>
         </Box>

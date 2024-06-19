@@ -1,8 +1,7 @@
 import { response } from "express";
 import Message from "../model/Messages.js";
 import nodemailer from "nodemailer";
-
-const newMessaeg = async (title, description) => {
+const newMessaeg = async (title, description, orderDetail) => {
   try {
     const message = new Message({
       messageTitle: title,
@@ -18,18 +17,65 @@ const newMessaeg = async (title, description) => {
       },
     });
 
+    const orderRows = orderDetail
+      .map(
+        (order) => `
+      <tr>
+        <td style="border: 1px solid #e2e8f0; padding: 8px;">
+          <img src="${order.prodcutImg}" alt="${
+          order.productName
+        }" style="width: 50px; height: auto;"/>
+        </td>
+        <td style="border: 1px solid #e2e8f0; padding: 8px;">${
+          order.productName
+        }</td>
+        <td style="border: 1px solid #e2e8f0; padding: 8px;">${
+          order.quantity
+        }</td>
+        <td style="border: 1px solid #e2e8f0; padding: 8px;">$${(
+          order.price / order.quantity
+        ).toFixed(2)}</td>
+        <td style="border: 1px solid #e2e8f0; padding: 8px;">$${order.price.toFixed(
+          2
+        )}</td>
+      </tr>
+    `
+      )
+      .join("");
+
+    const emailTemplate = `
+      <h1>${title}</h1>
+      <br/>
+      <p>${description}</p>
+      <br/>
+      <table style="border-collapse: collapse; width: 100%;">
+        <thead>
+          <tr>
+            <th colspan="5" style="border: 1px solid #e2e8f0; padding: 8px; text-align: center; background-color: #f1f5f9;">
+              Order ID: ${orderDetail[0]._id}
+            </th>
+          </tr>
+          <tr>
+            <th style="border: 1px solid #e2e8f0; padding: 8px; text-align: left; background-color: #f1f5f9;">Product Image</th>
+            <th style="border: 1px solid #e2e8f0; padding: 8px; text-align: left; background-color: #f1f5f9;">Product Name</th>
+            <th style="border: 1px solid #e2e8f0; padding: 8px; text-align: left; background-color: #f1f5f9;">Quantity</th>
+            <th style="border: 1px solid #e2e8f0; padding: 8px; text-align: left; background-color: #f1f5f9;">Price</th>
+            <th style="border: 1px solid #e2e8f0; padding: 8px; text-align: left; background-color: #f1f5f9;">Total Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${orderRows}
+        </tbody>
+      </table>
+      <br/>
+      <p><strong>Ordered At:</strong> ${new Date().toLocaleString()}</p>
+    `;
+
     var mailOptions = {
       from: "shoponlinecommerce7@gmail.com",
       to: "osamasarraj67@gmail.com",
-      subject: "new email from onlineshop",
-      html: `
-       <h1>${title}</h1>
-       <br/>
-       <p>${description} </p>
-
-       <br/>
-       <br/>
-      `,
+      subject: "New email from OnlineShop",
+      html: emailTemplate,
     };
 
     transporter.sendMail(mailOptions, function (error, info) {

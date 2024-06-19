@@ -46,7 +46,7 @@ function App() {
         <Route path='/register' element={<Signup />} />
         <Route path='/product/:pid' element={<Product />} />
         <Route path='/cart/:uid' element={user && <Cart />} />
-        <Route path='/dashbored/:uid' element={<DashBored />} />
+        <Route path='/dashbored/:uid' element={user && <DashBored />} />
         <Route path='/admin/:uid' element={user?.isAdmin && <Admin />} />
         <Route path='/admin/product/create' element={user?.isAdmin && <CreateProduct />} />
         <Route path='/admin/product/show' element={user?.isAdmin && <ShowProduct />} />

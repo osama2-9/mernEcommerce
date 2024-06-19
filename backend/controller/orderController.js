@@ -32,7 +32,6 @@ const makeAnOrder = async (req, res) => {
       });
     }
 
-
     const cartItems = await Cart.find({ uid: uid });
     if (cartItems.length === 0) {
       return res.status(404).json({
@@ -73,25 +72,16 @@ const makeAnOrder = async (req, res) => {
 
       await newOrder.save();
       await product.save();
-      await newMessaeg(
-        "New Order Created",
-        `A new order has been created for ${userOrdered.email}
-        <br/>
-        <ul>
-        <li>product Name : ${newOrder.productName}</li>
- <li>Quantity :  ${newOrder.quantity}</li>
-
-        <li>Total Price :$${newOrder.price}</li>
-
- <p><strong>Ordered At:</strong> ${newOrder.createdAt}</p>
-
-        
-        </ul>
-        `
-      );
+      return newOrder;
     });
 
-    await Promise.all(newOrderPromises);
+    const newOrders = await Promise.all(newOrderPromises);
+
+    await newMessaeg(
+      "New Order Created",
+      `A new order has been created for ${userOrdered.email}`,
+      newOrders
+    );
 
     await Cart.deleteMany({ uid: uid });
 

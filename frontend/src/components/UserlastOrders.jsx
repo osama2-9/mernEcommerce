@@ -54,6 +54,7 @@ const UserlastOrders = () => {
                     oid: orderId,
                 }),
             });
+            
             const data = await res.json();
             if (data.error) {
                 toast.error(data.error);
@@ -73,7 +74,7 @@ const UserlastOrders = () => {
     const bg = useColorModeValue("white", "gray.800");
 
     return (
-        <Box p={4} mt="150px">
+        <Box p={4} mt="150px" w={'1000px'} ml={380}>
             <Flex justify="space-between" align="center" mb={5}>
                 <Text fontSize="2xl" fontWeight="bold">
                     <Badge fontSize="2xl" bg={'teal.500'} color={'white'}>Your Last Orders</Badge>
@@ -95,7 +96,7 @@ const UserlastOrders = () => {
                         <Tbody>
                             {orders.map((order) => (
                                 <Tr key={order._id} _hover={{ bg: "gray.100" }}>
-                                    <Td>{order.productName}</Td>
+                                    <Td>{order.productName.length >18 ? order.productName.slice(0,18) +"..." :order.productName }</Td>
                                     <Td>{order.quantity}</Td>
                                     <Td>${order.price.toFixed(2)}</Td>
                                     <Td>{order.orderStatus}</Td>
