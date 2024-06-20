@@ -263,7 +263,7 @@ const Orders = () => {
                             {i + 1}
                         </Button>
                     ))}
-                    <Button onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(filteredOrders.length / itemsPerPage)}>Next</Button>
+                    <Button ml={2} onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(filteredOrders.length / itemsPerPage)}>Next</Button>
                 </Box>
             </Flex>
         </Box>

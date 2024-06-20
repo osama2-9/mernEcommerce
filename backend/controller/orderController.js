@@ -105,9 +105,7 @@ const getUserOrders = async (req, res) => {
         error: "no user found",
       });
     }
-    const userOrders = await Order.find({ uid: uid })
-      .limit(5)
-      .sort({ createdAt: -1 });
+    const userOrders = await Order.find({ uid: uid }).sort({ createdAt: -1 });
 
     if (userOrders.length === 0) {
       return;

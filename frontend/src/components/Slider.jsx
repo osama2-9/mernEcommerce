@@ -35,20 +35,22 @@ const Slider = () => {
             >
                 Start explore our collections
             </Text>
-            <Carousel
+            <Carousel 
+            
                 autoPlay
                 interval={3000}
                 infiniteLoop
+                
                 showStatus={false}
                 showThumbs={false}
-                showArrows={false}
+                showArrows={true}
             >
                 <div>
                     <Image
                         height="600px"
-                        width="100%"
-                        objectFit="cover"
-                        src="/her1.png"
+                        width="900px"
+                        
+                        src="/m1.avif"
                         alt="Slide 1"
                     />
                 </div>
@@ -56,8 +58,8 @@ const Slider = () => {
                     <Image
                         height="600px"
                         width="100%"
-                        objectFit="cover"
-                        src="/her2.png"
+                        
+                        src="/m2.jpg"
                         alt="Slide 2"
                     />
                 </div>
@@ -65,8 +67,8 @@ const Slider = () => {
                     <Image
                         height="600px"
                         width="100%"
-                        objectFit="cover"
-                        src="/her3.png"
+                        
+                        src="/m3.jpg"
                         alt="Slide 3"
                     />
                 </div>

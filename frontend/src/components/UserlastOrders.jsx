@@ -54,7 +54,7 @@ const UserlastOrders = () => {
                     oid: orderId,
                 }),
             });
-            
+
             const data = await res.json();
             if (data.error) {
                 toast.error(data.error);
@@ -96,7 +96,7 @@ const UserlastOrders = () => {
                         <Tbody>
                             {orders.map((order) => (
                                 <Tr key={order._id} _hover={{ bg: "gray.100" }}>
-                                    <Td>{order.productName.length >18 ? order.productName.slice(0,18) +"..." :order.productName }</Td>
+                                    <Td>{order.productName.length > 18 ? order.productName.slice(0, 18) + "..." : order.productName}</Td>
                                     <Td>{order.quantity}</Td>
                                     <Td>${order.price.toFixed(2)}</Td>
                                     <Td>{order.orderStatus}</Td>

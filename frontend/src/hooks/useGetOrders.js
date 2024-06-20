@@ -29,9 +29,8 @@ const useGetOrders = () => {
 
   const lastThreeOrders = sortedOrders.slice(0, 3);
 
-  const ordersTotalPrice = orders.reduce(
-    (total, product) => total + product.price,
-    0
+  const ordersTotalPrice = Math.ceil(
+    parseInt(orders.reduce((total, product) => total + product.price, 0))
   );
 
   const totalOrders = orders.length;
@@ -42,7 +41,7 @@ const useGetOrders = () => {
     totalOrders,
     sortedOrders,
     lastThreeOrders,
-    refreshOrders: getAllOrders, 
+    refreshOrders: getAllOrders,
   };
 };
 

@@ -28,7 +28,7 @@ const PeroductsReport = () => {
               <Tbody>
                 {lastThreeOrders.map((product, i) => (
                   <Tr key={i}>
-                    <Td><Image src={product.prodcutImg} w={7} /></Td>
+                    <Td><Image src={product.prodcutImg} w={7} h={10} /></Td>
                     <Td>{product.email}</Td>
                     <Td>{product.productName.length >= 18 ? product.productName.slice(0, 18).concat('...') : product.productName}</Td>
                     <Td>{product.quantity}</Td>
