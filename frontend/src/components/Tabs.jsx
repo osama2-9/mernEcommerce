@@ -30,7 +30,7 @@ const Tabs = () => {
                 console.error("Error fetching currency data:", error);
             }
         };
-        // getCurrency();
+        getCurrency();
     }, []);
 
     return (
