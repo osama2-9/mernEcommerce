@@ -1,7 +1,6 @@
-/* eslint-disable no-unused-vars */
 import {
-    Box, Button, Flex, FormControl, FormLabel, Input, Modal,
-    ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader,
+    Box, Button, Flex, FormControl, FormLabel, Image, Input, Modal,
+    ModalBody, ModalCloseButton, ModalContent, ModalHeader,
     ModalOverlay, Select, Table, TableCaption, TableContainer, Tbody, Td,
     Textarea, Th, Thead, Tr, useDisclosure
 } from "@chakra-ui/react";
@@ -13,7 +12,7 @@ import useGetCategories from '../../hooks/useGetCategories';
 import useImgPreview from "../../hooks/useImgPreview";
 
 const ShowProduct = () => {
-    const { img, setImg, handleImgChange } = useImgPreview()
+    const { img, handleImgChange } = useImgPreview()
     const { products, refresh } = useGetProduct();
     const { categories } = useGetCategories();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -28,8 +27,11 @@ const ShowProduct = () => {
         productColors: '',
         productDesc: '',
         categoryID: '',
+        productImg: ''
     });
     const [searchTerm, setSearchTerm] = useState("");
+    const [selectedImg, setSelectedImg] = useState(null);
+    const { isOpen: isImgModalOpen, onOpen: onImgModalOpen, onClose: onImgModalClose } = useDisclosure();
 
     useEffect(() => {
         setInputs({
@@ -41,6 +43,7 @@ const ShowProduct = () => {
             productColors: selectedProduct.productColors ? selectedProduct.productColors.join(',') : '',
             productDesc: selectedProduct.productDesc,
             categoryID: selectedProduct.categoryID,
+            productImg: selectedProduct.productImg
         });
     }, [selectedProduct]);
 
@@ -107,6 +110,11 @@ const ShowProduct = () => {
         onOpen();
     }
 
+    const handleImgClick = (imgSrc) => {
+        setSelectedImg(imgSrc);
+        onImgModalOpen();
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         updateProductData();
@@ -170,7 +178,13 @@ const ShowProduct = () => {
                                     <Td>{product.productPrice}</Td>
                                     <Td>{product.prodcutSize.length === 0 ? '-' : product.prodcutSize.join(',')}</Td>
                                     <Td>{product.productColors.length === 0 ? '-' : product.productColors.join(', ')}</Td>
-                                    <Td><img src={product.productImg} alt={product.productName} width="50" height="50" /></Td>
+                                    <Td>
+                                        <Image className="transition-all" _hover={{
+                                            border: "1px solid gray",
+                                            borderRadius:"5px"
+                                            
+                                        }} src={product.productImg} alt={product.productName} width="50" height="50" cursor="pointer" onClick={() => handleImgClick(product.productImg)} />
+                                    </Td>
                                     <Td>{product.sells}</Td>
                                     <Td>
                                         <Flex gap={3}>
@@ -188,6 +202,8 @@ const ShowProduct = () => {
                     </Table>
                 </TableContainer>
             </Box>
+
+            {/* Edit Product Modal */}
             <Modal isOpen={isOpen} onClose={onClose} size="full">
                 <ModalOverlay />
                 <ModalContent>
@@ -218,6 +234,9 @@ const ShowProduct = () => {
                             <FormControl mt={4}>
                                 <FormLabel>Product Image</FormLabel>
                                 <Input name="productImg" type="file" onChange={handleImgChange} />
+                                <Flex flexDirection={'column'}>
+                                    <Image src={inputs.productImg} w={'50px'} />
+                                </Flex>
                             </FormControl>
                             <FormControl mt={4}>
                                 <FormLabel>Category</FormLabel>
@@ -236,6 +255,17 @@ const ShowProduct = () => {
                             </Button>
                             <Button onClick={onClose} mt={4}>Cancel</Button>
                         </form>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+
+            {/* Image Modal */}
+            <Modal isOpen={isImgModalOpen} onClose={onImgModalClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalCloseButton />
+                    <ModalBody pb={6}>
+                        <Image src={selectedImg} alt="Product Image" width="100%" />
                     </ModalBody>
                 </ModalContent>
             </Modal>

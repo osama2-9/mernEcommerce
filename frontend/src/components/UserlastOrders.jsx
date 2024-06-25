@@ -16,11 +16,19 @@ import {
     Badge,
     Button,
     Flex,
+
 } from "@chakra-ui/react";
 import { BsTrash } from "react-icons/bs";
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 
-const UserlastOrders = () => {
+const UserLastOrders = () => {
+
+
+
+
     const [orders, setOrders] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const ordersPerPage = 5;
     const logged = useRecoilValue(userAtom);
 
     useEffect(() => {
@@ -59,10 +67,7 @@ const UserlastOrders = () => {
             if (data.error) {
                 toast.error(data.error);
             } else {
-                setOrders(prevOrders => prevOrders
-                    .filter(order => order._id !== orderId)
-
-                );
+                setOrders(prevOrders => prevOrders.filter(order => order._id !== orderId));
                 toast.success(data.message);
             }
         } catch (error) {
@@ -73,11 +78,23 @@ const UserlastOrders = () => {
 
     const bg = useColorModeValue("white", "gray.800");
 
+    const indexOfLastOrder = currentPage * ordersPerPage;
+    const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+    const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
+
+    const nextPage = () => {
+        setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(orders.length / ordersPerPage)));
+    };
+
+    const prevPage = () => {
+        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    };
+
     return (
         <Box p={4} mt="150px" w={'1000px'} ml={380}>
             <Flex justify="space-between" align="center" mb={5}>
                 <Text fontSize="2xl" fontWeight="bold">
-                    <Badge fontSize="2xl" bg={'teal.500'} color={'white'}>Your Last Orders</Badge>
+                    <Badge fontSize="2xl" bg={'teal.500'} color={'white'}>Your  Orders</Badge>
                 </Text>
                 {orders.length === 0 && <Text>No orders found.</Text>}
             </Flex>
@@ -90,16 +107,19 @@ const UserlastOrders = () => {
                                 <Th>Quantity</Th>
                                 <Th>Price</Th>
                                 <Th>Order Status</Th>
+                                <Th>Orderd At</Th>
                                 <Th>Action</Th>
+
                             </Tr>
                         </Thead>
                         <Tbody>
-                            {orders.map((order) => (
+                            {currentOrders.map((order) => (
                                 <Tr key={order._id} _hover={{ bg: "gray.100" }}>
                                     <Td>{order.productName.length > 18 ? order.productName.slice(0, 18) + "..." : order.productName}</Td>
                                     <Td>{order.quantity}</Td>
                                     <Td>${order.price.toFixed(2)}</Td>
                                     <Td>{order.orderStatus}</Td>
+                                    <Td>{order.createdAt.split('T')[0]}</Td>
                                     <Td>
                                         <Button onClick={() => deleteOrder(order._id)} bg={'red.500'} _hover={{ bg: "red.600" }} size="sm">
                                             <BsTrash color="white" size={20} />
@@ -111,8 +131,17 @@ const UserlastOrders = () => {
                     </Table>
                 </TableContainer>
             )}
+            <Flex justify="space-between" align="center" mt={4}>
+                <Button onClick={prevPage} disabled={currentPage === 1} leftIcon={<ChevronLeftIcon />}>
+                    Previous
+                </Button>
+                <Text>Page {currentPage} of {Math.ceil(orders.length / ordersPerPage)}</Text>
+                <Button onClick={nextPage} disabled={currentPage === Math.ceil(orders.length / ordersPerPage)} rightIcon={<ChevronRightIcon />}>
+                    Next
+                </Button>
+            </Flex>
         </Box>
     );
 };
 
-export default UserlastOrders;
+export default UserLastOrders;

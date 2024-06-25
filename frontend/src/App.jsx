@@ -24,6 +24,8 @@ import ForgetPassword from './pages/ForgetPassword'
 import ResetPassword from './pages/ResetPassword'
 import SpecificProducts from './pages/SpecificProducts'
 import Sales from './pages/admin/Sales'
+import UserProfile from './pages/UserProfile'
+import MyOrders from './pages/MyOrders'
 
 function App() {
   const user = useRecoilValue(userAtom)
@@ -58,6 +60,8 @@ function App() {
         <Route path='/admin/profile/:uid' element={user?.isAdmin && <Profile />} />
         <Route path='/admin/order/' element={user?.isAdmin && <Orders />} />
         <Route path='/address' element={user && <Address />} />
+        <Route path='/user-profile' element={user && <UserProfile />} />
+        <Route path='my-orders/:uid' element={user && <MyOrders />}/>
       </Routes>
       <ToastContainer position='bottom-center' />
     </div>

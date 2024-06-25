@@ -11,7 +11,7 @@ const UserTabs = () => {
 
     console.log('filterd :\n', filter);
     return (
-        <Flex position={'absolute'} left={'400px'} direction="row" p={4} m={4}>
+        <Flex position={'absolute'} left={'600px'} direction="row" p={4} m={4}>
 
             <Box
                 w={'400px'}

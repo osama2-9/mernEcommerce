@@ -9,8 +9,7 @@ import Address from "./Address"
 
 
 const DashBored = () => {
-    const { uid } = useParams()
-    const logged = useRecoilValue(userAtom)
+   
 
     return (
         <>

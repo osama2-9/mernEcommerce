@@ -9,7 +9,7 @@ const useGetOrders = () => {
       const res = await fetch("/api/order/order");
       const data = await res.json();
       if (data.error) {
-        toast.error(data.error);
+        // toast.error(data.error);
       } else {
         setOrders(data);
       }

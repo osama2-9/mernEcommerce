@@ -57,7 +57,15 @@ const getCategoriesWithProducts = async (req, res) => {
     for (const category of categories) {
       const products = await Product.find({ categoryID: category._id });
       if (products.length > 0) {
-        const selectedProduct = products[0];
+        let i = 1;
+
+        const selectedProduct = products[i];
+        if (
+          selectedProduct.productQuntity === 0 ||
+          !selectedProduct.productImg
+        ) {
+          i++;
+        }
 
         results.push({
           cid: category._id,
@@ -166,5 +174,5 @@ export {
   getCategoriesWithProducts,
   getSpecificProduct,
   deleteCategory,
-  updateCategory
+  updateCategory,
 };
