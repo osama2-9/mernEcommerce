@@ -36,6 +36,8 @@ const Orders = () => {
     const [orderStatus, setOrderStatus] = useState('Pending');
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedOrder, setSelectedOrder] = useState(null);
+    const [searchId, setSearchId] = useState("");
+    const [filteredOrderById, setFilteredOrderById] = useState(null);
 
     const handleOrderStatusChange = (e) => {
         setOrderStatus(e.target.value);
@@ -115,6 +117,21 @@ const Orders = () => {
         }
     };
 
+    const handleFindOrderById = () => {
+        const foundOrder = orders.find(order => order._id === searchId);
+        if (foundOrder) {
+            setFilteredOrderById(foundOrder);
+        } else {
+            toast.error("Order not found");
+        }
+    };
+
+    const handleResetFilters = () => {
+        setSearchTerm("");
+        setSearchId("");
+        setFilteredOrderById(null);
+    };
+
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 7;
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -126,7 +143,7 @@ const Orders = () => {
         )
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-    const currentOrders = filteredOrders.slice(indexOfFirstItem, indexOfLastItem);
+    const currentOrders = filteredOrderById ? [filteredOrderById] : filteredOrders.slice(indexOfFirstItem, indexOfLastItem);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -138,8 +155,27 @@ const Orders = () => {
                     border={'2px solid teal'}
                     placeholder="Search by email"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                        if (!e.target.value) handleResetFilters();
+                    }}
                 />
+                <Input
+                    type="text"
+                    border={'2px solid teal'}
+                    placeholder="Search by ID"
+                    value={searchId}
+                    onChange={(e) => {
+                        setSearchId(e.target.value);
+                        if (!e.target.value) handleResetFilters();
+                    }}
+                />
+                <Button w={'170px'} onClick={handleFindOrderById} colorScheme="teal">
+                    Find by ID
+                </Button>
+                <Button width={'100px'} onClick={handleResetFilters} colorScheme="blue">
+                    Reset
+                </Button>
             </Flex>
 
             <TableContainer overflowX="auto">

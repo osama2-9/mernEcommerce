@@ -181,8 +181,8 @@ const ShowProduct = () => {
                                     <Td>
                                         <Image className="transition-all" _hover={{
                                             border: "1px solid gray",
-                                            borderRadius:"5px"
-                                            
+                                            borderRadius: "5px"
+
                                         }} src={product.productImg} alt={product.productName} width="50" height="50" cursor="pointer" onClick={() => handleImgClick(product.productImg)} />
                                     </Td>
                                     <Td>{product.sells}</Td>

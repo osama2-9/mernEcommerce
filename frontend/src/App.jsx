@@ -61,7 +61,7 @@ function App() {
         <Route path='/admin/order/' element={user?.isAdmin && <Orders />} />
         <Route path='/address' element={user && <Address />} />
         <Route path='/user-profile' element={user && <UserProfile />} />
-        <Route path='my-orders/:uid' element={user && <MyOrders />}/>
+        <Route path='my-orders/:uid' element={user && <MyOrders />} />
       </Routes>
       <ToastContainer position='bottom-center' />
     </div>

@@ -12,8 +12,8 @@ const newMessaeg = async (title, description, orderDetail) => {
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "osamasarraj67@gmail.com",
-        pass: "ksyl ihhi cjxm sjkb",
+        user: "hoponlineecommerce7@gmail.com",
+        pass: "zmpp kwdp pxgz vhrz",
       },
     });
 
@@ -122,14 +122,17 @@ const sendDeletionEmail = async (deletedOrders) => {
 
     var transporter = nodemailer.createTransport({
       service: "gmail",
+      host:"smtp.gmail.com",
+      port:587,
+      secure:false,
       auth: {
-        user: "osamasarraj67@gmail.com",
-        pass: "ksyl ihhi cjxm sjkb",
+        user: "shoponlineecommerce7@gmail.com",
+        pass: "zmpp kwdp pxgz vhrz",
       },
     });
 
     var mailOptions = {
-      from: "osamasarraj67@gmail.com",
+      from: "shoponlineecommerce7@gmail.com",
       to: deletedOrders[0].email,
       subject: "User Deletion Notification",
       html: `
