@@ -8,6 +8,10 @@ Vite.js
 Node.js
 Express.js
 mongodb
+tailwind
+chakra ui
+
+
 
 
 
