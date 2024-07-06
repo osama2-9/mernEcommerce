@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import useGetTopSells from "../hooks/useGetTopSells";
 import Categories from "../components/Categories";
 import Slider from "../components/Slider";
+import Brands from "../components/Brands";
 
 const HomePage = () => {
     const { topSell } = useGetTopSells()
@@ -226,8 +227,13 @@ const HomePage = () => {
                     }
 
                 </ProductContainer>
+                <ProductContainer>
 
-                {/* FOTTER */}
+                    <Brands />
+                </ProductContainer>
+
+
+
                 <Box w={{ base: "750px", lg: "1519px", sm: "500px" }}
                     h={'300'}
                     bg={'gray.200'} borderTopRadius={'5'}

@@ -69,6 +69,20 @@ const Sidebar = () => {
                     </MenuList>
 
                 </Menu>
+                <Menu>
+                    <MenuButton variant="ghost">
+                        <Flex alignItems={'center'} gap={2}>
+                            <TbCategory size={22} />
+                            <Text fontSize="xl" fontWeight="bold">Brands</Text>
+
+                        </Flex>
+                    </MenuButton>
+                    <MenuList >
+                        <MenuItem color={'black'} as={RouterLink} to="admin/brand/create">Create Brand</MenuItem>
+                        <MenuItem color={'black'} as={RouterLink} to="/admin/brand/show">Show Brand</MenuItem>
+                    </MenuList>
+
+                </Menu>
                 <Link as={RouterLink} to='/admin/sales'>
                     <Flex gap={2} alignItems={'center'}>
                         <AiOutlineStock size={22} />

@@ -26,6 +26,7 @@ import SpecificProducts from './pages/SpecificProducts'
 import Sales from './pages/admin/Sales'
 import UserProfile from './pages/UserProfile'
 import MyOrders from './pages/MyOrders'
+import CreateBrand from './pages/CreateBrand'
 
 function App() {
   const user = useRecoilValue(userAtom)
@@ -54,6 +55,7 @@ function App() {
         <Route path='/admin/product/show' element={user?.isAdmin && <ShowProduct />} />
         <Route path='/admin/category/create' element={user?.isAdmin && <CreateCategory />} />
         <Route path='/admin/category/show' element={user?.isAdmin && <ShowCategory />} />
+        <Route path='/admin/brand/create' element={user?.isAdmin && <CreateBrand />}/>
         <Route path="/products/:categoryName/:categoryId" element={<SpecificProducts />} />
         <Route path='/admin/customer' element={user?.isAdmin && <Customer />} />
         <Route path='/admin/sales' element={user?.isAdmin && <Sales />} />
