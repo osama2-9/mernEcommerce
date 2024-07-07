@@ -4,36 +4,42 @@ import { v2 as cloudinary } from "cloudinary";
 const createBrand = async (req, res) => {
   try {
     const { brandName, brandFor, brandDesc } = req.body;
-    let {brandImg} =req.body
+    let { brandImg } = req.body;
+
     if (!brandName || !brandFor || !brandImg) {
       return res.status(400).json({
         error: "Please fill all required fields",
       });
     }
+
     const isBrandExsist = await Brand.findOne({ brandName: brandName });
     if (isBrandExsist) {
       return res.status(400).json({
-        error: "This brand already exsist",
+        error: "This brand already exists",
       });
     }
-    if(brandImg){
-      const upload = await cloudinary.uploader.upload(brandImg)
-      brandImg = upload.secure_url
+
+    if (brandImg) {
+      const upload = await cloudinary.uploader.upload(brandImg);
+      brandImg = upload.secure_url;
     }
+
     const createNewBrand = new Brand({
       brandName: brandName,
       brandFor: brandFor,
       brandDesc: brandDesc,
-      brandImg:brandImg
+      brandImg: brandImg,
     });
+
     if (!createNewBrand) {
       return res.status(400).json({
-        error: "Error While Create",
+        error: "Error While Creating",
       });
     }
+
     await createNewBrand.save();
     return res.status(201).json({
-      message: `${brandName} Brand created successfully  `,
+      message: `${brandName} Brand created successfully`,
     });
   } catch (error) {
     console.log(error);

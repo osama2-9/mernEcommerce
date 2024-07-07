@@ -1,10 +1,3 @@
-import { BsPerson, BsCart, BsSpeedometer, BsSearch } from 'react-icons/bs';
-import { Link, useNavigate } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import userAtom from '../atoms/userAtom';
-import { IoIosLogOut } from 'react-icons/io';
-import { toast } from 'react-toastify';
-import { MdOutlineAdminPanelSettings } from 'react-icons/md';
 import {
     Box,
     Flex,
@@ -26,11 +19,19 @@ import {
     DrawerContent,
     DrawerCloseButton,
     Skeleton,
-    
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { BsPerson, BsCart, BsSpeedometer, BsSearch } from 'react-icons/bs';
+import { IoIosLogOut } from 'react-icons/io';
+import { MdOutlineAdminPanelSettings } from 'react-icons/md';
 import { BiSolidHome } from 'react-icons/bi';
-import { FaBars } from "react-icons/fa";
+import { FaBars } from 'react-icons/fa';
+import userAtom from '../atoms/userAtom';
+import { toast } from 'react-toastify';
+import useGetCategories from '../hooks/useGetCategories';
+import CategoreisWithBrands from './CategoreisWithBrands';
 
 const Header = () => {
     const Nav = useNavigate();
@@ -39,7 +40,10 @@ const Header = () => {
     const [search, setSearch] = useState('');
     const [searchResult, setSearchResult] = useState([]);
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const { categories } = useGetCategories()
+
+
     const handleLogout = async () => {
         try {
             const res = await fetch('/api/users/logout', {
@@ -68,7 +72,7 @@ const Header = () => {
 
     const searchData = async (query) => {
         try {
-            setLoading(true)
+            setLoading(true);
             const res = await fetch(`/api/product/search/${query}`);
             const data = await res.json();
             if (Array.isArray(data)) {
@@ -80,7 +84,7 @@ const Header = () => {
             console.log(error);
             setSearchResult([]);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     };
 
@@ -95,8 +99,8 @@ const Header = () => {
     };
 
     return (
-        <Box w="100%" h="16" shadow="sm">
-            <Flex justify="space-between" align="center" h="100%" px={10}>
+        <Box w="100%" shadow="sm">
+            <Flex justify="space-between" align="center" h="16" px={10}>
                 <Link to="/">
                     <Image src="/logo.png" alt="Logo" w={70} />
                 </Link>
@@ -108,46 +112,39 @@ const Header = () => {
                         width={{ base: '200px', md: '400px' }}
                         border="2px solid"
                         borderColor="gray.300"
-                        placeholder="search for products"
+                        placeholder="Search for products"
                         _hover={{
                             borderColor: 'gray.300',
-                            }}
+                        }}
                         _focus={{
                             borderColor: 'gray.300',
                             boxShadow: 'none',
                             outline: 'none',
-                            }}
+                        }}
                         bg={useColorModeValue('white', 'gray.800')}
                     />
                     <Button bg="gray.300" h="35px" ml={2} type="submit">
                         <BsSearch />
                     </Button>
-
-
                     {searchResult.length > 0 && search !== "" && (
                         <Flex position={'absolute'} mt={'35px'} zIndex={10}>
                             <Box p={1} w={'400px'} me={10} color={'black'} bg={'gray.50'} rounded={'sm'}>
-                                {
-                                    loading ? (
-                                        <>
-                                            <Flex flexDir={'column'} gap={2}>
-
-                                                <Skeleton h={'30px'} mb={2} />
-                                                <Skeleton h={'30px'} mb={2} />
-                                                <Skeleton h={'30px'} mb={2} />
-                                            </Flex>
-                                        </>
-                                    ) : (
-                                        searchResult.map((product, i) => (
-                                            <Box onClick={() => setSearch("")} key={i} p={2}>
-                                                <Link to={`/product/${product._id}`}>
-                                                    <Text>{product.productName}</Text>
-                                                </Link>
-                                                <Divider mt={2} />
-                                            </Box>
-                                        ))
-                                    )
-                                }
+                                {loading ? (
+                                    <Flex flexDir={'column'} gap={2}>
+                                        <Skeleton h={'30px'} mb={2} />
+                                        <Skeleton h={'30px'} mb={2} />
+                                        <Skeleton h={'30px'} mb={2} />
+                                    </Flex>
+                                ) : (
+                                    searchResult.map((product, i) => (
+                                        <Box onClick={() => setSearch("")} key={i} p={2}>
+                                            <Link to={`/product/${product._id}`}>
+                                                <Text>{product.productName}</Text>
+                                            </Link>
+                                            <Divider mt={2} />
+                                        </Box>
+                                    ))
+                                )}
                             </Box>
                         </Flex>
                     )}
@@ -244,7 +241,6 @@ const Header = () => {
                                     <Link to={`/`} onClick={onClose}>
                                         Home
                                         <Tooltip label="Home" aria-label="Home">
-
                                             <IconButton
                                                 icon={<BiSolidHome />}
                                                 size="md"
@@ -256,13 +252,12 @@ const Header = () => {
                                     </Link>
                                     <Link to={`/login`} onClick={onClose}>
                                         Login
-                                        <Tooltip label="login" aria-label="login">
-
+                                        <Tooltip label="Login" aria-label="Login">
                                             <IconButton
                                                 icon={<BsPerson />}
                                                 size="md"
                                                 variant="ghost"
-                                                aria-label="login"
+                                                aria-label="Login"
                                                 mb={2}
                                             />
                                         </Tooltip>
@@ -270,7 +265,6 @@ const Header = () => {
                                     <Link to={`/cart/${logged?.uid}`} onClick={onClose}>
                                         Cart
                                         <Tooltip label="Cart" aria-label="Cart">
-
                                             <IconButton
                                                 icon={<BsCart />}
                                                 size="md"
@@ -292,11 +286,10 @@ const Header = () => {
                                                     mb={2}
                                                 />
                                             </Tooltip>
-
                                         </Link>
                                     )}
                                     <Link to={`/dashbored/${logged?.uid}`} onClick={onClose}>
-                                        Dashbord
+                                        Dashboard
                                         <Tooltip label="Dashboard" aria-label="Dashboard">
                                             <IconButton
                                                 icon={<BsSpeedometer />}
@@ -331,6 +324,8 @@ const Header = () => {
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
+            <CategoreisWithBrands categories={categories} />
+
         </Box>
     );
 };

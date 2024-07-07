@@ -11,7 +11,7 @@ const CreateBrand = () => {
 
   const [inputs, setInputs] = useState({
     brandName: "",
-    brandFor: "",
+    brandFor: [],
     brandImg: "",
     brandDesc: ""
   });
@@ -22,10 +22,9 @@ const CreateBrand = () => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
 
-  console.log(inputs);
-
-  const handleCategoryChange = (selectedOption) => {
-    setInputs({ ...inputs, brandFor: selectedOption.value });
+  const handleCategoryChange = (selectedOptions) => {
+    const selectedValues = selectedOptions.map(option => option.value);
+    setInputs({ ...inputs, brandFor: selectedValues });
   };
 
   const handleCreateBrand = async (e) => {
@@ -48,7 +47,12 @@ const CreateBrand = () => {
         toast.error(data.error);
       } else {
         toast.success(data.message);
-        setInputs('')
+        setInputs({
+          brandName: "",
+          brandFor: [],
+          brandImg: "",
+          brandDesc: ""
+        });
       }
     } catch (error) {
       console.log(error);
@@ -81,11 +85,12 @@ const CreateBrand = () => {
           <Spinner color='black' />
         ) : (
           <Select
+            isMulti
             name='brandFor'
-            value={categoryOptions.find(option => option.value === inputs.brandFor)}
+            value={categoryOptions.filter(option => inputs.brandFor.includes(option.value))}
             onChange={handleCategoryChange}
             options={categoryOptions}
-            placeholder="Select a category"
+            placeholder="Select categories"
           />
         )}
       </FormControl>

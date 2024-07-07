@@ -31,7 +31,9 @@ const Categories = () => {
     }, []);
 
     return (
-        <Box mb={4} display="flex" justifyContent="space-around">
+        <Box position={'relative'} top={
+            45
+        } mb={4} h={'150px'} display="flex" justifyContent="space-around">
             {loading ? (
                 [0, 1, 2, 3, 4, 5, 6, 7].map((ele, i) => (
                     <SkeletonCircle mt={1} size="80px" key={i} />

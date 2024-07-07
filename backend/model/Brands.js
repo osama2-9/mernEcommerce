@@ -5,11 +5,14 @@ const brandSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  brandFor: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Category",
-    required: true,
-  },
+  brandFor: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
+  ],
+
   brandImg: {
     type: String,
     required: true,

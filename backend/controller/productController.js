@@ -3,22 +3,22 @@ import Category from "../model/Category.js";
 import Product from "../model/Product.js";
 import Prodcut from "../model/Product.js";
 import { v2 as cloudinary } from "cloudinary";
-
 const createProduct = async (req, res) => {
   try {
     const {
       productName,
       productPrice,
-      productQuntity,
+      productQuantity,
       productDesc,
       categoryID,
-      prodcutSize,
+      brandID,
+      productSize,
       productColors,
     } = req.body;
     let { productImg } = req.body;
 
-    const sizesArray = prodcutSize
-      ? prodcutSize.split(",").map((size) => size.trim())
+    const sizesArray = productSize
+      ? productSize.split(",").map((size) => size.trim())
       : [];
     const colorsArray = productColors
       ? productColors.split(",").map((color) => color.trim())
@@ -28,8 +28,9 @@ const createProduct = async (req, res) => {
       !productName ||
       !productPrice ||
       !productDesc ||
-      !productQuntity ||
-      !categoryID
+      !productQuantity ||
+      !categoryID ||
+      !brandID
     ) {
       return res.status(400).json({
         error: "Please fill all form fields",
@@ -46,19 +47,20 @@ const createProduct = async (req, res) => {
       productPrice,
       productDesc,
       productImg,
-      productQuntity,
+      productQuantity,
       categoryID,
+      brandID,
     };
 
-    if (sizesArray.length > 1) {
-      productData.prodcutSize = sizesArray;
+    if (sizesArray.length > 0) {
+      productData.productSize = sizesArray;
     }
 
-    if (colorsArray.length > 1) {
+    if (colorsArray.length > 0) {
       productData.productColors = colorsArray;
     }
 
-    const createProduct = new Prodcut(productData);
+    const createProduct = new Product(productData);
 
     await createProduct.save();
     return res.status(201).json({
