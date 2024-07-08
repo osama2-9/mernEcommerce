@@ -29,8 +29,7 @@ const createProduct = async (req, res) => {
       !productPrice ||
       !productDesc ||
       !productQuantity ||
-      !categoryID ||
-      !brandID
+      !categoryID
     ) {
       return res.status(400).json({
         error: "Please fill all form fields",
@@ -77,10 +76,7 @@ const createProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Prodcut.find({
-      productQuntity: { $gt: 0 },
-      categoryID: { $ne: "664f444d1d05fea3bccf975f" },
-    });
+    const products = await Prodcut.find();
 
     if (products.length === 0) {
       return res.status(404).json({
@@ -403,7 +399,7 @@ const removeSale = async (req, res) => {
     }
     product.save();
     return res.status(200).json({
-      message: "Product data updated"
+      message: "Product data updated",
     });
   } catch (error) {
     console.log(error);
@@ -421,5 +417,5 @@ export {
   deleteProduct,
   updateProductData,
   getFilterdProducts,
-  removeSale
+  removeSale,
 };

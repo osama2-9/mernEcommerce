@@ -10,46 +10,50 @@ const CategoreisWithBrands = ({ categories }) => {
 
     return (
         <Flex gap={3} justify="center" bg="gray.100" py={5}>
-            {categories?.map((category) => (
-                <Menu
-                    key={category.categoryName}
-                    isOpen={openMenu === category.categoryName}
-                >
-                    <MenuButton
-                        as={Button}
-                        variant="link"
-                        mx={2}
-                        fontSize="sm"
-                        onMouseEnter={() => setOpenMenu(category.categoryName)}
-                        onMouseLeave={() => setOpenMenu(null)}
-                        _hover={{ textDecoration: 'none' }}
+            {categories?.map((category) => {
+                const categoryBrands = brands?.filter(brand => brand.brandFor.includes(category._id));
+
+                return (
+                    <Menu
+                        key={category.categoryName}
+                        isOpen={openMenu === category.categoryName}
                     >
-                        {category.categoryName}
-                    </MenuButton>
-                    <MenuList
-                        width={'300px'}
-                        onMouseEnter={() => setOpenMenu(category.categoryName)}
-                        onMouseLeave={() => setOpenMenu(null)}
-                    >
-                        {brands
-                            ?.filter(brand => brand.brandFor.includes(category._id))
-                            ?.map((brand) => (
-                                <Link key={brand._id} to={`/brand/${brand._id}`}>
-                                    <MenuItem>
-                                        <Image
-                                            src={brand.brandImg}
-                                            alt={brand.brandName}
-                                            boxSize="2rem"
-                                            borderRadius="full"
-                                            mr="12px"
-                                        />
-                                        {brand.brandName}
-                                    </MenuItem>
-                                </Link>
-                            ))}
-                    </MenuList>
-                </Menu>
-            ))}
+                        <MenuButton
+                            as={Button}
+                            variant="link"
+                            mx={2}
+                            fontSize="sm"
+                            onMouseEnter={() => setOpenMenu(category.categoryName)}
+                            onMouseLeave={() => setOpenMenu(null)}
+                            _hover={{ textDecoration: 'none' }}
+                        >
+                            {category.categoryName}
+                        </MenuButton>
+                        {categoryBrands?.length > 0 && (
+                            <MenuList
+                                width={'300px'}
+                                onMouseEnter={() => setOpenMenu(category.categoryName)}
+                                onMouseLeave={() => setOpenMenu(null)}
+                            >
+                                {categoryBrands.map((brand) => (
+                                    <Link to={`/brand/${brand._id}`} key={brand._id}>
+                                        <MenuItem>
+                                            <Image
+                                                src={brand.brandImg}
+                                                alt={brand.brandName}
+                                                boxSize="2rem"
+                                                borderRadius="full"
+                                                mr="12px"
+                                            />
+                                            {brand.brandName}
+                                        </MenuItem>
+                                    </Link>
+                                ))}
+                            </MenuList>
+                        )}
+                    </Menu>
+                );
+            })}
         </Flex>
     );
 };

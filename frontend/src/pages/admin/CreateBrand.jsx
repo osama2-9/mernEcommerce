@@ -1,9 +1,9 @@
 import { Box, FormControl, FormLabel, Input, Textarea, Button, Spinner, Image } from '@chakra-ui/react';
 import Select from 'react-select';
-import useGetCategories from '../hooks/useGetCategories';
+import useGetCategories from '../../hooks/useGetCategories';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
-import useImgPreview from '../hooks/useImgPreview';
+import useImgPreview from '../../hooks/useImgPreview';
 
 const CreateBrand = () => {
   const { categories, loading } = useGetCategories();

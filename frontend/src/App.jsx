@@ -1,45 +1,51 @@
-import './App.css'
-import { Routes, Route, useLocation, useNavigate, BrowserRouter } from 'react-router-dom'
-import Header from './components/Header'
-import HomePage from './pages/HomePage'
-import Login from './pages/Login'
-import Signup from './pages/Signup'
-import Product from './components/Product'
-import Cart from './pages/Cart'
-import { ToastContainer } from 'react-toastify'
-import { useRecoilValue } from 'recoil'
-import userAtom from './atoms/userAtom'
-import DashBored from './pages/DashBored'
-import Admin from './pages/admin/Admin'
-import CreateProduct from './pages/admin/CreateProduct'
-import CreateCategory from './pages/admin/CreateCategory'
-import ShowProduct from './pages/admin/ShowProduct'
-import Sidebar from './components/Sidebar'
-import ShowCategory from './pages/admin/ShowCategory'
-import Customer from './pages/admin/Customer'
-import Profile from './pages/admin/Profile'
-import Address from './pages/Address'
-import Orders from './pages/admin/Orders'
-import ForgetPassword from './pages/ForgetPassword'
-import ResetPassword from './pages/ResetPassword'
-import SpecificProducts from './pages/SpecificProducts'
-import Sales from './pages/admin/Sales'
-import UserProfile from './pages/UserProfile'
-import MyOrders from './pages/MyOrders'
-import CreateBrand from './pages/CreateBrand'
+import './App.css';
+import { Routes, Route, useLocation, useNavigate, BrowserRouter } from 'react-router-dom';
+import Header from './components/Header';
+import HomePage from './pages/HomePage';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Product from './components/Product';
+import Cart from './pages/Cart';
+import { ToastContainer } from 'react-toastify';
+import { useRecoilValue } from 'recoil';
+import userAtom from './atoms/userAtom';
+import DashBored from './pages/DashBored';
+import Admin from './pages/admin/Admin';
+import CreateProduct from './pages/admin/CreateProduct';
+import CreateCategory from './pages/admin/CreateCategory';
+import ShowProduct from './pages/admin/ShowProduct';
+import Sidebar from './components/Sidebar';
+import ShowCategory from './pages/admin/ShowCategory';
+import Customer from './pages/admin/Customer';
+import Profile from './pages/admin/Profile';
+import Address from './pages/Address';
+import Orders from './pages/admin/Orders';
+import ForgetPassword from './pages/ForgetPassword';
+import ResetPassword from './pages/ResetPassword';
+import SpecificProducts from './pages/SpecificProducts';
+import Sales from './pages/admin/Sales';
+import UserProfile from './pages/UserProfile';
+import MyOrders from './pages/MyOrders';
+import CreateBrand from './pages/admin/CreateBrand';
+import AdminHeader from './components/AdminHeader';
+import ShowBrands from './pages/admin/ShowBrands';
+import BrandWithProducts from './pages/BrandWithProducts';
 
 function App() {
-  const user = useRecoilValue(userAtom)
-  const location = useLocation()
-  const navigate = useNavigate()
+  const user = useRecoilValue(userAtom);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   if (location.pathname.includes('/admin') && !user?.isAdmin) {
-    navigate('/')
+    navigate('/');
   }
+
+  const showHeader = !location.pathname.includes('/login') && !location.pathname.includes('/register') && !location.pathname.includes('/forget-password') && !location.pathname.includes('/reset-password');
 
   return (
     <div>
-      <Header />
+      {location.pathname.includes('/admin') ? <AdminHeader /> : showHeader && <Header />}
+
       {location.pathname.includes('/admin') && user?.isAdmin && <Sidebar />}
       <Routes>
         <Route path='/' element={<HomePage />} />
@@ -55,7 +61,9 @@ function App() {
         <Route path='/admin/product/show' element={user?.isAdmin && <ShowProduct />} />
         <Route path='/admin/category/create' element={user?.isAdmin && <CreateCategory />} />
         <Route path='/admin/category/show' element={user?.isAdmin && <ShowCategory />} />
-        <Route path='/admin/brand/create' element={user?.isAdmin && <CreateBrand />}/>
+        <Route path='/admin/brand/create' element={user?.isAdmin && <CreateBrand />} />
+        <Route path='/admin/brand/show' element={user?.isAdmin && <ShowBrands />} />
+        <Route path='/brand/:bid' element={user?.isAdmin && <BrandWithProducts />}  />
         <Route path="/products/:categoryName/:categoryId" element={<SpecificProducts />} />
         <Route path='/admin/customer' element={user?.isAdmin && <Customer />} />
         <Route path='/admin/sales' element={user?.isAdmin && <Sales />} />
@@ -67,7 +75,7 @@ function App() {
       </Routes>
       <ToastContainer position='bottom-center' />
     </div>
-  )
+  );
 }
 
 export default function WrappedApp() {
@@ -75,5 +83,5 @@ export default function WrappedApp() {
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  )
+  );
 }

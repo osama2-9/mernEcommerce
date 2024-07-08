@@ -39,7 +39,7 @@ const productSchema = new mongoose.Schema({
   brandID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Brands",
-    requried: true,
+    
   },
   sells: {
     type: Number,

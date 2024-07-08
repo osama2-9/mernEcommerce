@@ -37,7 +37,7 @@ const SpecificProducts = () => {
     return (
         <>
             <FilterProducts categoryId={categoryId} products={products} setFilterdProducts={updateData} />
-            <ProductContainer top={'100'} position={'absolute'} left={280}>
+            <ProductContainer top={'140'} position={'absolute'} left={280}>
                 {filteredProducts.map((p) => (
                     <Products key={p._id} product={p} />
                 ))}

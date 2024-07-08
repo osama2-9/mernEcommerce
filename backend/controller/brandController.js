@@ -1,4 +1,6 @@
 import Brand from "../model/Brands.js";
+import Product from "../model/Product.js";
+import Category from "../model/Category.js";
 import { v2 as cloudinary } from "cloudinary";
 
 const createBrand = async (req, res) => {
@@ -106,18 +108,55 @@ const deleteBrand = async (req, res) => {
 
 const getBrands = async (req, res) => {
   try {
-    const getBrands = await Brand.find();
-    if (getBrands.length === 0) {
-      return;
+    const brands = await Brand.find();
+
+    if (brands.length === 0) {
+      return res.status(200).json({ brands: [], products: [] });
     }
 
-    return res.status(200).json(getBrands);
+    const products = await Product.find({
+      brandID: { $in: brands.map((brand) => brand._id) },
+    });
+
+    return res.status(200).json({ brands, products });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({
-      error: error.message,
-    });
+    return res.status(500).json({ error: error.message });
   }
 };
 
-export { createBrand, updateBrand, deleteBrand, getBrands };
+const getBrandsWithProducts = async (req, res) => {
+  try {
+    const { bid } = req.params;
+    if (!bid) {
+      return res.status(400).json({
+        error: "Brand Id is required",
+      });
+    }
+
+    const brand = await Brand.findById(bid);
+    if (!brand) {
+      return res.status(404).json({
+        error: "This Brand not found",
+      });
+    }
+
+    const products = await Product.find({ brandID: brand._id });
+
+    const category = await Category.find({
+      _id: { $in: products.map((p) => p.categoryID) },
+    });
+
+    return res.status(200).json({ products, brand, category });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export {
+  createBrand,
+  updateBrand,
+  deleteBrand,
+  getBrands,
+  getBrandsWithProducts,
+};
