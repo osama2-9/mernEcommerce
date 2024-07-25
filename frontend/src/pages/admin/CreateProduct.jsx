@@ -49,7 +49,7 @@ const CreateProduct = () => {
                     autoClose: true
                 });
             } else {
-                toast("New Product Added!");
+                toast.success("New Product Added !");
                 setInputs({
                     productName: "",
                     productQuantity: "",

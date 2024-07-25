@@ -20,7 +20,6 @@ const createBrand = async (req, res) => {
         error: "This brand already exists",
       });
     }
-
     if (brandImg) {
       const upload = await cloudinary.uploader.upload(brandImg);
       brandImg = upload.secure_url;
@@ -54,6 +53,7 @@ const createBrand = async (req, res) => {
 const updateBrand = async (req, res) => {
   try {
     const { bid, brandName, brandFor, brandDesc } = req.body;
+
     if (!bid) {
       return res.status(400).json({
         error: "Brand Id is required",
@@ -143,11 +143,46 @@ const getBrandsWithProducts = async (req, res) => {
 
     const products = await Product.find({ brandID: brand._id });
 
-    const category = await Category.find({
-      _id: { $in: products.map((p) => p.categoryID) },
+    const sizeSet = new Set();
+    const colorSet = new Set();
+    const onSale = [];
+    const prices = [];
+    const quantity = [];
+
+    products.forEach((product) => {
+      if (product.prodcutSize) {
+        product.prodcutSize.forEach((size) => {
+          sizeSet.add(size);
+        });
+      }
+    });
+    products.forEach((product) => {
+      if (product.productColors) {
+        product.productColors.forEach((color) => {
+          colorSet.add(color);
+        });
+      }
+    });
+    products.forEach((product) => {
+      prices.push(product.productPrice);
+    });
+    products.forEach((product) => {
+      if (product.productQuntity >= 10) {
+        quantity.push(product);
+      }
+    });
+    products.forEach((product) => {
+      if (product.sale > 0) {
+        onSale.push(product);
+      }
     });
 
-    return res.status(200).json({ products, brand, category });
+    const sizes = Array.from(sizeSet);
+    const colors = Array.from(colorSet);
+
+    return res
+      .status(200)
+      .json({ products, brand, sizes, colors, onSale, prices, quantity });
   } catch (error) {
     console.log(error);
   }

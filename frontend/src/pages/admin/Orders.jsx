@@ -215,68 +215,82 @@ const Orders = () => {
                 </Table>
             </TableContainer>
 
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Modal isOpen={isOpen} onClose={onClose} size="xl">
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Order Details</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         {selectedOrder && (
-                            <VStack align="start" spacing={3}>
-                                <HStack>
-                                    <Text fontWeight="bold">Order ID:</Text>
-                                    <Text>{selectedOrder._id}</Text>
-                                </HStack>
+                            <VStack align="start" spacing={5}>
                                 <Image src={selectedOrder.prodcutImg} alt={selectedOrder.productName} boxSize="100px" borderRadius="md" />
-                                <HStack>
-                                    <Text fontWeight="bold">Email:</Text>
-                                    <Text>{selectedOrder.email}</Text>
-                                </HStack>
-                                <HStack>
-                                    <Text fontWeight="bold">Phone:</Text>
-                                    <Text>{selectedOrder.phone}</Text>
-                                </HStack>
-                                <HStack>
-                                    <Text fontWeight="bold">Product Name:</Text>
-                                    <Text>{selectedOrder.productName}</Text>
-                                </HStack>
-                                <HStack>
-                                    <Text fontWeight="bold">Quantity:</Text>
-                                    <Text>{selectedOrder.quantity}</Text>
-                                </HStack>
-                                <HStack>
-                                    <Text fontWeight="bold">Price:</Text>
-                                    <Text>${selectedOrder.price}</Text>
-                                </HStack>
-                                <HStack>
-                                    <Text fontWeight="bold">Total:</Text>
-                                    <Text>${selectedOrder.price * selectedOrder.quantity}</Text>
-                                </HStack>
-                                <HStack>
-                                    <Text fontWeight="bold">Payment Method:</Text>
-                                    <Text>{selectedOrder.paymentMethod}</Text>
-                                </HStack>
-                                <HStack>
-                                    <Text fontWeight="bold">Order Status:</Text>
-                                    <Text>{selectedOrder.orderStatus}</Text>
-                                </HStack>
-                                <Box>
-                                    <Text fontWeight="bold">Address:</Text>
-                                    <Text>{selectedOrder.address.addressName}</Text>
-                                    <Text>{selectedOrder.address.street}, {selectedOrder.address.city}</Text>
-                                    <Text>{selectedOrder.address.country}</Text>
-                                </Box>
-                                <Select
-                                    mt={3}
-                                    value={orderStatus}
-                                    onChange={handleOrderStatusChange}
-                                >
-                                    <option value="Pending">Pending</option>
-                                    <option value="Processing">Processing</option>
-                                    <option value="Shipped">Shipped</option>
-                                    <option value="Delivered">Delivered</option>
-                                    <option value="Cancelled">Cancelled</option>
-                                </Select>
+                                <VStack align="start" spacing={3}>
+                                    <HStack>
+                                        <Text fontWeight="bold">Order ID:</Text>
+                                        <Text>{selectedOrder._id}</Text>
+                                    </HStack>
+                                    <HStack>
+                                        <Text fontWeight="bold">Email:</Text>
+                                        <Text>{selectedOrder.email}</Text>
+                                    </HStack>
+                                    <HStack>
+                                        <Text fontWeight="bold">Phone:</Text>
+                                        <Text>{selectedOrder.phone}</Text>
+                                    </HStack>
+                                    <HStack>
+                                        <Text fontWeight="bold">Product Name:</Text>
+                                        <Text>{selectedOrder.productName}</Text>
+                                    </HStack>
+                                    <HStack>
+                                        <Text fontWeight="bold">Quantity:</Text>
+                                        <Text>{selectedOrder.quantity}</Text>
+                                    </HStack>
+                                    <HStack>
+                                        <Text fontWeight="bold">Size:</Text>
+                                        <Text>{selectedOrder.size}</Text>
+                                    </HStack>
+                                    <HStack>
+                                        <Text fontWeight="bold">Color:</Text>
+                                        <Text>{selectedOrder.color}</Text>
+                                    </HStack>
+                                    <HStack>
+                                        <Text fontWeight="bold">Price:</Text>
+                                        <Text>${selectedOrder.price}</Text>
+                                    </HStack>
+                                    <HStack>
+                                        <Text fontWeight="bold">Total:</Text>
+                                        <Text>${selectedOrder.price * selectedOrder.quantity}</Text>
+                                    </HStack>
+                                    <HStack>
+                                        <Text fontWeight="bold">Payment Method:</Text>
+                                        <Text>{selectedOrder.paymentMethod}</Text>
+                                    </HStack>
+                                    <HStack>
+                                        <Text fontWeight="bold">Order Status:</Text>
+                                        <Text>{selectedOrder.orderStatus}</Text>
+                                    </HStack>
+                                    <HStack>
+                                        <Text fontWeight="bold">Order Date:</Text>
+                                        <Text>{new Date(selectedOrder.createdAt).toLocaleString()}</Text>
+                                    </HStack>
+                                    <Box>
+                                        <Text fontWeight="bold">Address:</Text>
+                                        <Text>{selectedOrder.address.addressName}</Text>
+                                        <Text>{selectedOrder.address.street}, {selectedOrder.address.city}</Text>
+                                        <Text>{selectedOrder.address.country}</Text>
+                                    </Box>
+                                    <Select
+                                        mt={3}
+                                        value={orderStatus}
+                                        onChange={handleOrderStatusChange}
+                                    >
+                                        <option value="Pending">Pending</option>
+                                        <option value="Processing">Processing</option>
+                                        <option value="Shipped">Shipped</option>
+                                        <option value="Delivered">Delivered</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </Select>
+                                </VStack>
                             </VStack>
                         )}
                     </ModalBody>

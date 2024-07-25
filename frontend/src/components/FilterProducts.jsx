@@ -3,7 +3,7 @@
 import { Box, IconButton, List, ListItem, Switch, Stack, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import PropTypes from 'prop-types';
+
 
 const FilterProducts = ({ categoryId, products, setFilterdProducts }) => {
     const [showMoreColors, setShowMoreColors] = useState(false);
@@ -192,10 +192,5 @@ const FilterProducts = ({ categoryId, products, setFilterdProducts }) => {
     );
 };
 
-FilterProducts.propTypes = {
-    categoryId: PropTypes.string.isRequired,
-    products: PropTypes.array.isRequired,
-    setFilterdProducts: PropTypes.func.isRequired,
-};
 
 export default FilterProducts;

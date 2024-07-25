@@ -18,6 +18,8 @@
     "backend": "file:..",
     "country-state-city": "^3.2.1",
     "framer-motion": "^11.2.4",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "react": "^18.2.0",
     "react-country-state-city": "^1.1.0",
     "react-dom": "^18.2.0",

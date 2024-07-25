@@ -1,14 +1,24 @@
 import { useState, useEffect } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import { Table, Thead, Tbody, Tr, Th, Td, TableContainer, Input, Button, Box, Flex } from '@chakra-ui/react';
+import {
+    Table, Thead, Tbody, Tr, Th, Td, TableContainer,
+    Input, Button, Box, Flex, useDisclosure, Modal,
+    ModalOverlay, ModalContent, ModalHeader, ModalFooter,
+    ModalBody, ModalCloseButton, FormControl, FormLabel,
+    Select
+} from '@chakra-ui/react';
 import { toast } from 'react-toastify';
+import useGetCategories from '../../hooks/useGetCategories';
 
 const ShowBrands = () => {
     const [brands, setBrands] = useState([]);
+    const [selectedBrand, setSelectedBrand] = useState({});
     const [filteredBrands, setFilteredBrands] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
     const [searchTerm, setSearchTerm] = useState('');
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const {categories } = useGetCategories()
 
     useEffect(() => {
         const fetchBrands = async () => {
@@ -32,13 +42,12 @@ const ShowBrands = () => {
         setCurrentPage(1);
     }, [searchTerm, brands]);
 
-    const handleEdit = (brandId) => {
-
-        console.log(`Edit brand with ID: ${brandId}`);
+    const handleEdit = (brand) => {
+        setSelectedBrand(brand);
+        onOpen();
     };
 
     const handleDelete = async (brandId) => {
-
         try {
             const res = await fetch('/api/brand/delete', {
                 method: "DELETE",
@@ -48,23 +57,52 @@ const ShowBrands = () => {
                 body: JSON.stringify({
                     bid: brandId
                 })
-            })
-            const data = await res.json()
+            });
+            const data = await res.json();
             if (data.error) {
-                toast.error(data.error)
+                toast.error(data.error);
             } else {
-                toast.success(data.message)
+                toast.success(data.message);
+                setBrands(brands.filter(brand => brand._id !== brandId));
+                setFilteredBrands(filteredBrands.filter(brand => brand._id !== brandId));
             }
-
-
-
         } catch (error) {
             console.log(error);
-            toast.error("Error While Delete This brand")
-
+            toast.error("Error while deleting this brand");
         }
     };
 
+    const handleUpdate = async () => {
+        try {
+            const res = await fetch('/api/brand/update', {
+                method: "PUT",
+                headers: {
+                    'content-type': "application/json"
+                },
+                body: JSON.stringify(selectedBrand)
+            });
+            const data = await res.json();
+            if (data.error) {
+                toast.error(data.error);
+            } else {
+                toast.success(data.message);
+                setBrands(brands.map(brand => brand._id === selectedBrand._id ? selectedBrand : brand));
+                setFilteredBrands(filteredBrands.map(brand => brand._id === selectedBrand._id ? selectedBrand : brand));
+                onClose();
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error("Error while updating this brand");
+        }
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setSelectedBrand({
+            ...selectedBrand,
+            [name]: value
+        });
+    };
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -102,8 +140,7 @@ const ShowBrands = () => {
                                 <Td>{brand.brandName}</Td>
                                 <Td>
                                     <Flex gap={2}>
-
-                                        <FaEdit color='teal' size={22} onClick={() => handleEdit(brand._id)} style={{ cursor: 'pointer', marginRight: '10px' }} />
+                                        <FaEdit color='teal' size={22} onClick={() => handleEdit(brand)} style={{ cursor: 'pointer', marginRight: '10px' }} />
                                         <FaTrash color='red' size={22} onClick={() => handleDelete(brand._id)} style={{ cursor: 'pointer' }} />
                                     </Flex>
                                 </Td>
@@ -119,6 +156,38 @@ const ShowBrands = () => {
                     </Button>
                 ))}
             </Box>
+
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Update Brand</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <FormControl>
+                            <FormLabel>Brand Name</FormLabel>
+                            <Input name="brandName" value={selectedBrand.brandName || ''} onChange={handleChange} />
+                        </FormControl>
+                        <FormControl mt={4}>
+                            <FormLabel>Brand Image URL</FormLabel>
+                            <Input name="brandImg" value={selectedBrand.brandImg || ''} onChange={handleChange} />
+                        </FormControl>
+                        <FormControl mt={4}>
+                            <FormLabel>Brand Category</FormLabel>
+                            <Select name="brandFor" value={selectedBrand.brandFor || ''} onChange={handleChange}>
+                                {categories.map(category => (
+                                    <option key={category._id} value={category._id}>{category.categoryName}</option>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="blue" mr={3} onClick={handleUpdate}>
+                            Save
+                        </Button>
+                        <Button onClick={onClose}>Cancel</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </Box>
     );
 };

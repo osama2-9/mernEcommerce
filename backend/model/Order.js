@@ -16,7 +16,7 @@ const OrderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    
+
     pid: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",
@@ -41,6 +41,13 @@ const OrderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    color: {
+      type: String,
+    },
+    size: {
+      type: String,
+    },
+
     price: {
       type: Number,
       require: true,
@@ -53,6 +60,7 @@ const OrderSchema = new mongoose.Schema(
       type: addressSchema,
       required: true,
     },
+
     orderStatus: {
       type: String,
       default: OrderStatus.PENDING,

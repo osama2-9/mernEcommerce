@@ -18,13 +18,14 @@ import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { BsFolder } from 'react-icons/bs';
+import { BsStarFill, BsStarHalf, BsStar } from 'react-icons/bs';
 
 import userAtom from '../atoms/userAtom';
 import RelatedProducts from './RelatedProducts';
 
 const Product = () => {
     const [selectedProduct, setSelectedProduct] = useState({});
+    const [rate, setRate] = useState({});
     const [category, setCategory] = useState("");
     const [quantity, setQuantity] = useState(1);
     const [color, setColor] = useState("");
@@ -32,6 +33,7 @@ const Product = () => {
     const logged = useRecoilValue(userAtom);
 
     const { pid } = useParams();
+
     useEffect(() => {
         const getProductById = async () => {
             try {
@@ -39,22 +41,24 @@ const Product = () => {
                 const data = await res.json();
                 const productData = data.data[0];
                 const categoryName = data.data[1];
-
+                const productRate = data.data[2];
+                console.log(productRate);
                 if (data.error) {
                     toast(data.error, {
                         type: "error",
                         autoClose: true,
                     });
+                } else {
+                    setSelectedProduct(productData);
+                    setCategory(categoryName);
+                    setRate(productRate);
                 }
-                setSelectedProduct(productData);
-                setCategory(categoryName);
-
             } catch (error) {
                 console.log(error);
             }
         };
         getProductById();
-    }, [pid, category._id]);
+    }, [pid, category._id, logged.uid]);
 
     const handleQuantityChange = (e) => {
         setQuantity(parseInt(e.target.value));
@@ -103,11 +107,51 @@ const Product = () => {
         }
     };
 
-    const hasSale  = selectedProduct.sale  > 0 ? true :false 
-
+    const hasSale = selectedProduct.sale > 0;
     const Discount = (price, discount) => {
         return price - (price * (discount / 100));
     };
+
+    const calculateAverageRating = (rate) => {
+        if (rate?.ratingCounter > 0 && rate?.rating) {
+            return rate.rating / rate.ratingCounter;
+        }
+        return 0;
+    };
+
+    const renderStars = (rating) => {
+        const fullStars = Math.floor(rating);
+        const halfStar = rating % 1 >= 0.5;
+        const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+        return (
+            <>
+                {Array(fullStars).fill('').map((_, i) => (
+                    <BsStarFill
+                        key={`full-${i}`}
+                        color="gold"
+                        size={22}
+                    />
+                ))}
+                {halfStar && (
+                    <BsStarHalf
+                        key="half"
+                        color="gold"
+                        size={22}
+                    />
+                )}
+                {Array(emptyStars).fill('').map((_, i) => (
+                    <BsStar
+                        key={`empty-${i}`}
+                        color="gold"
+                        size={22}
+                    />
+                ))}
+            </>
+        );
+    };
+
+    const averageRating = calculateAverageRating(rate);
 
     return (
         <>
@@ -119,7 +163,6 @@ const Product = () => {
                     >
                         <Flex flex={1}>
                             <Image
-
                                 p={1}
                                 width={{ sm: "100%", md: "600px" }}
                                 height={{ sm: "auto", md: "500px" }}
@@ -140,7 +183,7 @@ const Product = () => {
                                 </Heading>
                                 {selectedProduct.productQuntity <= 3 && (
                                     <Text>
-                                        <Badge p={1} bg={'black'} color={'white'} h={'30px'} textAlign={'center'} >
+                                        <Badge p={1} bg={'black'} color={'white'} h={'30px'} textAlign={'center'}>
                                             In Stock {selectedProduct.productQuntity}
                                         </Badge>
                                     </Text>
@@ -161,8 +204,7 @@ const Product = () => {
                                 )}
                             </Flex>
                             <Flex flexDirection={'row'} gap={2} color={'gray.500'} alignItems="center">
-                                <BsFolder className='mt-1' size={22} />
-                                <Text fontWeight={'bold'} fontSize={'lg'}> {category.categoryName}</Text>
+                                <Text fontWeight={'bold'} fontSize={'lg'}>{category.categoryName}</Text>
                             </Flex>
                             <Divider orientation="horizontal" borderColor="black" />
                             <Text fontWeight={600} color={'gray.500'} size="sm">
@@ -170,16 +212,19 @@ const Product = () => {
                             </Text>
                             <Divider orientation="horizontal" borderColor="black" />
                             <Box>
-                                {
-                                    hasSale && (
-                                        <Badge bg={'red.500'} color={'white'} p={2}>
-                                            On Sale
-
-                                </Badge>
-                                    )
-                                }
-
-
+                                {hasSale && (
+                                    <Badge bg={'red.500'} color={'white'} p={2}>
+                                        On Sale
+                                    </Badge>
+                                )}
+                            </Box>
+                            <Box>
+                                <Flex alignItems="center" mt={2}>
+                                    {renderStars(averageRating)}
+                                    <Text ml={2} color="gray.500">
+                                        ({rate?.ratingCounter || 0} reviews)
+                                    </Text>
+                                </Flex>
                             </Box>
                             <Stack spacing={4} width="100%">
                                 {selectedProduct.prodcutSize?.length > 0 && (

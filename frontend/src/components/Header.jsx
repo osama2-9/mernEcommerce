@@ -105,6 +105,7 @@ const Header = () => {
                     <Image src="/logo.png" alt="Logo" w={70} />
                 </Link>
                 <Flex justifyContent={'center'}>
+                    
                     <Input
                         value={search}
                         onChange={handleChange}
@@ -250,18 +251,7 @@ const Header = () => {
                                             />
                                         </Tooltip>
                                     </Link>
-                                    <Link to={`/login`} onClick={onClose}>
-                                        Login
-                                        <Tooltip label="Login" aria-label="Login">
-                                            <IconButton
-                                                icon={<BsPerson />}
-                                                size="md"
-                                                variant="ghost"
-                                                aria-label="Login"
-                                                mb={2}
-                                            />
-                                        </Tooltip>
-                                    </Link>
+                                
                                     <Link to={`/cart/${logged?.uid}`} onClick={onClose}>
                                         Cart
                                         <Tooltip label="Cart" aria-label="Cart">
@@ -274,7 +264,7 @@ const Header = () => {
                                             />
                                         </Tooltip>
                                     </Link>
-                                    {logged.isAdmin && (
+                                    {logged?.isAdmin && (
                                         <Link to={`admin/${logged.uid}`} onClick={onClose}>
                                             Admin
                                             <Tooltip label="Admin Panel" aria-label="Admin Panel">

@@ -92,9 +92,12 @@ const Cart = () => {
             console.log(error);
         }
     };
+    
+
+
 
     return (
-        <Box p={5}>
+        <Box  p={5}>
             <Text fontSize="2xl" mb={5}>Shopping Cart ({cartItems.length}) ({logged.email})</Text>
             <Stack spacing={5}>
                 {cartItems.map(item => (

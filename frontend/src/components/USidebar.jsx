@@ -14,7 +14,7 @@ const USidebar = () => {
             color="white"
             p={4}
             position="fixed"
-            top={32}
+            top={'120px'}
         >
             <VStack align="stretch" spacing={4}>
                 <Text fontSize="2xl" mb={4}>Menu</Text>

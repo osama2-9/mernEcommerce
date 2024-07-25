@@ -2,6 +2,7 @@ import { response } from "express";
 import Category from "../model/Category.js";
 import Product from "../model/Product.js";
 import Prodcut from "../model/Product.js";
+import Rating from "../model/Rating.js";
 import { v2 as cloudinary } from "cloudinary";
 const createProduct = async (req, res) => {
   try {
@@ -138,7 +139,12 @@ const getProductById = async (req, res) => {
     const selectedProduct = await Prodcut.findById(pid);
     const categoryID = selectedProduct.categoryID;
     const getCategoryNameByProductId = await Category.findById(categoryID);
-    const fullData = data.concat(selectedProduct, getCategoryNameByProductId);
+    const getProductRate = await Rating.findOne({ pid: selectedProduct?._id });
+    const fullData = data.concat(
+      selectedProduct,
+      getCategoryNameByProductId,
+      getProductRate
+    );
 
     if (!selectedProduct) {
       return res.status(404).json({
@@ -405,7 +411,89 @@ const removeSale = async (req, res) => {
     console.log(error);
   }
 };
+
+const ProductRating = async (req, res) => {
+  try {
+    const { uid, pid, rating } = req.body;
+    if (!uid || !pid) {
+      return res.status(400).json({
+        error: "Missing dependencies to rate",
+      });
+    }
+
+    const rate = parseInt(rating);
+    if (isNaN(rate) || rate <= 0) {
+      return res.status(400).json({
+        error: "Invalid rating value",
+      });
+    }
+
+    const productToRate = await Product.findById(pid);
+    if (!productToRate) {
+      return res.status(400).json({
+        error: "No product found",
+      });
+    }
+
+    let existingRating = await Rating.findOne({ uid, pid });
+
+    if (existingRating) {
+      existingRating.rating = rate;
+      existingRating.ratingCounter += 1;
+      await existingRating.save();
+    } else {
+      const newRate = new Rating({
+        pid: productToRate._id,
+        uid: req.user._id,
+        rating: rate,
+        ratingCounter: 1,
+      });
+      await newRate.save();
+    }
+
+    const allRatings = await Rating.find({ pid });
+    const totalRatings = allRatings.reduce((sum, rate) => sum + rate.rating, 0);
+    const ratingCount = allRatings.length;
+    const averageRating = totalRatings / ratingCount;
+
+    productToRate.rating = averageRating;
+    productToRate.ratingCount = ratingCount;
+    await productToRate.save();
+
+    return res.status(200).json({
+      message: "Thanks for rating",
+      rating: averageRating,
+      ratingCount,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "An error occurred while submitting the rating",
+    });
+  }
+};
+
+
+const getTopRate = async (req, res) => {
+  try {
+    const products = await Product.find();
+    const rating = await Rating.find();
+
+    const productsWithRatings = products.forEach((pr) => {
+      rating.filter((p = p._id === pr._id));
+    });
+
+    // productsWithRatings.sort((a, b) => b.averageRating - a.averageRating);
+
+    return res.status(200).json(productsWithRatings);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 export {
+  ProductRating,
   createProduct,
   getAllProducts,
   filterProducts,
@@ -418,4 +506,5 @@ export {
   updateProductData,
   getFilterdProducts,
   removeSale,
+  getTopRate,
 };

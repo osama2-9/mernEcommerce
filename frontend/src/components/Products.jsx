@@ -28,7 +28,7 @@ const Products = ({ product }) => {
                     <Image className="rounded-sm" src={product?.productImg} width="500px" height={250} alt={product.productName} />
                 </Box>
                 <Box>
-                    <Text textAlign="center" mt={1} fontSize="xl" fontWeight="500" lineHeight="short">
+                    <Text textAlign="center" mt={2} fontSize="xl" fontWeight="500" lineHeight="short">
                         {product.productName.length >= 18 ? product.productName.slice(0, 18).concat('...') : product.productName}
                     </Text>
                 </Box>

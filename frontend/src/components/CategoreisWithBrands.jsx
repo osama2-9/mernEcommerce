@@ -9,10 +9,11 @@ const CategoreisWithBrands = ({ categories }) => {
     const [openMenu, setOpenMenu] = useState(null);
 
     return (
-        <Flex gap={3} justify="center" bg="gray.100" py={5}>
+        <Flex gap={3} justify="center" bg="gray.200" py={5}>
             {categories?.map((category) => {
                 const categoryBrands = brands?.filter(brand => brand.brandFor.includes(category._id));
 
+                
                 return (
                     <Menu
                         key={category.categoryName}
@@ -29,7 +30,9 @@ const CategoreisWithBrands = ({ categories }) => {
                         >
                             {category.categoryName}
                         </MenuButton>
+
                         {categoryBrands?.length > 0 && (
+
                             <MenuList
                                 width={'300px'}
                                 onMouseEnter={() => setOpenMenu(category.categoryName)}

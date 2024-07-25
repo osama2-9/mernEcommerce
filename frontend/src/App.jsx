@@ -1,4 +1,5 @@
 import './App.css';
+import { useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate, BrowserRouter } from 'react-router-dom';
 import Header from './components/Header';
 import HomePage from './pages/HomePage';
@@ -36,11 +37,13 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  if (location.pathname.includes('/admin') && !user?.isAdmin) {
-    navigate('/');
-  }
+  useEffect(() => {
+    if (location.pathname.includes('/admin') && !user?.isAdmin) {
+      navigate('/');
+    }
+  }, [location, user, navigate]);
 
-  const showHeader = !location.pathname.includes('/login') && !location.pathname.includes('/register') && !location.pathname.includes('/forget-password') && !location.pathname.includes('/reset-password');
+  const showHeader = !['/login', '/register', '/forget-password', '/reset-password'].some(path => location.pathname.includes(path));
 
   return (
     <div>
@@ -54,24 +57,24 @@ function App() {
         <Route path='/reset-password/:uid/:token' element={<ResetPassword />} />
         <Route path='/register' element={<Signup />} />
         <Route path='/product/:pid' element={<Product />} />
-        <Route path='/cart/:uid' element={user && <Cart />} />
-        <Route path='/dashbored/:uid' element={user && <DashBored />} />
-        <Route path='/admin/:uid' element={user?.isAdmin && <Admin />} />
-        <Route path='/admin/product/create' element={user?.isAdmin && <CreateProduct />} />
-        <Route path='/admin/product/show' element={user?.isAdmin && <ShowProduct />} />
-        <Route path='/admin/category/create' element={user?.isAdmin && <CreateCategory />} />
-        <Route path='/admin/category/show' element={user?.isAdmin && <ShowCategory />} />
-        <Route path='/admin/brand/create' element={user?.isAdmin && <CreateBrand />} />
-        <Route path='/admin/brand/show' element={user?.isAdmin && <ShowBrands />} />
-        <Route path='/brand/:bid' element={user?.isAdmin && <BrandWithProducts />}  />
-        <Route path="/products/:categoryName/:categoryId" element={<SpecificProducts />} />
-        <Route path='/admin/customer' element={user?.isAdmin && <Customer />} />
-        <Route path='/admin/sales' element={user?.isAdmin && <Sales />} />
-        <Route path='/admin/profile/:uid' element={user?.isAdmin && <Profile />} />
-        <Route path='/admin/order/' element={user?.isAdmin && <Orders />} />
-        <Route path='/address' element={user && <Address />} />
-        <Route path='/user-profile' element={user && <UserProfile />} />
-        <Route path='my-orders/:uid' element={user && <MyOrders />} />
+        <Route path='/cart/:uid' element={user ? <Cart /> : <HomePage />} />
+        <Route path='/dashbored/:uid' element={user ? <DashBored /> : <HomePage />} />
+        <Route path='/admin/:uid' element={user?.isAdmin ? <Admin /> : <HomePage />} />
+        <Route path='/admin/product/create' element={user?.isAdmin ? <CreateProduct /> : <HomePage />} />
+        <Route path='/admin/product/show' element={user?.isAdmin ? <ShowProduct /> : <HomePage />} />
+        <Route path='/admin/category/create' element={user?.isAdmin ? <CreateCategory /> : <HomePage />} />
+        <Route path='/admin/category/show' element={user?.isAdmin ? <ShowCategory /> : <HomePage />} />
+        <Route path='/admin/brand/create' element={user?.isAdmin ? <CreateBrand /> : <HomePage />} />
+        <Route path='/admin/brand/show' element={user?.isAdmin ? <ShowBrands /> : <HomePage />} />
+        <Route path='/brand/:bid' element={<BrandWithProducts />} />
+        <Route path='/products/:categoryName/:categoryId' element={<SpecificProducts />} />
+        <Route path='/admin/customer' element={user?.isAdmin ? <Customer /> : <HomePage />} />
+        <Route path='/admin/sales' element={user?.isAdmin ? <Sales /> : <HomePage />} />
+        <Route path='/admin/profile/:uid' element={user?.isAdmin ? <Profile /> : <HomePage />} />
+        <Route path='/admin/order' element={user?.isAdmin ? <Orders /> : <HomePage />} />
+        <Route path='/address' element={user ? <Address /> : <HomePage />} />
+        <Route path='/user-profile' element={user ? <UserProfile /> : <HomePage />} />
+        <Route path='/my-orders/:uid' element={user ? <MyOrders /> : <HomePage />} />
       </Routes>
       <ToastContainer position='bottom-center' />
     </div>

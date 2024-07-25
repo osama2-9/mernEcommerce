@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
-
 const productSchema = new mongoose.Schema({
   productName: {
     type: String,
-    requried: true,
+    required: true,
     trim: true,
   },
   productImg: {
@@ -13,12 +12,11 @@ const productSchema = new mongoose.Schema({
   productDesc: {
     type: String,
     required: true,
-
     maxLength: 500,
   },
   productPrice: {
     type: Number,
-    requried: true,
+    required: true,
     min: 1,
   },
   productQuntity: {
@@ -39,7 +37,6 @@ const productSchema = new mongoose.Schema({
   brandID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Brands",
-    
   },
   sells: {
     type: Number,
@@ -49,7 +46,16 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  rating: {
+    type: Number,
+    default: 0,
+  },
+  ratingCount: {
+    type: Number,
+    default: 0,
+  },
 });
+
 productSchema.statics.getRelatedProducts = async function (
   categoryID,
   excludeProductID,

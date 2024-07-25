@@ -12,8 +12,8 @@ const newMessaeg = async (title, description, orderDetail) => {
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "hoponlineecommerce7@gmail.com",
-        pass: "zmpp kwdp pxgz vhrz",
+        user: "osamaalsrraj3@gmail.com",
+        pass: "qzpd uegm trvr otmh",
       },
     });
 
@@ -72,8 +72,8 @@ const newMessaeg = async (title, description, orderDetail) => {
     `;
 
     var mailOptions = {
-      from: "shoponlinecommerce7@gmail.com",
-      to: "osamasarraj67@gmail.com",
+      from: "osamaalsrraj3@gmail.com",
+      to: orderDetail.email,
       subject: "New email from OnlineShop",
       html: emailTemplate,
     };
@@ -122,17 +122,17 @@ const sendDeletionEmail = async (deletedOrders) => {
 
     var transporter = nodemailer.createTransport({
       service: "gmail",
-      host:"smtp.gmail.com",
-      port:587,
-      secure:false,
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
       auth: {
-        user: "shoponlineecommerce7@gmail.com",
-        pass: "zmpp kwdp pxgz vhrz",
+        user: "osamaalsrraj3@gmail.com",
+        pass: "qzpd uegm trvr otmh",
       },
     });
 
     var mailOptions = {
-      from: "shoponlineecommerce7@gmail.com",
+      from: "osamaalsrraj3@gmail.com",
       to: deletedOrders[0].email,
       subject: "User Deletion Notification",
       html: `
