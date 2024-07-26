@@ -13,7 +13,7 @@ import {
   getFilterdProducts,
   removeSale,
   ProductRating,
-  getTopRate,
+  getTopRatedProducts,
 } from "../controller/productController.js";
 import { isAdmin } from "../middleware/isAdmin.js";
 import { protectRoute } from "../middleware/protectRoute.js";
@@ -33,6 +33,6 @@ productRoute.put("/update", isAdmin, protectRoute, updateProductData);
 productRoute.get("/filter/products/:cid", getFilterdProducts);
 productRoute.put("/removeSale", isAdmin, protectRoute, removeSale);
 productRoute.post("/rate", protectRoute, ProductRating);
-productRoute.get("/topRateProducts", getTopRate);
+productRoute.get("/getProducts/topRated", getTopRatedProducts);
 
 export default productRoute;

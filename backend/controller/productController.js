@@ -114,6 +114,7 @@ const filterProducts = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 const search = async (req, res) => {
   try {
     const { query } = req.params;
@@ -472,23 +473,32 @@ const ProductRating = async (req, res) => {
     });
   }
 };
-
-
-const getTopRate = async (req, res) => {
+const getTopRatedProducts = async (req, res) => {
   try {
     const products = await Product.find();
-    const rating = await Rating.find();
+    const ratings = await Rating.find();
 
-    const productsWithRatings = products.forEach((pr) => {
-      rating.filter((p = p._id === pr._id));
-    });
+    const ratedProducts = products
+      .map((product) => {
+        const rating = ratings.find(
+          (rated) => rated.pid.toString() === product._id.toString()
+        );
+        if (rating) {
+          return {
+            ...product.toObject(),
+            rating: rating.value,
+          };
+        }
+        return null;
+      })
+      .filter((product) => product !== null);
 
-    // productsWithRatings.sort((a, b) => b.averageRating - a.averageRating);
+    ratedProducts.sort((a, b) => b.rating - a.rating);
 
-    return res.status(200).json(productsWithRatings);
+    return res.status(200).json(ratedProducts);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error(error);
+    return res.status(500).json({ error: "Server error" });
   }
 };
 
@@ -506,5 +516,5 @@ export {
   updateProductData,
   getFilterdProducts,
   removeSale,
-  getTopRate,
+  getTopRatedProducts,
 };
