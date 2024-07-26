@@ -5,6 +5,7 @@ import { Box, Button, FormControl, FormLabel, Input, useColorModeValue } from '@
 import { toast } from 'react-toastify';
 import { useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom';
+import USidebar from '../components/USidebar';
 
 const countryOptions = countries
     .filter((c) => c.name.common !== 'Israel')
@@ -92,7 +93,10 @@ const Address = () => {
     };
 
     return (
+        <>
+        <USidebar />
         <Box
+        mt={20}
             bg={useColorModeValue('white', 'gray.800')}
             p={8}
             borderRadius="lg"
@@ -164,6 +168,7 @@ const Address = () => {
                 </form>
             
         </Box>
+            </>
     );
 };
 

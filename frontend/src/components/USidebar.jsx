@@ -1,35 +1,35 @@
-import { Box, VStack, Link, Text } from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Box, Flex } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom';
+import { BsHouseDoor, BsSpeedometer, BsPerson } from 'react-icons/bs';
 
-const USidebar = () => {
-    const user = useRecoilValue(userAtom)
+const Navbar = () => {
+    const user = useRecoilValue(userAtom);
+
     return (
-        <Box
-            as="nav"
-            width="250px"
-            height="100vh"
-            bg="gray.800"
-            color="white"
-            p={4}
-            position="fixed"
-            top={'120px'}
-        >
-            <VStack align="stretch" spacing={4}>
-                <Text fontSize="2xl" mb={4}>Menu</Text>
-                <Link as={RouterLink} to="/address" _hover={{ textDecor: 'none', bg: 'gray.700' }} p={2} borderRadius="md">
-                    Address
-                </Link>
-                <Link as={RouterLink} to={`/my-orders/${user?.uid}`} _hover={{ textDecor: 'none', bg: 'gray.700' }} p={2} borderRadius="md">
-                    My Orders
-                </Link>
-                <Link as={RouterLink} to="/user-profile" _hover={{ textDecor: 'none', bg: 'gray.700' }} p={2} borderRadius="md">
-                    Profile
-                </Link>
-            </VStack>
+        <Box bg="gray.50" color="black" top={0} position="fixed" width="100%" zIndex="sticky" shadow={'md'}>
+            <Flex align="center" justify="space-between" p={4} maxW="1200px" >
+                <Link to={'/'}><BsHouseDoor size={22} /></Link>
+                <Flex align="center" gap={6}>
+
+                    <Link to={`/my-orders/${user?.uid}`} _hover={{ color: 'gray.200' }}>
+                        My Orders
+                    </Link>
+                    <Link to="/user-profile" _hover={{ color: 'gray.200' }}>
+                        <BsPerson size={24} />
+                    </Link>
+                    <Link to={`/dashboard/${user?.uid}`} _hover={{ color: 'gray.200' }}>
+                        <BsSpeedometer size={24} />
+                    </Link>
+                </Flex>
+
+
+            </Flex>
+
+
         </Box>
     );
 };
 
-export default USidebar;
+export default Navbar;

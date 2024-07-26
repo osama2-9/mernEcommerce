@@ -1,41 +1,76 @@
-import { Box, Flex, Image, Text, Badge, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from "@chakra-ui/react";
-import USidebar from "../components/USidebar"
-import { useParams } from "react-router-dom"
-import { toast } from "react-toastify"
-import { StarIcon } from "@chakra-ui/icons";
-import { useEffect, useState } from "react"
+import {
+    Box,
+    Flex,
+    Image,
+    Text,
+    Badge,
+    Button,
+    useDisclosure,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalCloseButton,
+    ModalBody,
+    ModalFooter,
+    Spinner,
+    Input,
+    useBreakpointValue,
+    IconButton
+} from "@chakra-ui/react";
+import USidebar from "../components/USidebar";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { StarIcon, SearchIcon } from "@chakra-ui/icons";
+import { useEffect, useState } from "react";
 import userAtom from "../atoms/userAtom";
 import { useRecoilValue } from "recoil";
 
 const MyOrders = () => {
-    const [userOrders, setUserOrders] = useState([])
-    const { uid } = useParams()
+    const [userOrders, setUserOrders] = useState([]);
+    const [filteredOrders, setFilteredOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const { uid } = useParams();
     const [rating, setRating] = useState(0);
     const [selectedOrder, setSelectedOrder] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const logged = useRecoilValue(userAtom)
+    const logged = useRecoilValue(userAtom);
+    const isMobile = useBreakpointValue({ base: true, md: false });
+
     useEffect(() => {
         const getUserOrders = async () => {
+            setLoading(true);
             try {
-                const res = await fetch(`/api/order/userOrder/${uid}`)
-                const data = await res.json()
+                const res = await fetch(`/api/order/userOrder/${uid}`);
+                const data = await res.json();
                 if (data.error) {
-                    toast.error(data.error)
+                    toast.error(data.error);
                 }
-                setUserOrders(data)
+                setUserOrders(data);
+                setFilteredOrders(data); // Initialize with all orders
             } catch (error) {
-                console.log(error)
-                toast.error("Failed to fetch orders")
+                console.log(error);
+                toast.error("Failed to fetch orders");
+            } finally {
+                setLoading(false);
             }
-        }
-        getUserOrders()
-    }, [uid])
+        };
+        getUserOrders();
+    }, [uid]);
+
+    useEffect(() => {
+        // Filter orders based on search query
+        const results = userOrders?.filter(order =>
+            order.productName.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setFilteredOrders(results);
+    }, [searchQuery, userOrders]);
 
     const handleRateNow = (order) => {
         setSelectedOrder(order);
         setRating(0);
         onOpen();
-
     };
 
     const handleStarClick = (index) => {
@@ -63,7 +98,7 @@ const MyOrders = () => {
                         autoClose: true,
                     });
                 } else {
-                    toast.success(data.message)
+                    toast.success(data.message);
                     onClose();
                 }
             } catch (error) {
@@ -81,42 +116,83 @@ const MyOrders = () => {
     return (
         <>
             <USidebar />
-            <Box position={'absolute'} top={'145px'} left={'280px'} shadow={'md'} h={'auto'} w={'1020px'} p={4}>
-                {userOrders.length > 0 ? (
-                    userOrders.map((order) => (
-                        <Box key={order._id} borderWidth="1px" borderRadius="lg" overflow="hidden" mb={4} p={4}>
-                            <Flex>
+            <Box
+                position='relative'
+                top='80px'
+                left={isMobile ? '0' : '0px'}
+                p={4}
+                maxW='1200px'
+                mx='auto'
+            >
+                <Flex mb={4} align="center">
+                    <Input
+                        placeholder="Search orders..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        size="md"
+                        mr={2}
+                    />
+                    <IconButton
+                        aria-label="Search Orders"
+                        icon={<SearchIcon />}
+                        onClick={() => setSearchQuery(searchQuery)}
+                        colorScheme="blue"
+                    />
+                </Flex>
+
+                {loading ? (
+                    <Flex justifyContent="center" alignItems="center" height="80vh">
+                        <Spinner size="lg" />
+                    </Flex>
+                ) : filteredOrders.length > 0 ? (
+                    filteredOrders.map((order) => (
+                        <Box
+                            key={order._id}
+                            borderWidth="1px"
+                            borderRadius="md"
+                            overflow="hidden"
+                            mb={6}
+                            p={4}
+                            boxShadow="lg"
+                            _hover={{ boxShadow: 'xl', transform: 'scale(1.01)', transition: '0.3s' }}
+                            transition="0.3s"
+                        >
+                            <Flex direction={{ base: 'column', md: 'row' }} align="center">
                                 <Image
                                     src={order.prodcutImg}
                                     alt={order.productName}
-                                    boxSize="150px"
-                                    objectFit="cover"
-                                    mr={4}
+                                    boxSize={{ base: 'full', md: '150px' }}
+                                    mb={{ base: 4, md: 0 }}
+                                    mr={{ md: 4 }}
+                                    borderRadius="md"
                                 />
                                 <Box flex="1">
-                                    <Flex justifyContent="space-between" alignItems="center">
-                                        <Text fontWeight="bold" fontSize="xl">{order.productName}</Text>
+                                    <Flex direction="column" mb={2}>
+                                        <Text fontWeight="bold" fontSize="xl" mb={1}>{order.productName}</Text>
                                         <Text color="gray.500">{new Date(order.createdAt).toLocaleDateString()}</Text>
                                     </Flex>
-                                    <Text fontWeight="bold" mt={2}>Order ID: {order._id}</Text>
-                                    <Text>Size: {order.size}</Text>
-                                    <Text>Color: {order.color}</Text>
-                                    <Text mt={2}>Address: {order.address.street}, {order.address.city}, {order.address.country}</Text>
-                                    <Text>Building: {order.address.buildingName}, Floor: {order.address.floor}, Apt: {order.address.apartmentNumber}</Text>
-                                    <Text fontWeight="bold" mt={2}>Price: ${order.price}</Text>
-                                    <Badge mt={2} colorScheme={getOrderStatusColor(order.orderStatus)}>
+                                    <Text fontWeight="bold" mb={1}>Order ID: {order._id}</Text>
+                                    <Text mb={1}>Size: {order.size}</Text>
+                                    <Text mb={1}>Color: {order.color}</Text>
+                                    <Text mb={1}>Address: {order.address.street}, {order.address.city}, {order.address.country}</Text>
+                                    <Text mb={2}>Building: {order.address.buildingName}, Floor: {order.address.floor}, Apt: {order.address.apartmentNumber}</Text>
+                                    <Text fontWeight="bold" mb={2}>Price: ${order.price}</Text>
+                                    <Badge colorScheme={getOrderStatusColor(order.orderStatus)}>
                                         {order.orderStatus}
                                     </Badge>
-
-
-
                                 </Box>
                                 {
-                                    order.orderStatus == "Delivered" && (<>
-                                        <Button mt={'48'} key={order._id} bg={'black'} color={'white'} _hover={{
-                                            bg: "gray.700"
-                                        }} size={'sm'} onClick={() => handleRateNow(order)}>Rate Now</Button>
-                                    </>)
+                                    order.orderStatus === "Delivered" && (
+                                        <Button
+                                            mt={{ base: 4, md: 0 }}
+                                            bg='black'
+                                            color='white'
+                                            _hover={{ bg: "gray.700" }}
+                                            onClick={() => handleRateNow(order)}
+                                        >
+                                            Rate Now
+                                        </Button>
+                                    )
                                 }
                             </Flex>
                         </Box>
@@ -125,6 +201,7 @@ const MyOrders = () => {
                     <Text>No orders found</Text>
                 )}
             </Box>
+
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
@@ -133,8 +210,14 @@ const MyOrders = () => {
                     <ModalBody>
                         {selectedOrder && (
                             <>
-                                <Image src={selectedOrder.prodcutImg
-                                } alt={selectedOrder.productName} boxSize="150px" objectFit="cover" mx="auto" mb={4} />
+                                <Image
+                                    src={selectedOrder.prodcutImg}
+                                    alt={selectedOrder.productName}
+                                    boxSize="150px"
+                                    mx="auto"
+                                    mb={4}
+                                    borderRadius="md"
+                                />
                                 <Text fontWeight="bold" textAlign="center">{selectedOrder.productName}</Text>
                                 <Flex justifyContent="center" mt={4}>
                                     {[0, 1, 2, 3, 4].map((index) => (
@@ -142,6 +225,7 @@ const MyOrders = () => {
                                             key={index}
                                             color={index < rating ? "yellow.400" : "gray.300"}
                                             cursor="pointer"
+                                            boxSize={8}
                                             onClick={() => handleStarClick(index)}
                                         />
                                     ))}
@@ -155,24 +239,24 @@ const MyOrders = () => {
                 </ModalContent>
             </Modal>
         </>
-    )
-}
+    );
+};
 
 const getOrderStatusColor = (status) => {
     switch (status) {
         case 'Pending':
-            return 'yellow'
+            return 'yellow';
         case 'Processing':
-            return 'blue'
+            return 'blue';
         case 'Shipped':
-            return 'purple'
+            return 'purple';
         case 'Delivered':
-            return 'green'
+            return 'green';
         case 'Cancelled':
-            return 'red'
+            return 'red';
         default:
-            return 'gray'
+            return 'gray';
     }
-}
+};
 
-export default MyOrders
+export default MyOrders;

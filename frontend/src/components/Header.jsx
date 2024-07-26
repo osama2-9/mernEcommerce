@@ -187,7 +187,7 @@ const Header = () => {
                                     </Tooltip>
                                 </Link>
                             )}
-                            <Link to={`/dashbored/${logged?.uid}`}>
+                                <Link to={`/dashboard/${logged?.uid}`}>
                                 <Tooltip label="Dashboard" aria-label="Dashboard">
                                     <IconButton
                                         icon={<BsSpeedometer />}
@@ -278,7 +278,7 @@ const Header = () => {
                                             </Tooltip>
                                         </Link>
                                     )}
-                                    <Link to={`/dashbored/${logged?.uid}`} onClick={onClose}>
+                                        <Link to={`/dashboard/${logged?.uid}`} onClick={onClose}>
                                         Dashboard
                                         <Tooltip label="Dashboard" aria-label="Dashboard">
                                             <IconButton

@@ -42,8 +42,8 @@ function App() {
       navigate('/');
     }
   }, [location, user, navigate]);
+  const showHeader = !['/login', '/register', '/forget-password', '/reset-password', '/my-orders', '/user-profile', '/dashboard', '/address'].some(path => location.pathname.includes(path));
 
-  const showHeader = !['/login', '/register', '/forget-password', '/reset-password'].some(path => location.pathname.includes(path));
 
   return (
     <div>
@@ -58,7 +58,7 @@ function App() {
         <Route path='/register' element={<Signup />} />
         <Route path='/product/:pid' element={<Product />} />
         <Route path='/cart/:uid' element={user ? <Cart /> : <HomePage />} />
-        <Route path='/dashbored/:uid' element={user ? <DashBored /> : <HomePage />} />
+        <Route path='/dashboard/:uid' element={user ? <DashBored /> : <HomePage />} />
         <Route path='/admin/:uid' element={user?.isAdmin ? <Admin /> : <HomePage />} />
         <Route path='/admin/product/create' element={user?.isAdmin ? <CreateProduct /> : <HomePage />} />
         <Route path='/admin/product/show' element={user?.isAdmin ? <ShowProduct /> : <HomePage />} />

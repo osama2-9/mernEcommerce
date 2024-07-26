@@ -1,38 +1,48 @@
-import { Box, Flex, Text, Icon, useColorModeValue } from '@chakra-ui/react';
+import { Box, Flex, Text, Icon, useColorModeValue, useBreakpointValue } from '@chakra-ui/react';
 import { FaBoxOpen } from 'react-icons/fa';
-import useGetOrders from '../hooks/useGetOrders'
+import useGetOrders from '../hooks/useGetOrders';
 import { useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom';
 
 const UserTabs = () => {
-    const logged = useRecoilValue(userAtom)
-    const { orders } = useGetOrders()
-    const filter = orders.filter((o) => o?.uid === logged?.uid)
+    const logged = useRecoilValue(userAtom);
+    const { orders } = useGetOrders();
+    const filter = orders.filter((o) => o?.uid === logged?.uid);
 
-    console.log('filterd :\n', filter);
+    const isMobile = useBreakpointValue({ base: true, md: false });
+
     return (
-        <Flex position={'absolute'} left={'600px'} direction="row" p={4} m={4}>
-
+        <Flex
+            direction={isMobile ? "column" : "row"}
+            p={4}
+            m={4}
+            justify={isMobile ? "center" : "flex-start"}
+            align="center"
+            position="relative"
+            maxW="1200px"
+            mx="auto"
+            mt={20}
+        >
             <Box
-                w={'400px'}
-
-                flex="1"
+                w={isMobile ? 'full' : '400px'}
                 bg={useColorModeValue('white', 'gray.800')}
-                shadow="md"
+                shadow="lg"
                 borderRadius="lg"
                 p={6}
-                ml={4}
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
-                transition="transform 0.2s"
-                _hover={{ transform: 'scale(1.05)' }}
+                transition="transform 0.2s, box-shadow 0.2s"
+                _hover={{ transform: 'scale(1.05)', boxShadow: 'lg' }}
             >
-                <Icon as={FaBoxOpen} boxSize={10} mr={4} color="teal.500" />
-                <Flex gap={1} flexDirection={'column'}>
-                    <Text fontSize="lg" fontWeight="bold">My Orders</Text>
-                    <Text fontSize="lg" fontWeight="bold" textAlign={'center'}>{filter.length}</Text>
-
+                <Icon as={FaBoxOpen} boxSize={12} mr={4} color="teal.500" />
+                <Flex direction="column" textAlign="center">
+                    <Text fontSize="xl" fontWeight="bold" mb={2}>
+                        My Orders
+                    </Text>
+                    <Text fontSize="3xl" fontWeight="bold" color={useColorModeValue('gray.700', 'gray.300')}>
+                        {filter.length}
+                    </Text>
                 </Flex>
             </Box>
         </Flex>
