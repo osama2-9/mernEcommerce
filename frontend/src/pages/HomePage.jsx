@@ -1,4 +1,4 @@
-import { Box, Flex, Image, Text, } from "@chakra-ui/react"
+import { Box, Button, Flex, Image, Text, } from "@chakra-ui/react"
 import { BsCart2 } from "react-icons/bs"
 import { BiBoltCircle } from "react-icons/bi";
 import { AiOutlineFileProtect } from "react-icons/ai";
@@ -83,16 +83,12 @@ const HomePage = () => {
                 <FeatureBox icon={<AiOutlineFileProtect size={30} />} title={"100% Secure Payment"} description={"Payment is secure and you can also pay upon receipt"} />
             </Box>
 
-            <Text ml={20} mt={10} mb={{
-                lg: "0px",
-                sm: "20px"
-            }} fontSize={'40px'} fontWeight={'bold'}>
-                Prodcuts
-            </Text>
+          
+
             <Box>
 
 
-                <ProductContainer >
+                <ProductContainer mt={10} title="Products" >
                     {
                         product.slice(0, 12).map((product) => (
                             <Products key={product._id} product={product} />
@@ -104,64 +100,61 @@ const HomePage = () => {
 
 
 
-                <Flex pos={'relative'} left={{
-                    base: 5,
-                    sm: 5,
-                    md: 5,
-                    lg: "30%"
-                }} maxW={'700'} justifyContent={'center'}  >
-
-
+                <Flex
+                    pos="relative"
+                    left={{ base: 5, sm: 5, md: 5, lg: "10%" }}
+                    maxW="80%"
+                    justifyContent="center"
+                    p={{ base: 5, md: 10 }}
+                >
                     <Box
                         mb={5}
-                        me={{
-                            lg: "0",
-                            sm: "250"
-                        }}
-                        w={{ base: "90%", md: "800px", sm: "300px" }}
-                        h={{ lg: "400px", base: "auto", md: "300px" }}
+                        w={{ base: "90%", md: "80%", lg: "70%" }}
                         bgColor="gray.100"
-                        className="shadow-md"
+                        boxShadow="xl"
                         rounded="lg"
-                        p={5}
+                        p={{ base: 5, md: 8 }}
                     >
                         <Flex direction={{ base: "column", md: "row" }} alignItems="center">
                             <Image
-                                rounded={'md'}
+                                rounded="md"
                                 src="/shopping.jpeg"
                                 height={{ lg: "350px", base: "auto", md: "300px" }}
-                                width={{ lg: "350px", base: "100%", md: "300px", sm: "300px" }}
+                                width={{ lg: "350px", base: "100%", md: "300px" }}
                                 objectFit="cover"
+                                mb={{ base: 5, md: 0 }}
+                                transition="transform 0.3s"
+                                _hover={{ transform: "scale(1.05)" }}
                             />
                             <Box
-                                maxW={{ base: "100%", md: "300px" }}
-                                ml={{ base: 0, md: 10 }}
+                                maxW={{ base: "100%", md: "300px" ,lg:"800px" }}
+                                ml={{ base: 0, md: 8 }}
                                 mt={{ base: 5, md: 0 }}
                                 textAlign={{ base: "center", md: "left" }}
                             >
                                 <Flex direction="column">
-                                    <Text mb={5} fontSize={{ base: "24px", md: "30px" }} fontWeight="bold">
-                                        Explore Yourself
+                                    <Text  mb={4} fontSize={{ base: "24px", md: "28px" }} fontWeight="bold" color="black">
+                                        Discover New Horizons
                                     </Text>
-                                    <Text color="gray.400">
-                                        Shop with ease and enjoy the convenience of free shipping on all orders. No need to worry about additional costs at checkout. Simply add your favorite items to your cart and experience the satisfaction of free delivery straight to your doorstep. It’s our way of thanking you for choosing our store.
+                                    <Text color="gray.500" fontSize={{ base: "16px", md: "18px" }} mb={5}>
+                                        Experience the best shopping with free shipping on all orders. Explore a wide range of products and enjoy seamless shopping right from your home. Shop now and take advantage of our special offers.
                                     </Text>
+                                    <Button
+                                        bg={'black'}
+                                        size="lg"
+                                        color={'white'}
+                                        mt={{ base: 4, md: 6 }}
+                                        _hover={{ bg: "gray.800", color: "white" }}
+                                    >
+                                        Shop Now
+                                    </Button>
                                 </Flex>
                             </Box>
                         </Flex>
                     </Box>
-
-                </Flex>
-                <Flex id="" justifyContent={'center'} me={{
-                    lg: "30px",
-                    sm: "250"
-                }} mb={'10px'}
-
-                >
-                    <Text mb={'10px'} fontSize={'40px'} fontWeight={'bold'} color={'black'}>New Arrivals</Text>
                 </Flex>
 
-                <ProductContainer>
+                <ProductContainer title="New Arrivels">
 
                     {
                         product.slice(-4).map((p) => (
@@ -172,34 +165,18 @@ const HomePage = () => {
 
 
                 <Flex justifyContent={'center'} flexDir={'row'}>
-                    <Box shadow={'md'} me={2}>
-                        <Image me={{
-                            lg: "0",
-                            sm: "250px"
-                        }} className="rounded-lg" h={520} w={{
-                            sm: 400
-                        }} src="main.png" />
+                    <Box width="100%" maxWidth="1000px" shadow={'md'} me={2}>
+                        <Image
+                            width={'full'}
+                            className="rounded-lg"
+                            h={450}
+                            src="main.png"
+                        />
                     </Box>
-                    <Flex display={{
-                        lg: "block",
-                        sm: "none"
-                    }} flexDir={'column'}>
-                        <Box>
-                            <Image className="rounded-lg" h={300} w={300} src="w1.png" />
-                        </Box>
-                        <Box mb={2}>
-                            <Image className="rounded-lg" h={212} w={300} src="w2.jpg" />
-                        </Box>
-                    </Flex>
-                </Flex>
-                <Flex id="" justifyContent={'center'} me={{
-                    lg: "30px",
-                    sm: "250"
-                }} mt={'20px'}>
-                    <Text mb={'10px'} fontSize={'40px'} fontWeight={'bold'} color={'black'}>Best Sells</Text>
                 </Flex>
 
-                <ProductContainer>
+               
+                <ProductContainer title="Top Sells">
                     {
                         topSell.map((p) => (
                             <Products key={p._id} product={p} />
@@ -207,18 +184,7 @@ const HomePage = () => {
                     }
 
                 </ProductContainer>
-
-
-
-                <Flex id="" mb={5} justifyContent={'center'} me={{
-                    lg: "30px",
-                    sm: "250"
-                }} mt={'20px'}>
-                    <Text mb={'10px'} fontSize={'40px'} fontWeight={'bold'} color={'black'}>On Sale</Text>
-                </Flex>
-
-
-                <ProductContainer>
+                <ProductContainer title="On Sales">
                     {
                         onSale.slice(0, 4).map((p) => (
                             <Products key={p._id} product={p} />
@@ -226,8 +192,8 @@ const HomePage = () => {
                     }
 
                 </ProductContainer>
-                
-                <ProductContainer>
+
+                <ProductContainer title="Some Brands">
 
                     <Brands />
                 </ProductContainer>

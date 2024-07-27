@@ -94,16 +94,16 @@ const Address = () => {
 
     return (
         <>
-        <USidebar />
-        <Box
-        mt={20}
-            bg={useColorModeValue('white', 'gray.800')}
-            p={8}
-            borderRadius="lg"
-            shadow="md"
-        >
-            
-            
+            <USidebar />
+            <Box
+                mt={20}
+                bg={useColorModeValue('white', 'gray.800')}
+                p={8}
+                borderRadius="lg"
+                shadow="md"
+            >
+
+
                 <form onSubmit={handleSubmit}>
                     <FormControl mb={4}>
                         <FormLabel>Address Name</FormLabel>
@@ -166,9 +166,9 @@ const Address = () => {
                         Cancel
                     </Button>
                 </form>
-            
-        </Box>
-            </>
+
+            </Box>
+        </>
     );
 };
 

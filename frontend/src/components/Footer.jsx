@@ -7,7 +7,7 @@ const Footer = () => {
   return (
       <Box w={{ base: "750px", lg: "1519px", sm: "500px" }}
           h={'300'}
-          bg={'gray.200'} borderTopRadius={'5'}
+          bg={'gray.50'} borderTopRadius={'5'}
 
       >
           <Box mt={'10'}>
@@ -34,7 +34,7 @@ const Footer = () => {
                   </Flex>
               </Box>
           </Box>
-          <Box w={'1520'} h={'28'} bg={'gray.800'} pos={'relative'} top={-20}>
+          <Box w={'1520'} h={'28'} bg={'black'} pos={'relative'} top={-20}>
               <Flex justifyContent={'center'} >
                   <Flex color={'white'} mt={10}>
                       <Link to={'https://github.com/osama2-9?tab=repositories'}>

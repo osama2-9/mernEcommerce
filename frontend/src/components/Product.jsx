@@ -164,7 +164,7 @@ const Product = () => {
                         <Flex flex={1}>
                             <Image
                                 p={1}
-                                width={{ sm: "100%", md: "600px" }}
+                                width={{ sm: "100%", md: "1000px" }}
                                 height={{ sm: "auto", md: "500px" }}
                                 src={selectedProduct.productImg}
                             />

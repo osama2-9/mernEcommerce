@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import ProductContainer from './ProductContainer';
 import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
@@ -28,12 +28,8 @@ const TopRate = () => {
 
     return (
         <Box>
-            <Flex justifyContent="center" mb={10}>
-                <Text fontSize="33" me={2} fontWeight="bold">
-                    Top Rated
-                </Text>
-            </Flex>
-            <ProductContainer>
+           
+            <ProductContainer title='Top Rate'>
                 {topRated.map((product) => (
                     <Products key={product._id} product={product} />
                 ))}

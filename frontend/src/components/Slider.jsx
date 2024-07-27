@@ -50,7 +50,7 @@ const Slider = () => {
                         height="600px"
                         width="900px"
                         
-                        src="/m1.avif"
+                        src="/ads.jpg"
                         alt="Slide 1"
                     />
                 </div>
@@ -59,7 +59,7 @@ const Slider = () => {
                         height="600px"
                         width="100%"
                         
-                        src="/m2.jpg"
+                        src="/ads2.jpeg"
                         alt="Slide 2"
                     />
                 </div>
@@ -68,7 +68,7 @@ const Slider = () => {
                         height="600px"
                         width="100%"
                         
-                        src="/m3.jpg"
+                        src="/ads3.jpg"
                         alt="Slide 3"
                     />
                 </div>

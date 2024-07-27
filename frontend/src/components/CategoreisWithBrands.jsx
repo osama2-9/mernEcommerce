@@ -9,7 +9,7 @@ const CategoreisWithBrands = ({ categories }) => {
     const [openMenu, setOpenMenu] = useState(null);
 
     return (
-        <Flex gap={3} justify="center" bg="gray.200" py={5}>
+        <Flex gap={3} justifyContent="center" bg="gray.200" py={5}>
             {categories?.map((category) => {
                 const categoryBrands = brands?.filter(brand => brand.brandFor.includes(category._id));
 
