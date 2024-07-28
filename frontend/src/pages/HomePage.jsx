@@ -13,6 +13,7 @@ import Slider from "../components/Slider";
 import Brands from "../components/Brands";
 import Footer from "../components/Footer";
 import TopRate from "../components/TopRate";
+import RecommendedProducts from "../components/RecommendedProducts";
 
 const HomePage = () => {
     const { topSell } = useGetTopSells()
@@ -59,7 +60,6 @@ const HomePage = () => {
         <div className="home">
             <Box>
 
-                <Categories />
 
 
 
@@ -83,10 +83,12 @@ const HomePage = () => {
                 <FeatureBox icon={<AiOutlineFileProtect size={30} />} title={"100% Secure Payment"} description={"Payment is secure and you can also pay upon receipt"} />
             </Box>
 
-          
+
 
             <Box>
 
+
+                <RecommendedProducts />
 
                 <ProductContainer mt={10} title="Products" >
                     {
@@ -98,11 +100,14 @@ const HomePage = () => {
 
 
 
+                <Categories />
+
 
 
                 <Flex
                     pos="relative"
                     left={{ base: 5, sm: 5, md: 5, lg: "10%" }}
+                    top={'100px'}
                     maxW="80%"
                     justifyContent="center"
                     p={{ base: 5, md: 10 }}
@@ -127,13 +132,13 @@ const HomePage = () => {
                                 _hover={{ transform: "scale(1.05)" }}
                             />
                             <Box
-                                maxW={{ base: "100%", md: "300px" ,lg:"800px" }}
+                                maxW={{ base: "100%", md: "300px", lg: "800px" }}
                                 ml={{ base: 0, md: 8 }}
                                 mt={{ base: 5, md: 0 }}
                                 textAlign={{ base: "center", md: "left" }}
                             >
                                 <Flex direction="column">
-                                    <Text  mb={4} fontSize={{ base: "24px", md: "28px" }} fontWeight="bold" color="black">
+                                    <Text mb={4} fontSize={{ base: "24px", md: "28px" }} fontWeight="bold" color="black">
                                         Discover New Horizons
                                     </Text>
                                     <Text color="gray.500" fontSize={{ base: "16px", md: "18px" }} mb={5}>
@@ -154,7 +159,7 @@ const HomePage = () => {
                     </Box>
                 </Flex>
 
-                <ProductContainer title="New Arrivels">
+                <ProductContainer title="New Arrivels" >
 
                     {
                         product.slice(-4).map((p) => (
@@ -175,8 +180,8 @@ const HomePage = () => {
                     </Box>
                 </Flex>
 
-               
-                <ProductContainer title="Top Sells">
+
+                <ProductContainer title="Top Sells" mt={10}>
                     {
                         topSell.map((p) => (
                             <Products key={p._id} product={p} />
@@ -184,7 +189,7 @@ const HomePage = () => {
                     }
 
                 </ProductContainer>
-                <ProductContainer title="On Sales">
+                <ProductContainer title="On Sales" mt={10}>
                     {
                         onSale.slice(0, 4).map((p) => (
                             <Products key={p._id} product={p} />
@@ -193,7 +198,7 @@ const HomePage = () => {
 
                 </ProductContainer>
 
-                <ProductContainer title="Some Brands">
+                <ProductContainer title="Some Brands" mt={10}>
 
                     <Brands />
                 </ProductContainer>

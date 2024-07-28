@@ -2,6 +2,7 @@
 /* eslint-disable react/prop-types */
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import useGetBrands from "../hooks/useGetBrands";
+import { Link } from "react-router-dom";
 
 const Brands = () => {
     const { homePageBrands } = useGetBrands()

@@ -3,6 +3,7 @@ import Category from "../model/Category.js";
 import Product from "../model/Product.js";
 import Prodcut from "../model/Product.js";
 import Rating from "../model/Rating.js";
+import Order from "../model/Order.js";
 import { v2 as cloudinary } from "cloudinary";
 const createProduct = async (req, res) => {
   try {
@@ -502,7 +503,38 @@ const getTopRatedProducts = async (req, res) => {
   }
 };
 
+const recommendedProducts = async (req, res) => {
+  try {
+    const { uid: loggeduser } = req.params;
+
+    if (!loggeduser) {
+      return 0
+    }
+
+    const loggedUserOrder = await Order.find({ uid: loggeduser });
+
+    if (!loggedUserOrder || loggedUserOrder.length === 0) {
+      return 0
+    }
+
+
+    const topSellingProducts = await Product.find()
+      .sort({ sells: -1 })
+      .limit(2);
+
+    const topRatedProducts = await Product.find().sort({ rating: -1 }).limit(2);
+
+    const recommendations = [...topSellingProducts, ...topRatedProducts];
+
+    return res.json(recommendations);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
+};
+
 export {
+  recommendedProducts,
   ProductRating,
   createProduct,
   getAllProducts,

@@ -14,6 +14,7 @@ import {
   removeSale,
   ProductRating,
   getTopRatedProducts,
+  recommendedProducts,
 } from "../controller/productController.js";
 import { isAdmin } from "../middleware/isAdmin.js";
 import { protectRoute } from "../middleware/protectRoute.js";
@@ -21,6 +22,7 @@ import { protectRoute } from "../middleware/protectRoute.js";
 const productRoute = express.Router();
 
 productRoute.post("/create", isAdmin, createProduct);
+productRoute.get("/recommended/:uid", recommendedProducts);
 productRoute.post("/createSale", isAdmin, protectRoute, createSale);
 productRoute.get("/on-sale", getProductsOnSale);
 productRoute.get("/get", getAllProducts);

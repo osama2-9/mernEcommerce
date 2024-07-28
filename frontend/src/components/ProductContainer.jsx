@@ -8,7 +8,7 @@ const ProductContainer = ({ children, mt = 10, position, left, top, title="" }) 
             <>
             <Text
                 ml={28}
-                mt={10}
+                mt={28}
                 mb={{
                     lg: "0px",
                     sm: "20px",
