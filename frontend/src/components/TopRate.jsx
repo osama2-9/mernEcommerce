@@ -22,6 +22,9 @@ const TopRate = () => {
         }
     };
 
+
+    
+
     useEffect(() => {
         getTopRated();
     }, []);

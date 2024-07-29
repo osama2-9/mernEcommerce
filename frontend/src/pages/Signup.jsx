@@ -12,27 +12,28 @@ import {
   Button,
   Heading,
   Text,
-
-
+  useColorModeValue,
+  useToast,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
-import { toast } from 'react-toastify';
-import { useSetRecoilState } from 'recoil'
+import { useSetRecoilState } from 'recoil';
 import userAtom from '../atoms/userAtom';
+
 const Signup = () => {
-  const Nav = useNavigate()
-  const setUser = useSetRecoilState(userAtom)
+  const navigate = useNavigate();
+  const setUser = useSetRecoilState(userAtom);
   const [inputs, setInputs] = useState({
     fname: "",
     lname: "",
     email: "",
     password: "",
     phone: ""
-
-  })
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const toast = useToast();
 
   const handleSignup = async () => {
     try {
@@ -41,71 +42,63 @@ const Signup = () => {
         headers: {
           "Content-Type": "application/json"
         },
-
         body: JSON.stringify(inputs)
-      })
+      });
       const data = await res.json();
-      if (data.error) {
-        toast(data.error, {
-          type: "error",
-          autoClose: true,
 
-        })
+      if (data.error) {
+        toast({
+          title: "Error",
+          description: data.error,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
         return;
       }
-      setUser(data)
-      localStorage.setItem("user", JSON.stringify(data))
-      Nav('/')
+
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data));
+      navigate('/');
+
     } catch (error) {
-      toast(error.message, {
-        type: "error",
-        autoClose: true
-      })
-
+      toast({
+        title: "Error",
+        description: error.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
-
-  }
-
+  };
 
   const handleInputsChange = (e) => {
-    setInputs({ ...inputs, [e.target.name]: e.target.value })
-  }
-  const [showPassword, setShowPassword] = useState(false);
-  return (
-    <Flex
+    setInputs({ ...inputs, [e.target.name]: e.target.value });
+  };
 
-      align={'center'}
-      justify={'center'}
-    >
+  return (
+    <Flex align={'center'} justify={'center'} minH={'100vh'} bg={useColorModeValue('gray.50', 'gray.800')}>
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack align={'center'}>
-          <Heading fontSize={'4xl'} textAlign={'center'}>
-            Sign up
-          </Heading>
-
+          <Heading fontSize={'4xl'} textAlign={'center'}>Sign up</Heading>
+          <Text fontSize={'lg'} color={'gray.600'}>
+            Create your account to get started
+          </Text>
         </Stack>
-        <Box
-          rounded={'lg'}
-
-          boxShadow={'lg'}
-          p={8}>
+        <Box rounded={'lg'} bg={useColorModeValue('white', 'gray.700')} boxShadow={'lg'} p={8}>
           <Stack spacing={4}>
             <HStack>
               <Box>
                 <FormControl id="firstName" isRequired>
                   <FormLabel>First Name</FormLabel>
-                  <Input type="text"
+                  <Input
+                    type="text"
                     value={inputs.fname}
                     onChange={handleInputsChange}
                     name='fname'
                     borderColor="blue.500"
-                    _hover={{
-                      borderColor: 'blue.500',
-                    }}
-                    _focus={{
-                      borderColor: 'blue.600',
-                      boxShadow: '0 0 0 1px blue.600',
-                    }}
+                    _hover={{ borderColor: 'blue.600' }}
+                    _focus={{ borderColor: 'blue.600', boxShadow: '0 0 0 1px blue.600' }}
                   />
                 </FormControl>
               </Box>
@@ -118,46 +111,35 @@ const Signup = () => {
                     name='lname'
                     type="text"
                     borderColor="blue.500"
-                    _hover={{
-                      borderColor: 'blue.500',
-                    }}
-                    _focus={{
-                      borderColor: 'blue.600',
-                      boxShadow: '0 0 0 1px blue.600',
-                    }}
+                    _hover={{ borderColor: 'blue.600' }}
+                    _focus={{ borderColor: 'blue.600', boxShadow: '0 0 0 1px blue.600' }}
                   />
                 </FormControl>
               </Box>
             </HStack>
             <FormControl id="email" isRequired>
-              <FormLabel>Email address</FormLabel>
-              <Input type="email"
+              <FormLabel>Email Address</FormLabel>
+              <Input
+                type="email"
                 name='email'
                 value={inputs.email}
                 onChange={handleInputsChange}
                 borderColor="blue.500"
-                _hover={{
-                  borderColor: 'blue.500',
-                }}
-                _focus={{
-                  borderColor: 'blue.600',
-                  boxShadow: '0 0 0 1px blue.600',
-                }} />
+                _hover={{ borderColor: 'blue.600' }}
+                _focus={{ borderColor: 'blue.600', boxShadow: '0 0 0 1px blue.600' }}
+              />
             </FormControl>
-            <FormControl id="email" isRequired>
-              <FormLabel>phone number</FormLabel>
-              <Input type="email"
+            <FormControl id="phone" isRequired>
+              <FormLabel>Phone Number</FormLabel>
+              <Input
+                type="tel"
                 name='phone'
                 value={inputs.phone}
                 onChange={handleInputsChange}
                 borderColor="blue.500"
-                _hover={{
-                  borderColor: 'blue.500',
-                }}
-                _focus={{
-                  borderColor: 'blue.600',
-                  boxShadow: '0 0 0 1px blue.600',
-                }} />
+                _hover={{ borderColor: 'blue.600' }}
+                _focus={{ borderColor: 'blue.600', boxShadow: '0 0 0 1px blue.600' }}
+              />
             </FormControl>
             <FormControl id="password" isRequired>
               <FormLabel>Password</FormLabel>
@@ -167,21 +149,16 @@ const Signup = () => {
                   value={inputs.password}
                   onChange={handleInputsChange}
                   borderColor="blue.500"
-                  _hover={{
-                    borderColor: 'blue.500',
-                  }}
-                  _focus={{
-                    borderColor: 'blue.600',
-                    boxShadow: '0 0 0 1px blue.600',
-                  }}
-                  type={showPassword ? 'text' : 'password'} />
+                  _hover={{ borderColor: 'blue.600' }}
+                  _focus={{ borderColor: 'blue.600', boxShadow: '0 0 0 1px blue.600' }}
+                  type={showPassword ? 'text' : 'password'}
+                />
                 <InputRightElement h={'full'}>
                   <Button
                     variant={'ghost'}
-                    onClick={() =>
-                      setShowPassword((showPassword) => !showPassword)
-                    }>
-                    {showPassword ? <BsEyeSlash size={30} color='black' /> : <BsEye color='black' />}
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <BsEyeSlash size={24} color='gray.500' /> : <BsEye size={24} color='gray.500' />}
                   </Button>
                 </InputRightElement>
               </InputGroup>
@@ -192,10 +169,7 @@ const Signup = () => {
                 size="lg"
                 bg={'blue.400'}
                 color={'white'}
-                _hover={{
-                  bg: 'blue.500',
-
-                }}
+                _hover={{ bg: 'blue.500' }}
                 onClick={handleSignup}
               >
                 Sign up
@@ -203,7 +177,7 @@ const Signup = () => {
             </Stack>
             <Stack pt={6}>
               <Text align={'center'}>
-                Already a user? <Link to={'/login'} className='text-blue-400'>Login</Link>
+                Already a user? <Link to={'/login'} style={{ color: '#3182ce' }}>Login</Link>
               </Text>
             </Stack>
           </Stack>
@@ -213,5 +187,4 @@ const Signup = () => {
   );
 }
 
-
-export default Signup
+export default Signup;
