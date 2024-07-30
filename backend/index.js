@@ -11,6 +11,7 @@ import { v2 as cloudinary } from "cloudinary";
 import orderRouter from "./router/orderRouter.js";
 import cartRouter from "./router/cartRouter.js";
 import brandRouter from "./router/brandRouter.js";
+import favoriteRoute from "./router/favoriteRouter.js";
 
 dotenv.config();
 dbConnect();
@@ -35,6 +36,7 @@ app.use("/api/product", productRoute);
 app.use("/api/order", orderRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/brand", brandRouter);
+app.use("/api/favorite", favoriteRoute);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/frontend/dist")));

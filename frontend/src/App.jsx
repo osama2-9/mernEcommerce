@@ -31,6 +31,7 @@ import CreateBrand from './pages/admin/CreateBrand';
 import AdminHeader from './components/AdminHeader';
 import ShowBrands from './pages/admin/ShowBrands';
 import BrandWithProducts from './pages/BrandWithProducts';
+import Favorite from './pages/Favorite';
 
 function App() {
   const user = useRecoilValue(userAtom);
@@ -42,7 +43,7 @@ function App() {
       navigate('/');
     }
   }, [location, user, navigate]);
-  const showHeader = !['/login', '/register', '/forget-password', '/reset-password', '/my-orders', '/user-profile', '/dashboard', '/address'].some(path => location.pathname.includes(path));
+  const showHeader = !['/login', '/register', '/forget-password', '/reset-password', '/my-orders', '/user-profile', '/dashboard', '/address','/favorite'].some(path => location.pathname.includes(path));
 
 
   return (
@@ -75,6 +76,7 @@ function App() {
         <Route path='/address' element={user ? <Address /> : <HomePage />} />
         <Route path='/user-profile' element={user ? <UserProfile /> : <HomePage />} />
         <Route path='/my-orders/:uid' element={user ? <MyOrders /> : <HomePage />} />
+        <Route path='/favorite/:uid' element={user ? <Favorite /> : <HomePage />} />
       </Routes>
       <ToastContainer position='bottom-center' />
     </div>

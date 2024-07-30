@@ -174,6 +174,7 @@ const Header = () => {
                                     />
                                 </Tooltip>
                             </Link>
+                        
                             <Spacer />
                             {logged.isAdmin && (
                                 <Link to={`admin/${logged.uid}`}>

@@ -16,28 +16,54 @@ import {
 import { Link } from "react-router-dom";
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRecoilValue } from "recoil";
+import userAtom from "../atoms/userAtom";
+import useGetFavoriteProducts from "../hooks/useGetFavoriteProducts";
 
 const Products = ({ product, isLoading }) => {
     const [saved, setSaved] = useState(false);
+    const { favoriteProducts } = useGetFavoriteProducts();
+    const user = useRecoilValue(userAtom);
     const toast = useToast();
+
+    useEffect(() => {
+        if (favoriteProducts) {
+            const isSaved = favoriteProducts.some((p) => p._id === product._id);
+            setSaved(isSaved);
+        }
+    }, [favoriteProducts, product._id]);
 
     const Discount = (price) => price - (price * (product?.sale / 100));
     const hasSale = product?.sale > 0;
     const finalPrice = Discount(product?.productPrice).toFixed(2);
     const originalPrice = product?.productPrice?.toFixed(2);
 
-    const handleSave = () => {
-        setSaved(!saved);
-        toast({
-            title: saved ? "Removed from Saved" : "Saved for Later",
-            status: saved ? "info" : "success",
-            duration: 2000,
-            isClosable: true,
-        });
-    };
+    const addProductToFavorite = async () => {
+        try {
+            const res = await fetch('/api/favorite/add', {
+                method: "POST",
+                headers: {
+                    'Content-Type': "application/json"
+                },
+                body: JSON.stringify({
+                    uid: user?.uid,
+                    pid: product?._id
+                })
+            });
+            const data = await res.json();
+            if (data.error) {
+                toast.error(data.error);
+            } else {
+                toast.success(data.message);
+                setSaved(true); // Update state to reflect the product being saved
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error("Error while adding product to favorites");
+        }
+    }
 
-    // Function to truncate product name
     const truncateProductName = (name, maxLength) => {
         return name.length > maxLength ? `${name.slice(0, maxLength)}...` : name;
     };
@@ -61,14 +87,14 @@ const Products = ({ product, isLoading }) => {
                         </Badge>
                     )}
                     <IconButton
-                    me={3}
-                    mt={3}
-                    p={2}
+                        me={3}
+                        mt={3}
+                        p={2}
                         icon={saved ? <FaHeart color="red" /> : <FaRegHeart />}
-                        onClick={handleSave}
+                        onClick={addProductToFavorite}
                         variant="ghost"
                         aria-label="Save for later"
-                        _hover={{ color: saved ? "red" : "gray.600"  ,bg:"gray.300"} }
+                        _hover={{ color: saved ? "red" : "gray.600", bg: "gray.300" }}
                         size="sm"
                     />
                 </Flex>
