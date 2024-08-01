@@ -13,7 +13,7 @@ const newMessaeg = async (title, description, orderDetail) => {
       service: "gmail",
       auth: {
         user: "osamaalsrraj3@gmail.com",
-        pass: "qzpd uegm trvr otmh",
+        pass: "uupe lfkn axyf hgtw",
       },
     });
 

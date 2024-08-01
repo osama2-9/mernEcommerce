@@ -8,7 +8,7 @@ import {
     Center,
     Badge,
     IconButton,
-    useToast,
+
     Tooltip,
     Skeleton,
     HStack,
@@ -20,12 +20,14 @@ import { useState, useEffect } from 'react';
 import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import useGetFavoriteProducts from "../hooks/useGetFavoriteProducts";
+import { toast } from "react-toastify";
 
 const Products = ({ product, isLoading }) => {
+
     const [saved, setSaved] = useState(false);
     const { favoriteProducts } = useGetFavoriteProducts();
     const user = useRecoilValue(userAtom);
-    const toast = useToast();
+
 
     useEffect(() => {
         if (favoriteProducts) {
@@ -56,11 +58,38 @@ const Products = ({ product, isLoading }) => {
                 toast.error(data.error);
             } else {
                 toast.success(data.message);
-                setSaved(true); // Update state to reflect the product being saved
+                setSaved(true);
             }
         } catch (error) {
             console.log(error);
             toast.error("Error while adding product to favorites");
+        }
+    }
+
+    const removeProductFromFavorite = async () => {
+        try {
+            const res = await fetch('/api/favorite/remove', {
+                method: "DELETE",
+                headers: {
+
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    pid: product?._id,
+                    uid: user?.uid
+                })
+
+
+            })
+            const data = await res.json()
+            if (data.error) {
+                toast.error(data.error)
+            }
+            toast.success(data.message)
+        } catch (error) {
+            console.log(error);
+
         }
     }
 
@@ -91,7 +120,7 @@ const Products = ({ product, isLoading }) => {
                         mt={3}
                         p={2}
                         icon={saved ? <FaHeart color="red" /> : <FaRegHeart />}
-                        onClick={addProductToFavorite}
+                        onClick={saved ? removeProductFromFavorite : addProductToFavorite}
                         variant="ghost"
                         aria-label="Save for later"
                         _hover={{ color: saved ? "red" : "gray.600", bg: "gray.300" }}

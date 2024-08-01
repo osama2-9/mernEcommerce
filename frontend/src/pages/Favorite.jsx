@@ -10,6 +10,7 @@ import useGetFavoriteProducts from "../hooks/useGetFavoriteProducts";
 
 const Favorite = () => {
     const { favoriteProducts } = useGetFavoriteProducts()
+    
 
 
     return (

@@ -43,7 +43,7 @@ function App() {
       navigate('/');
     }
   }, [location, user, navigate]);
-  const showHeader = !['/login', '/register', '/forget-password', '/reset-password', '/my-orders', '/user-profile', '/dashboard', '/address','/favorite'].some(path => location.pathname.includes(path));
+  const showHeader = !['/login', '/register', '/forget-password', '/reset-password', '/my-orders', '/user-profile', '/dashboard', '/address', '/favorite'].some(path => location.pathname.includes(path));
 
 
   return (

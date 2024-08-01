@@ -1,5 +1,6 @@
 import Favorite from "../model/Favorite.js";
 import Product from "../model/Product.js";
+import User from "../model/User.js";
 const addProductToFavorite = async (req, res) => {
   try {
     const { uid, pid } = req.body;
@@ -74,5 +75,40 @@ const getUserFavoriteList = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+const removeFromFavorite = async (req, res) => {
+  try {
+    const { uid, pid } = req.body;
+    if (!uid || !pid) {
+      return res.status(400).json({
+        error: "User Id and Product Id are required",
+      });
+    }
 
-export { addProductToFavorite, getUserFavoriteList };
+    const getUser = await User.findById(uid);
+    if (!getUser) {
+      return res.status(404).json({
+        error: "User not found",
+      });
+    }
+
+    const product = await Product.findById(pid);
+    if (!product) {
+      return res.status(404).json({
+        error: "Product not found",
+      });
+    }
+
+    await Favorite.deleteOne({ uid: uid, pid: pid });
+
+    return res.status(200).json({
+      message: "Product removed from favorites",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+};
+
+export { addProductToFavorite, getUserFavoriteList  ,removeFromFavorite};
