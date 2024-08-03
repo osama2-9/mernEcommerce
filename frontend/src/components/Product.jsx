@@ -13,12 +13,16 @@ import {
     Select,
     Stack,
     Text,
+    Collapse,
+    IconButton,
+    Avatar
 } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { BsStarFill, BsStarHalf, BsStar } from 'react-icons/bs';
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 
 import userAtom from '../atoms/userAtom';
 import RelatedProducts from './RelatedProducts';
@@ -30,35 +34,47 @@ const Product = () => {
     const [quantity, setQuantity] = useState(1);
     const [color, setColor] = useState("");
     const [size, setSize] = useState("");
+    const [userReview, setUserReview] = useState([]);
+    const [showAllReviews, setShowAllReviews] = useState(false);
     const logged = useRecoilValue(userAtom);
 
     const { pid } = useParams();
 
-    useEffect(() => {
-        const getProductById = async () => {
-            try {
-                const res = await fetch(`/api/product/target/${pid}`);
-                const data = await res.json();
-                const productData = data.data[0];
-                const categoryName = data.data[1];
-                const productRate = data.data[2];
-                console.log(productRate);
-                if (data.error) {
-                    toast(data.error, {
-                        type: "error",
-                        autoClose: true,
-                    });
-                } else {
-                    setSelectedProduct(productData);
-                    setCategory(categoryName);
-                    setRate(productRate);
-                }
-            } catch (error) {
-                console.log(error);
+    const getProductById = useCallback(async () => {
+        try {
+            const res = await fetch(`/api/product/target/${pid}`);
+            const data = await res.json();
+            const productData = data.data[0];
+            const categoryName = data.data[1];
+            const productRate = data.data[2];
+            if (data.error) {
+                toast.error(data.error);
+            } else {
+                setSelectedProduct(productData);
+                setCategory(categoryName);
+                setRate(productRate);
             }
-        };
+        } catch (error) {
+            console.log(error);
+        }
+    }, [pid]);
+
+    const getUsersReview = useCallback(async () => {
+        try {
+            const res = await fetch(`/api/product/productReviews/${pid}`);
+            const data = await res.json();
+            if (!data.error) {
+                setUserReview(data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }, [pid]);
+
+    useEffect(() => {
         getProductById();
-    }, [pid, category._id, logged.uid]);
+        getUsersReview();
+    }, [getProductById, getUsersReview]);
 
     const handleQuantityChange = (e) => {
         setQuantity(parseInt(e.target.value));
@@ -88,38 +104,29 @@ const Product = () => {
             });
             const data = await res.json();
             if (data.error) {
-                toast(data.error, {
-                    type: "error",
-                    autoClose: true,
-                });
+                toast.error(data.error);
             } else {
-                toast("Order placed successfully!", {
-                    type: "success",
-                    autoClose: true,
-                });
+                toast.success("Order placed successfully!");
             }
         } catch (error) {
             console.log(error);
-            toast("An error occurred while placing the order.", {
-                type: "error",
-                autoClose: true,
-            });
+            toast.error("An error occurred while placing the order.");
         }
     };
 
-    const hasSale = selectedProduct.sale > 0;
-    const Discount = (price, discount) => {
+    const hasSale = useMemo(() => selectedProduct.sale > 0, [selectedProduct.sale]);
+    const Discount = useCallback((price, discount) => {
         return price - (price * (discount / 100));
-    };
+    }, []);
 
-    const calculateAverageRating = (rate) => {
+    const calculateAverageRating = useCallback((rate) => {
         if (rate?.ratingCounter > 0 && rate?.rating) {
             return rate.rating / rate.ratingCounter;
         }
         return 0;
-    };
+    }, []);
 
-    const renderStars = (rating) => {
+    const renderStars = useCallback((rating) => {
         const fullStars = Math.floor(rating);
         const halfStar = rating % 1 >= 0.5;
         const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
@@ -149,9 +156,9 @@ const Product = () => {
                 ))}
             </>
         );
-    };
+    }, []);
 
-    const averageRating = calculateAverageRating(rate);
+    const averageRating = useMemo(() => calculateAverageRating(rate), [rate, calculateAverageRating]);
 
     return (
         <>
@@ -324,6 +331,61 @@ const Product = () => {
                     </Stack>
                 </Center>
             )}
+
+            <Box mt={8} px={4}>
+                <Heading as="h3" size="lg" mb={4}>User Reviews</Heading>
+                {userReview.length > 0 ? (
+                    <>
+                        {userReview.slice(0, 3).map((review, index) => (
+                            <Box key={index} mb={4} p={4} >
+                                <Flex alignItems="center" mb={2}>
+                                    <Avatar name={review.userFullName}  size="md" mr={2} />
+                                    <Text fontWeight="bold">{review.userFullName}</Text>
+                                </Flex>
+                                <Flex alignItems="center" mb={2}>
+                                    {renderStars(review.rating)}
+                                    <Text ml={2} color="gray.500">
+                                        {review.date}
+                                    </Text>
+                                </Flex>
+                                <Text mb={2}>{review.userComment}</Text>
+                                <Divider h={.4} bg={'gray.300'} />
+                            </Box>
+                        ))}
+                        {userReview.length > 3 && (
+                            <>
+                                <Collapse startingHeight={0} in={showAllReviews}>
+                                    {userReview.slice(3).map((review, index) => (
+                                        <Box key={index} mb={4} p={4} borderWidth="1px" borderRadius="lg">
+                                            <Flex alignItems="center" mb={2}>
+                                                <Avatar name={review.userFullName} src={review.userAvatar} size="md" mr={2} />
+                                                <Text fontWeight="bold">{review.userFullName}</Text>
+                                            </Flex>
+                                            <Flex alignItems="center" mb={2}>
+                                                {renderStars(review.rating)}
+                                                <Text ml={2} color="gray.500">
+                                                    {review.date}
+                                                </Text>
+                                            </Flex>
+                                            <Text mb={2}>{review.userComment}</Text>
+                                        </Box>
+                                    ))}
+                                </Collapse>
+                                <Flex justifyContent="center">
+                                    <IconButton
+                                        icon={showAllReviews ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                                        onClick={() => setShowAllReviews(!showAllReviews)}
+                                        aria-label="Show more reviews"
+                                    />
+                                </Flex>
+                            </>
+                        )}
+                    </>
+                ) : (
+                    <Text>No reviews yet.</Text>
+                )}
+            </Box>
+
             <RelatedProducts pid={pid} categoryId={category._id} />
         </>
     );

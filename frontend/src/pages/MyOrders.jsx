@@ -16,7 +16,8 @@ import {
     Spinner,
     Input,
     useBreakpointValue,
-    IconButton
+    IconButton,
+    Textarea
 } from "@chakra-ui/react";
 import USidebar from "../components/USidebar";
 import { useParams } from "react-router-dom";
@@ -34,6 +35,7 @@ const MyOrders = () => {
     const [rating, setRating] = useState(0);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [comment, setComment] = useState('');
     const { isOpen, onOpen, onClose } = useDisclosure();
     const logged = useRecoilValue(userAtom);
     const isMobile = useBreakpointValue({ base: true, md: false });
@@ -48,7 +50,7 @@ const MyOrders = () => {
                     toast.error(data.error);
                 }
                 setUserOrders(data);
-                setFilteredOrders(data); // Initialize with all orders
+                setFilteredOrders(data);
             } catch (error) {
                 console.log(error);
                 toast.error("Failed to fetch orders");
@@ -60,7 +62,6 @@ const MyOrders = () => {
     }, [uid]);
 
     useEffect(() => {
-        // Filter orders based on search query
         const results = userOrders?.filter(order =>
             order.productName.toLowerCase().includes(searchQuery.toLowerCase())
         );
@@ -70,6 +71,7 @@ const MyOrders = () => {
     const handleRateNow = (order) => {
         setSelectedOrder(order);
         setRating(0);
+        setComment('');
         onOpen();
     };
 
@@ -88,7 +90,8 @@ const MyOrders = () => {
                     body: JSON.stringify({
                         uid: logged?.uid,
                         pid: selectedOrder?.pid,
-                        rating: rating
+                        rating: rating,
+                        userComment: comment
                     })
                 });
                 const data = await res.json();
@@ -230,6 +233,12 @@ const MyOrders = () => {
                                         />
                                     ))}
                                 </Flex>
+                                <Textarea
+                                    placeholder="Add a comment..."
+                                    value={comment}
+                                    onChange={(e) => setComment(e.target.value)}
+                                    mt={4}
+                                />
                             </>
                         )}
                     </ModalBody>

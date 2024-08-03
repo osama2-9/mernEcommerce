@@ -19,7 +19,11 @@ const ratingSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  userComment: {
+    type: String,
+    maxLength: 200,
+  },
 });
 
-const Rating =  mongoose.model("Rate", ratingSchema);
+const Rating = mongoose.model("Rate", ratingSchema);
 export default Rating;

@@ -1,6 +1,5 @@
-import { response } from "express";
+import User from "../model/User.js";
 import Category from "../model/Category.js";
-import Product from "../model/Product.js";
 import Prodcut from "../model/Product.js";
 import Rating from "../model/Rating.js";
 import Order from "../model/Order.js";
@@ -416,7 +415,7 @@ const removeSale = async (req, res) => {
 
 const ProductRating = async (req, res) => {
   try {
-    const { uid, pid, rating } = req.body;
+    const { uid, pid, rating, userComment } = req.body;
     if (!uid || !pid) {
       return res.status(400).json({
         error: "Missing dependencies to rate",
@@ -449,6 +448,7 @@ const ProductRating = async (req, res) => {
         uid: req.user._id,
         rating: rate,
         ratingCounter: 1,
+        userComment: userComment,
       });
       await newRate.save();
     }
@@ -476,7 +476,7 @@ const ProductRating = async (req, res) => {
 };
 const getTopRatedProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Prodcut.find();
     const ratings = await Rating.find();
 
     const ratedProducts = products
@@ -508,21 +508,20 @@ const recommendedProducts = async (req, res) => {
     const { uid: loggeduser } = req.params;
 
     if (!loggeduser) {
-      return 0
+      return 0;
     }
 
     const loggedUserOrder = await Order.find({ uid: loggeduser });
 
     if (!loggedUserOrder || loggedUserOrder.length === 0) {
-      return 0
+      return 0;
     }
 
-
-    const topSellingProducts = await Product.find()
+    const topSellingProducts = await Prodcut.find()
       .sort({ sells: -1 })
       .limit(2);
 
-    const topRatedProducts = await Product.find().sort({ rating: -1 }).limit(2);
+    const topRatedProducts = await Prodcut.find().sort({ rating: -1 }).limit(2);
 
     const recommendations = [...topSellingProducts, ...topRatedProducts];
 
@@ -530,6 +529,41 @@ const recommendedProducts = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error");
+  }
+};
+const getUsersReviewForProduct = async (req, res) => {
+  try {
+    const { pid } = req.params;
+
+    const usersComment = await Rating.find({ pid });
+
+    if (usersComment.length === 0) {
+      return res.status(404).json({ message: "No comments found" });
+    }
+
+    const userIds = usersComment.map((comment) => comment.uid);
+    const uniqueUserIds = [...new Set(userIds)];
+
+    const getUserNames = await User.find(
+      { _id: { $in: uniqueUserIds } },
+      { fname: 1, lname: 1 }
+    );
+
+    const data = usersComment.map((comment) => {
+      const user = getUserNames.find(
+        (user) => user._id.toString() === comment.uid.toString()
+      );
+      return {
+        ...comment.toObject(),
+        userFullName: user ? `${user.fname} ${user.lname}` : "Unknown User",
+      };
+    });
+
+    return res.status(200).json(data);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };
 
@@ -549,4 +583,5 @@ export {
   getFilterdProducts,
   removeSale,
   getTopRatedProducts,
+  getUsersReviewForProduct,
 };

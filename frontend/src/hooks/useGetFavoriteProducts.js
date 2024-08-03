@@ -4,11 +4,11 @@ import { toast } from "react-toastify";
 
 const useGetFavoriteProducts = () => {
   const { uid } = useParams();
-
   const [favoriteProducts, setFavoriteProducts] = useState([]);
-  console.log(favoriteProducts);
 
   useEffect(() => {
+    let isMounted = true; // Track if the component is mounted
+
     const getFavoriteProducts = async () => {
       if (!uid) return;
       try {
@@ -17,15 +17,25 @@ const useGetFavoriteProducts = () => {
         if (data.error) {
           toast.error(data.error);
         } else {
-          setFavoriteProducts(data);
+          if (isMounted) {
+            setFavoriteProducts(data);
+          }
         }
       } catch (error) {
-        toast.error("Error while getting favorite products");
+        if (isMounted) {
+          toast.error("Error while getting favorite products");
+        }
         console.log(error);
       }
     };
+
     getFavoriteProducts();
+
+    return () => {
+      isMounted = false; // Cleanup function to set the flag to false when unmounting
+    };
   }, [uid]);
+
   return { favoriteProducts };
 };
 
