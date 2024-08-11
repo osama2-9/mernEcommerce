@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 const Footer = () => {
   return (
-      <Box w={{ base: "750px", lg: "1519px", sm: "500px" }}
+      <Box  w={{ base: "750px", lg: "1519px", sm: "500px" }}
           h={'300'}
           bg={'gray.50'} borderTopRadius={'5'}
 

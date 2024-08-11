@@ -127,7 +127,7 @@ const Header = () => {
                     <Button bg="gray.300" h="35px" ml={2} type="submit">
                         <BsSearch />
                     </Button>
-                    {searchResult.length > 0 && search !== "" && (
+                    {searchResult.length > 0 && search != "" && (
                         <Flex position={'absolute'} mt={'35px'} zIndex={10}>
                             <Box p={1} w={'400px'} me={10} color={'black'} bg={'gray.50'} rounded={'sm'}>
                                 {loading ? (

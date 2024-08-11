@@ -14,7 +14,7 @@ const TopRate = () => {
             if (data.error) {
                 toast.error(data.error);
             } else {
-                setTopRated(data.reverse()); // Reverse the array
+                setTopRated(data.reverse()); 
             }
         } catch (error) {
             console.error(error);

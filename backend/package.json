@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": " nodemon backend/index.js",
-   "start": " node backend/index.js",
+    "start": " node backend/index.js",
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "osamasarraj",
@@ -22,6 +22,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
+    "mailtrap": "^3.4.0",
     "mongoose": "^8.3.5",
     "nodemailer": "^6.9.13",
     "nodemon": "^3.1.0"

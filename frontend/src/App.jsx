@@ -1,6 +1,6 @@
 import './App.css';
 import { useEffect } from 'react';
-import { Routes, Route, useLocation, useNavigate, BrowserRouter } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate, BrowserRouter, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import HomePage from './pages/HomePage';
 import Login from './pages/Login';
@@ -32,6 +32,7 @@ import AdminHeader from './components/AdminHeader';
 import ShowBrands from './pages/admin/ShowBrands';
 import BrandWithProducts from './pages/BrandWithProducts';
 import Favorite from './pages/Favorite';
+import VerifyEmail from './components/VerifiyEmail';
 
 function App() {
   const user = useRecoilValue(userAtom);
@@ -43,7 +44,7 @@ function App() {
       navigate('/');
     }
   }, [location, user, navigate]);
-  const showHeader = !['/login', '/register', '/forget-password', '/reset-password', '/my-orders', '/user-profile', '/dashboard', '/address', '/favorite'].some(path => location.pathname.includes(path));
+  const showHeader = !['/login', '/register', '/forget-password', '/reset-password', '/my-orders', '/user-profile', '/dashboard', '/address', '/favorite', '/verify-email'].some(path => location.pathname.includes(path));
 
 
   return (
@@ -55,12 +56,13 @@ function App() {
         <Route path='/' element={<HomePage />} />
         <Route path='/login' element={<Login />} />
         <Route path='/forget-password' element={<ForgetPassword />} />
-        <Route path='/reset-password/:uid/:token' element={<ResetPassword />} />
+        <Route path='/reset-password/:token' element={<ResetPassword />} />
+        <Route path='/verify-email/:token' element={<VerifyEmail />} />
         <Route path='/register' element={<Signup />} />
         <Route path='/product/:pid' element={<Product />} />
         <Route path='/cart/:uid' element={user ? <Cart /> : <HomePage />} />
         <Route path='/dashboard/:uid' element={user ? <DashBored /> : <HomePage />} />
-        <Route path='/admin/:uid' element={user?.isAdmin ? <Admin /> : <HomePage />} />
+        <Route path='/admin/:uid' element={user?.isAdmin ? <Admin /> : <Navigate to={'/'} />} />
         <Route path='/admin/product/create' element={user?.isAdmin ? <CreateProduct /> : <HomePage />} />
         <Route path='/admin/product/show' element={user?.isAdmin ? <ShowProduct /> : <HomePage />} />
         <Route path='/admin/category/create' element={user?.isAdmin ? <CreateCategory /> : <HomePage />} />
@@ -78,6 +80,7 @@ function App() {
         <Route path='/my-orders/:uid' element={user ? <MyOrders /> : <HomePage />} />
         <Route path='/favorite/:uid' element={user ? <Favorite /> : <HomePage />} />
       </Routes>
+
       <ToastContainer position='bottom-center' />
     </div>
   );

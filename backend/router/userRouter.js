@@ -14,6 +14,7 @@ import {
 
   signup,
   updateUserData,
+  verifiyEmail,
 } from "../controller/userController.js";
 import { isAdmin } from "../middleware/isAdmin.js";
 import { protectRoute } from "../middleware/protectRoute.js";
@@ -23,10 +24,11 @@ const userRouter = express.Router();
 
 userRouter.post("/signup", signup);
 userRouter.post("/login", login);
+userRouter.post('/verifiy-email' ,verifiyEmail)
 userRouter.post("/logout", logout);
 userRouter.get("/messages", isAdmin, getAllMessages);
 userRouter.post("/forget-password", forgetPassword);
-userRouter.post("/reset-password/:uid/:token", resetPassword);
+userRouter.post("/reset-password/:token", resetPassword);
 userRouter.post("/addAddress", protectRoute, addAddress);
 userRouter.put("/addpayment", protectRoute, addPayment);
 userRouter.put("/updateUserData", protectRoute, updateUserData);

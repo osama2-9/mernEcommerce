@@ -48,6 +48,7 @@ const getAllCategory = async (req, res) => {
     console.log(error);
   }
 };
+
 const getCategoriesWithProducts = async (req, res) => {
   try {
     const categories = await Category.find();

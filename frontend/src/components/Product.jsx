@@ -126,6 +126,8 @@ const Product = () => {
         return 0;
     }, []);
 
+
+
     const renderStars = useCallback((rating) => {
         const fullStars = Math.floor(rating);
         const halfStar = rating % 1 >= 0.5;
@@ -337,17 +339,24 @@ const Product = () => {
                 {userReview.length > 0 ? (
                     <>
                         {userReview.slice(0, 3).map((review, index) => (
+
                             <Box key={index} mb={4} p={4} >
-                                <Flex alignItems="center" mb={2}>
-                                    <Avatar name={review.userFullName}  size="md" mr={2} />
-                                    <Text fontWeight="bold">{review.userFullName}</Text>
-                                </Flex>
-                                <Flex alignItems="center" mb={2}>
-                                    {renderStars(review.rating)}
-                                    <Text ml={2} color="gray.500">
-                                        {review.date}
-                                    </Text>
-                                </Flex>
+
+                                {review?.userComment != "" && (
+                                    <>
+                                        <Flex alignItems="center" mb={2}>
+                                            <Avatar name={review.userFullName} size="md" mr={2} />
+                                            <Text fontWeight="bold">{review.userFullName}</Text>
+                                        </Flex>
+
+                                        <Flex alignItems="center" mb={2}>
+                                            {renderStars(review.rating)}
+                                            <Text ml={2} color="gray.500">
+                                                {review.date}
+                                            </Text>
+                                        </Flex>
+                                    </>
+                                )}
                                 <Text mb={2}>{review.userComment}</Text>
                                 <Divider h={.4} bg={'gray.300'} />
                             </Box>
@@ -356,7 +365,7 @@ const Product = () => {
                             <>
                                 <Collapse startingHeight={0} in={showAllReviews}>
                                     {userReview.slice(3).map((review, index) => (
-                                        <Box key={index} mb={4} p={4} borderWidth="1px" borderRadius="lg">
+                                        <Box key={index} mb={4} p={4} >
                                             <Flex alignItems="center" mb={2}>
                                                 <Avatar name={review.userFullName} src={review.userAvatar} size="md" mr={2} />
                                                 <Text fontWeight="bold">{review.userFullName}</Text>
@@ -368,6 +377,7 @@ const Product = () => {
                                                 </Text>
                                             </Flex>
                                             <Text mb={2}>{review.userComment}</Text>
+                                            <Divider h={.4} bg={'gray.300'} />
                                         </Box>
                                     ))}
                                 </Collapse>

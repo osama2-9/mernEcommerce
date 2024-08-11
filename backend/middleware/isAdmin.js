@@ -1,35 +1,48 @@
 import jwt from "jsonwebtoken";
 import User from "../model/User.js";
 
-const isAdmin = async(req ,res ,next)=>{
-    try {
-        const token = req.cookies.auth
-        if(!token){
-            return res.status(401).json({
-                error:"Can't access this page"
-            })
-        }
-        const decode =jwt.verify(token ,process.env.JWT_SECRET)
-        const user= await User.findById(decode.uid);
-        if(!user){
-            return res.status(404).json({
-                error:"no user found"
-            })
-        }
-if(!user.isAdmin){
-    return res.status(401).json({
-        error:"Can't access this page"
-    })
-}
-        
-req.user = user;
-next()
-    } catch (error) {
+const isAdmin = async (req, res, next) => {
+  try {
+    const token = req.cookies.auth;
 
-        console.log(error);
-        
+    if (!token) {
+      return res.status(401).json({
+        error: "Can't access this page",
+      });
     }
-}
 
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      res.cookie("auth", "", { expires: new Date(0), httpOnly: true });
+      return res.status(401).json({
+        error: "Can't access this page",
+      });
+    }
 
-export  {isAdmin}
+    const user = await User.findById(decoded.uid);
+    if (!user) {
+      res.cookie("auth", "", { expires: new Date(0), httpOnly: true });
+      return res.status(404).json({
+        error: "No user found",
+      });
+    }
+
+    if (!user.isAdmin) {
+      return res.status(403).json({
+        error: "Access denied",
+      });
+    }
+
+    req.user = user;
+    next();
+  } catch (error) {
+    console.error("Error in isAdmin:", error);
+    res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+};
+
+export { isAdmin };

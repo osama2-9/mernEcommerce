@@ -39,6 +39,9 @@ const HomePage = () => {
     }, [])
 
 
+
+
+
     useEffect(() => {
         const getOnSale = async () => {
             try {

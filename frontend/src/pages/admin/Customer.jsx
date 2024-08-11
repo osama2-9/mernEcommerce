@@ -1,5 +1,6 @@
 import { Box, Button, Flex, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
 import { MdDelete } from "react-icons/md";
+import { FaCheck, FaTimes } from "react-icons/fa"; // Import check and X icons
 import useGetCustomer from "../../hooks/useGetCustomer";
 import { toast } from "react-toastify";
 import { useState } from "react";
@@ -13,7 +14,7 @@ const Customer = () => {
     const [deleting, setDeleting] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const usersPerPage = 10;
+    const usersPerPage = 7;  // Display only 7 rows per page
 
     const deleteUser = async () => {
         setDeleting(true);
@@ -33,7 +34,7 @@ const Customer = () => {
             } else {
                 onClose();
                 toast.success(data.message);
-                refresh();  // Refresh the user list after deletion
+                refresh();
             }
         } catch (error) {
             console.error(error);
@@ -92,17 +93,26 @@ const Customer = () => {
                                         <Th>Full Name</Th>
                                         <Th>Email</Th>
                                         <Th>Phone</Th>
+                                        <Th>Verified</Th>
+                                        <Th>Last Login</Th>
                                         <Th>Action</Th>
                                     </Tr>
                                 </Thead>
                                 <Tbody>
                                     {currentUsers.map((user, i) => (
-                                        <Tr  key={user._id}>
-                                            
+                                        <Tr key={user._id}>
                                             <Td>{indexOfFirstUser + i + 1}</Td>
                                             <Td>{user.fname + " " + user.lname}</Td>
                                             <Td>{user.email}</Td>
                                             <Td>{user.phone}</Td>
+                                            <Td>
+                                                {user.isVerified ? (
+                                                    <FaCheck color="green" />
+                                                ) : (
+                                                    <FaTimes color="red" />
+                                                )}
+                                            </Td>
+                                            <Td>{user.lastLogin ? new Date(user.lastLogin).toLocaleString() : "N/A"}</Td>
                                             <Td>
                                                 <Button
                                                     bg={'red.500'}

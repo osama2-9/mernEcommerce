@@ -7,6 +7,10 @@ import nodemailer from "nodemailer";
 import Order from "../model/Order.js";
 import Product from "../model/Product.js";
 import { newMessaeg, sendDeletionEmail } from "./messageController.js";
+import { generateVerificationCode } from "../emails/generateVerificationCode.js";
+import { sendVerificationCode } from "../emails/sendVerificationCode.js";
+import crypto from "crypto";
+import { sendResetPasswordURL } from "../emails/sendResetPasswordURL.js";
 
 const signup = async (req, res) => {
   try {
@@ -26,6 +30,7 @@ const signup = async (req, res) => {
         error: "User Already Signup",
       });
     }
+    const verificationCode = generateVerificationCode();
 
     const newUser = new User({
       fname,
@@ -33,11 +38,21 @@ const signup = async (req, res) => {
       email,
       password: hashPassword,
       phone,
+      verificationToken: verificationCode,
+      verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000,
     });
     await newUser.save();
 
     if (newUser) {
       generateToken(newUser._id, res);
+      const veificationCodeToken = crypto.randomBytes(30).toString("hex");
+
+      const verificationCodeURL = `${process.env.CLIENT_URL}verify-email/${veificationCodeToken}`;
+      await sendVerificationCode(
+        newUser.email,
+        verificationCode,
+        verificationCodeURL
+      );
 
       res.status(201).json({
         uid: newUser._id,
@@ -47,6 +62,8 @@ const signup = async (req, res) => {
         email: newUser.email,
         isAdmin: newUser.isAdmin,
         address: newUser.address,
+        verificationToken: newUser.verificationToken,
+        verificationTokenExpiresAt: newUser.verificationTokenExpiresAt,
       });
     } else {
       return res.status(404).json({
@@ -93,6 +110,9 @@ const login = async (req, res) => {
     }
 
     generateToken(user._id, res);
+    user.lastLogin = new Date();
+    await user.save();
+
     res.status(200).json({
       uid: user._id,
       fname: user.fname,
@@ -106,6 +126,33 @@ const login = async (req, res) => {
     return res.status(500).json({
       error: error,
     });
+  }
+};
+
+const verifiyEmail = async (req, res) => {
+  const { code } = req.body;
+  try {
+    const user = await User.findOne({
+      verificationToken: code,
+      verificationTokenExpiresAt: { $gt: Date.now() },
+    });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+
+        message: "Invalid or expired verification code",
+      });
+    }
+
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpiresAt = undefined;
+    await user.save();
+    return res.status(200).json({
+      message: "Your Account Verifided Successfully",
+    });
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -280,49 +327,32 @@ const deleteUser = async (req, res) => {
     console.log(error);
   }
 };
+
 const forgetPassword = async (req, res) => {
   try {
     const { email } = req.body;
     const findUser = await User.findOne({ email: email });
+
     if (!findUser) {
       return res.status(404).json({
         error: "No user found with this email",
       });
     }
-    const token = jwt.sign({ uid: findUser._id }, process.env.JWT_SECRET, {
-      expiresIn: 1000 * 60 * 30,
-    });
+    const resetPasswordToken = crypto.randomBytes(30).toString("hex");
+    const resetTokenExpiresAt = Date.now() + 60 * 60 * 1000;
 
-    var transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "osamasarraj67@gmail.com",
-        pass: "ksyl ihhi cjxm sjkb",
-      },
-    });
+    findUser.resetPasswordToken = resetPasswordToken;
+    findUser.resetPasswordExpiresAt = resetTokenExpiresAt;
 
-    var mailOptions = {
-      from: "osamasarraj67@gmail.com",
-      to: findUser.email,
-      subject: "Reset your password",
-      text: ` 
-      Follow This Link To Reset Your Password  
+    await findUser.save();
 
-      http://localhost:3000/reset-password/${findUser._id}/${token}`,
-    };
+    const resetURL = `${process.env.CLIENT_URL}reset-password/${resetPasswordToken}`;
 
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-        return res.status(500).json({
-          error: "Failed to send email",
-        });
-      } else {
-        return res.status(200).json({
-          message: "Email sent successfully!",
-        });
-      }
-    });
+    await sendResetPasswordURL(findUser, findUser?.email, resetURL);
+
+    return res
+      .status(200)
+      .json({ message: "Reset password link sent to your email" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -330,34 +360,25 @@ const forgetPassword = async (req, res) => {
     });
   }
 };
+
 const resetPassword = async (req, res) => {
   try {
-    const { uid, token } = req.params;
+    const { token } = req.params;
     const { password } = req.body;
-
-    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
-      if (err) {
-        return res.status(404).json({
-          error: "Invalid or expired token",
-        });
-      } else {
-        const newPasswordHash = await bcrypt.hash(password, 10);
-
-        const user = await User.findById(uid);
-
-        if (!user) {
-          return res.status(404).json({
-            error: "No user found",
-          });
-        }
-
-        user.password = newPasswordHash;
-        await user.save();
-
-        return res.status(201).json({
-          message: "Password updated successfully",
-        });
-      }
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpiresAt: { $gt: Date.now() },
+    });
+    if (!user) {
+      return res.status(400).json({
+        error: "Invalid or expired reset token",
+      });
+    }
+    const newHashedPassword = await bcrypt.hash(password, 10);
+    user.password = newHashedPassword;
+    await user.save();
+    return res.status(200).json({
+      message: "Password updated",
     });
   } catch (error) {
     console.log(error);
@@ -467,7 +488,6 @@ const deleteUserByAdmin = async (req, res) => {
   }
 };
 
-
 export {
   signup,
   login,
@@ -482,5 +502,5 @@ export {
   resetPassword,
   updateUserData,
   deleteUserByAdmin,
-  
+  verifiyEmail,
 };

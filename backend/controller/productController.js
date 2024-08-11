@@ -1,7 +1,7 @@
 import User from "../model/User.js";
 import Category from "../model/Category.js";
 import Prodcut from "../model/Product.js";
-import Rating from "../model/Rating.js";
+import { Rating } from "../model/Rating.js";
 import Order from "../model/Order.js";
 import { v2 as cloudinary } from "cloudinary";
 const createProduct = async (req, res) => {
@@ -118,7 +118,7 @@ const filterProducts = async (req, res) => {
 const search = async (req, res) => {
   try {
     const { query } = req.params;
-    const products = await Product.find({
+    const products = await Prodcut.find({
       productName: { $regex: query, $options: "i" },
     }).limit(5);
     return res.json(products);
@@ -334,7 +334,7 @@ const getFilterdProducts = async (req, res) => {
     });
   }
 
-  const products = await Product.find({ categoryID: category?._id });
+  const products = await Prodcut.find({ categoryID: category?._id });
   if (!products) {
     return res.status(400).json({
       error: "Products not found",
@@ -429,7 +429,7 @@ const ProductRating = async (req, res) => {
       });
     }
 
-    const productToRate = await Product.findById(pid);
+    const productToRate = await Prodcut.findById(pid);
     if (!productToRate) {
       return res.status(400).json({
         error: "No product found",
@@ -447,7 +447,7 @@ const ProductRating = async (req, res) => {
         pid: productToRate._id,
         uid: req.user._id,
         rating: rate,
-        ratingCounter: 1,
+
         userComment: userComment,
       });
       await newRate.save();
@@ -496,7 +496,9 @@ const getTopRatedProducts = async (req, res) => {
 
     ratedProducts.sort((a, b) => b.rating - a.rating);
 
-    return res.status(200).json(ratedProducts);
+    const topRatedProducts = ratedProducts.slice(0, 4);
+
+    return res.status(200).json(topRatedProducts);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Server error" });

@@ -42,6 +42,7 @@ const BrandWithProducts = () => {
 
     return (
         <>
+
             <BrandFilter setFilteredProducts={updateFilteredProducts} filterData={filterData} />
             <Box left={'105px'} position={'absolute'} top={'150px'} p={4}>
                 <Flex direction="column" align="center">

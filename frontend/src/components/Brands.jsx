@@ -9,7 +9,7 @@ const Brands = () => {
 
 
     return (
-        <Box w={{ base: "100%", md: "80%", lg: "110%" }} mx="auto" p={4} rounded="md" shadow="md" bg="white">
+        <Box className="font-bold" w={{ base: "100%", md: "80%", lg: "110%" }} mx="auto" p={4} rounded="md" shadow="md" bg="white">
 
             <Flex justify="center">
                 {homePageBrands.length > 0 ? (

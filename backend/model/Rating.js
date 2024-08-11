@@ -15,15 +15,12 @@ const ratingSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  ratingCounter: {
-    type: Number,
-    required: true,
-  },
   userComment: {
     type: String,
     maxLength: 200,
+    default: "",
   },
 });
 
 const Rating = mongoose.model("Rate", ratingSchema);
-export default Rating;
+export { Rating, ratingSchema };

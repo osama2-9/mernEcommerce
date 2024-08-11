@@ -7,7 +7,7 @@ const ResetPassword = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { uid, token } = useParams();
+  const { token } = useParams();
 
 
 
@@ -18,7 +18,7 @@ const ResetPassword = () => {
         toast.error("Password Not Match !")
       } else {
 
-        const res = await fetch(`/api/users/reset-password/${uid}/${token}`, {
+        const res = await fetch(`/api/users/reset-password/${token}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
