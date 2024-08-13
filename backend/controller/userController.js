@@ -2,13 +2,14 @@ import User from "../model/User.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../utils/jwt.js";
 import { Address } from "../model/Address.js";
-import jwt from "jsonwebtoken";
-import nodemailer from "nodemailer";
 import Order from "../model/Order.js";
 import Product from "../model/Product.js";
-import { newMessaeg, sendDeletionEmail } from "./messageController.js";
+import { sendDeletionEmail } from "./messageController.js";
 import { generateVerificationCode } from "../emails/generateVerificationCode.js";
-import { sendVerificationCode } from "../emails/sendVerificationCode.js";
+import {
+  resendVerificationCodeByAdmin,
+  sendVerificationCode,
+} from "../emails/sendVerificationCode.js";
 import crypto from "crypto";
 import { sendResetPasswordURL } from "../emails/sendResetPasswordURL.js";
 
@@ -20,6 +21,12 @@ const signup = async (req, res) => {
     if (!fname || !lname || !email || !password || !phone) {
       return res.status(404).json({
         error: "Please Fill All Fields !",
+      });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({
+        error: "Password must be from 8 char",
       });
     }
 
@@ -150,6 +157,48 @@ const verifiyEmail = async (req, res) => {
     await user.save();
     return res.status(200).json({
       message: "Your Account Verifided Successfully",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const sendVerificationCodeByAdmin = async (req, res) => {
+  try {
+    const { uid } = req.body;
+    if (!uid) {
+      return res.status(400).json({
+        error: "Can't send code ",
+      });
+    }
+    const user = await User.findById(uid);
+    if (!user) {
+      return res.status(404).json({
+        error: "No user found",
+      });
+    }
+
+    if (user.isVerified == true) {
+      return res.status(400).json({
+        error: "User Already Verified",
+      });
+    }
+
+    const generateCode = generateVerificationCode();
+    const veificationCodeToken = crypto.randomBytes(30).toString("hex");
+
+    user.verificationTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000;
+    user.verificationToken = generateCode;
+
+    const verificationCodeURL = `${process.env.CLIENT_URL}verify-email/${veificationCodeToken}`;
+    await user.save();
+    await resendVerificationCodeByAdmin(
+      user.email,
+      generateCode,
+      verificationCodeURL
+    );
+    return res.status(200).json({
+      message: "Verification Code Send Successfully",
     });
   } catch (error) {
     console.log(error);
@@ -376,6 +425,8 @@ const resetPassword = async (req, res) => {
     }
     const newHashedPassword = await bcrypt.hash(password, 10);
     user.password = newHashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpiresAt = undefined;
     await user.save();
     return res.status(200).json({
       message: "Password updated",
@@ -503,4 +554,5 @@ export {
   updateUserData,
   deleteUserByAdmin,
   verifiyEmail,
+  sendVerificationCodeByAdmin,
 };

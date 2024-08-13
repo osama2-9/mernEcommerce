@@ -187,7 +187,7 @@ const createSale = async (req, res) => {
       });
     }
 
-    const product = await Product.findById(pid);
+    const product = await Prodcut.findById(pid);
     if (!product) {
       return res.status(404).json({
         error: "Error while getting product",

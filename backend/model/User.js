@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema(
     fname: {
       type: String,
       required: true,
+      
     },
     lname: {
       type: String,
@@ -19,7 +20,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      unique: true,
+      minLength: 8,
     },
     phone: {
       type: Number,

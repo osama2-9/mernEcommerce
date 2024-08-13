@@ -11,7 +11,7 @@ import {
   login,
   logout,
   resetPassword,
-
+  sendVerificationCodeByAdmin,
   signup,
   updateUserData,
   verifiyEmail,
@@ -24,7 +24,8 @@ const userRouter = express.Router();
 
 userRouter.post("/signup", signup);
 userRouter.post("/login", login);
-userRouter.post('/verifiy-email' ,verifiyEmail)
+userRouter.post("/verifiy-email", verifiyEmail);
+userRouter.post("/sendVerificationCode", isAdmin, sendVerificationCodeByAdmin);
 userRouter.post("/logout", logout);
 userRouter.get("/messages", isAdmin, getAllMessages);
 userRouter.post("/forget-password", forgetPassword);
@@ -37,6 +38,5 @@ userRouter.get("/user/", getUserById);
 userRouter.get("/get", isAdmin, protectRoute, getAllUsers);
 userRouter.delete("/delete", protectRoute, deleteUser);
 userRouter.delete("/deleteByAdmin", isAdmin, protectRoute, deleteUserByAdmin);
-
 
 export default userRouter;

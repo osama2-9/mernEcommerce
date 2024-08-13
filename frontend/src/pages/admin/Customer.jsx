@@ -1,12 +1,12 @@
-import { Box, Button, Flex, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Flex, Input,  Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
 import { MdDelete } from "react-icons/md";
-import { FaCheck, FaTimes } from "react-icons/fa"; // Import check and X icons
+import { FaCheck, FaTimes } from "react-icons/fa"; 
 import useGetCustomer from "../../hooks/useGetCustomer";
 import { toast } from "react-toastify";
 import { useState } from "react";
 
 const Customer = () => {
-    const { users, loading, refresh } = useGetCustomer();  // Assume refresh function to reload the data
+    const { users, loading, refresh } = useGetCustomer();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const [selectedUser, setSelectedUser] = useState(null);
@@ -14,7 +14,7 @@ const Customer = () => {
     const [deleting, setDeleting] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const usersPerPage = 7;  // Display only 7 rows per page
+    const usersPerPage = 7;
 
     const deleteUser = async () => {
         setDeleting(true);
@@ -44,6 +44,32 @@ const Customer = () => {
         }
     };
 
+
+    const sendVerificationCode = async (userId) => {
+       
+        try {
+            const res = await fetch('/api/users/sendVerificationCode', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    uid: userId
+                })
+            })
+            const data = await res.json()
+            if (data.error) {
+                toast.error(data.error)
+            } else {
+                toast.success(data.message)
+            }
+
+        } catch (error) {
+            console.log(error);
+
+
+        }
+    }
     const onClickDeleteBtn = (uid) => {
         setSelectedUser(uid);
         onOpen();
@@ -114,7 +140,9 @@ const Customer = () => {
                                             </Td>
                                             <Td>{user.lastLogin ? new Date(user.lastLogin).toLocaleString() : "N/A"}</Td>
                                             <Td>
+                                                <Button bg={'blue.500'} color={'white'} onClick={() => sendVerificationCode(user?._id)}>Send VC</Button>
                                                 <Button
+                                                    ml={2}
                                                     bg={'red.500'}
                                                     onClick={() => onClickDeleteBtn(user._id)}
                                                     isLoading={deleting && selectedUser === user._id}
@@ -122,6 +150,7 @@ const Customer = () => {
                                                 >
                                                     <MdDelete className="text-white" size={22} />
                                                 </Button>
+
                                             </Td>
                                         </Tr>
                                     ))}

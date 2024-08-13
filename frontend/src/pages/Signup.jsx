@@ -13,7 +13,6 @@ import {
   Heading,
   Text,
   useColorModeValue,
-  useToast,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
@@ -21,6 +20,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSetRecoilState } from 'recoil';
 import userAtom from '../atoms/userAtom';
+import { toast } from 'react-toastify';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -33,7 +33,6 @@ const Signup = () => {
     phone: ""
   });
   const [showPassword, setShowPassword] = useState(false);
-  const toast = useToast();
 
   const handleSignup = async () => {
     try {
@@ -47,13 +46,7 @@ const Signup = () => {
       const data = await res.json();
 
       if (data.error) {
-        toast({
-          title: "Error",
-          description: data.error,
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
+        toast.error(data.error)
         return;
       }
 
@@ -62,13 +55,8 @@ const Signup = () => {
       navigate('/');
 
     } catch (error) {
-      toast({
-        title: "Error",
-        description: error.message,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
+      console.log(error);
+
     }
   };
 
