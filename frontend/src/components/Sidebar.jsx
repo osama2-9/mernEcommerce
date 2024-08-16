@@ -83,13 +83,21 @@ const Sidebar = () => {
                     </MenuList>
 
                 </Menu>
-                <Link as={RouterLink} to='/admin/sales'>
-                    <Flex gap={2} alignItems={'center'}>
-                        <AiOutlineStock size={22} />
-                        <Text fontSize="xl" fontWeight="bold">Sales</Text>
+                <Menu>
+                    <MenuButton>
+                        <Flex gap={2} alignItems={'center'}>
+                            <AiOutlineStock size={22} />
+                            <Text fontSize="xl" fontWeight="bold">Sales</Text>
 
-                    </Flex>
-                </Link>
+                        </Flex>
+                    </MenuButton>
+                    <MenuList>
+                        <MenuItem color={'black'} as={RouterLink} to="admin/sales">Sales</MenuItem>
+                        <MenuItem color={'black'} as={RouterLink} to="/admin/product/timedSale">Timed Sale</MenuItem>
+
+                    </MenuList>
+                </Menu>
+
                 <Link as={RouterLink} to="admin/customer">
                     <Flex gap={2} alignItems={'center'}>
                         <MdGroups2 size={22} />

@@ -4,9 +4,7 @@
   "description": "",
   "main": "index.js",
   "type": "module",
-  "engines": {
-    "node": "20.11.1"
-  },
+ 
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon backend/index.js",
     "start": "cross-env NODE_ENV=production node backend/index.js",

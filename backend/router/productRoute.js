@@ -26,6 +26,7 @@ productRoute.post("/create", isAdmin, createProduct);
 productRoute.get("/recommended/:uid", recommendedProducts);
 productRoute.post("/createSale", isAdmin, protectRoute, createSale);
 productRoute.get("/on-sale", getProductsOnSale);
+
 productRoute.get("/get", getAllProducts);
 productRoute.get("/:type", filterProducts);
 productRoute.get("/target/:pid", getProductById);

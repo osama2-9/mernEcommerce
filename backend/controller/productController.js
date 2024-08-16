@@ -4,6 +4,7 @@ import Prodcut from "../model/Product.js";
 import { Rating } from "../model/Rating.js";
 import Order from "../model/Order.js";
 import { v2 as cloudinary } from "cloudinary";
+import Sale from "../model/Sale.js";
 const createProduct = async (req, res) => {
   try {
     const {
@@ -206,18 +207,40 @@ const createSale = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 const getProductsOnSale = async (req, res) => {
   try {
-    const product = await Prodcut.find();
-    const onSale = product.filter((p) => p.sale > 0);
-    if (onSale.length < 0) {
-      return;
+    const products = await Prodcut.find({ sale: { $gt: 0 } });
+
+    if (products.length === 0) {
+      return res.status(200).json({ message: "No products on sale." });
     }
 
-    return res.status(200).json(onSale);
+    const productIds = products.map((p) => p._id);
+
+    const sales = await Sale.find({ productId: { $in: productIds } });
+
+    const productsWithSaleDetails = products.map((product) => {
+      const saleInfo = sales.find(
+        (s) => s.productId.toString() === product._id.toString()
+      );
+
+      return {
+        ...product.toObject(),
+        sale: product.sale,
+        saleDetails: saleInfo
+          ? {
+              startTime: saleInfo.startTime,
+              endTime: saleInfo.endTime,
+              isActive: saleInfo.isActive,
+            }
+          : null,
+      };
+    });
+
+    return res.status(200).json(productsWithSaleDetails);
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 

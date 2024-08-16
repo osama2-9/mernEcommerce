@@ -14,6 +14,7 @@ import Brands from "../components/Brands";
 import Footer from "../components/Footer";
 import TopRate from "../components/TopRate";
 import RecommendedProducts from "../components/RecommendedProducts";
+import ShowTimedSaleProducts from "../components/ShowTimedSaleProducts";
 
 const HomePage = () => {
     const { topSell } = useGetTopSells()
@@ -109,9 +110,9 @@ const HomePage = () => {
 
                 <Flex
                     pos="relative"
-                    left={{ base: 5, sm: 5, md: 5, lg: "10%" }}
+                    left={{ base: 5, sm: 5, md: 5, lg: "0%" }}
                     top={'100px'}
-                    maxW="80%"
+                    maxW="100%"
                     justifyContent="center"
                     p={{ base: 5, md: 10 }}
                 >
@@ -152,6 +153,7 @@ const HomePage = () => {
                                         size="lg"
                                         color={'white'}
                                         mt={{ base: 4, md: 6 }}
+                                        w={'300px'}
                                         _hover={{ bg: "gray.800", color: "white" }}
                                     >
                                         Shop Now
@@ -200,6 +202,8 @@ const HomePage = () => {
                     }
 
                 </ProductContainer>
+
+                <ShowTimedSaleProducts />
 
                 <ProductContainer title="Some Brands" mt={10}>
 

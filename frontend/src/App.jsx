@@ -33,6 +33,7 @@ import ShowBrands from './pages/admin/ShowBrands';
 import BrandWithProducts from './pages/BrandWithProducts';
 import Favorite from './pages/Favorite';
 import VerifyEmail from './components/VerifiyEmail';
+import TimedSaleProducts from './pages/admin/TimedSaleProducts';
 
 function App() {
   const user = useRecoilValue(userAtom);
@@ -65,6 +66,7 @@ function App() {
         <Route path='/admin/:uid' element={user?.isAdmin ? <Admin /> : <Navigate to='/' replace />} />
         <Route path='/admin/product/create' element={user?.isAdmin ? <CreateProduct /> : <HomePage />} />
         <Route path='/admin/product/show' element={user?.isAdmin ? <ShowProduct /> : <HomePage />} />
+        <Route path='/admin/product/timedSale' element={user?.isAdmin ? <TimedSaleProducts /> : <HomePage />} />
         <Route path='/admin/category/create' element={user?.isAdmin ? <CreateCategory /> : <HomePage />} />
         <Route path='/admin/category/show' element={user?.isAdmin ? <ShowCategory /> : <HomePage />} />
         <Route path='/admin/brand/create' element={user?.isAdmin ? <CreateBrand /> : <HomePage />} />
