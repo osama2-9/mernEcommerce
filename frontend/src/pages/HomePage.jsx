@@ -23,7 +23,7 @@ const HomePage = () => {
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const res = await fetch(`/api/product/get`);
+                const res = await fetch(`https://mern-ecommerce-rust-iota.vercel.app/api/product/get`);
                 const data = await res.json();
                 if (data.error) {
                     toast(data.error, {
@@ -57,7 +57,7 @@ const HomePage = () => {
         getOnSale();
     }, []);
 
-console.log(product);
+    console.log(product);
 
 
 
@@ -110,7 +110,7 @@ console.log(product);
 
 
 
-                
+
 
 
 
