@@ -7,7 +7,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       "/api": {
-        target: "http://localhost:4000/",
+        target: "https://mern-ecommerce-rust-iota.vercel.app/",
         secure: false,
         changeOrigin: true,
       },
