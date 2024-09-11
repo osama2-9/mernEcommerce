@@ -29,7 +29,6 @@ import RelatedProducts from './RelatedProducts';
 
 const Product = () => {
     const [selectedProduct, setSelectedProduct] = useState({});
-    const [rate, setRate] = useState({});
     const [category, setCategory] = useState("");
     const [quantity, setQuantity] = useState(1);
     const [color, setColor] = useState("");
@@ -40,19 +39,19 @@ const Product = () => {
 
     const { pid } = useParams();
 
+
+
     const getProductById = useCallback(async () => {
         try {
             const res = await fetch(`/api/product/target/${pid}`);
             const data = await res.json();
             const productData = data.data[0];
             const categoryName = data.data[1];
-            const productRate = data.data[2];
             if (data.error) {
                 toast.error(data.error);
             } else {
                 setSelectedProduct(productData);
                 setCategory(categoryName);
-                setRate(productRate);
             }
         } catch (error) {
             console.log(error);
@@ -119,12 +118,6 @@ const Product = () => {
         return price - (price * (discount / 100));
     }, []);
 
-    const calculateAverageRating = useCallback((rate) => {
-        if (rate?.ratingCounter > 0 && rate?.rating) {
-            return rate.rating / rate.ratingCounter;
-        }
-        return 0;
-    }, []);
 
 
 
@@ -160,7 +153,8 @@ const Product = () => {
         );
     }, []);
 
-    const averageRating = useMemo(() => calculateAverageRating(rate), [rate, calculateAverageRating]);
+
+console.log(selectedProduct);
 
     return (
         <>
@@ -229,9 +223,9 @@ const Product = () => {
                             </Box>
                             <Box>
                                 <Flex alignItems="center" mt={2}>
-                                    {renderStars(averageRating)}
+                                    {renderStars(selectedProduct?.rating || 0)}
                                     <Text ml={2} color="gray.500">
-                                        ({rate?.ratingCounter || 0} reviews)
+                                        ({selectedProduct?.ratingCount || 0} reviews)
                                     </Text>
                                 </Flex>
                             </Box>
@@ -339,16 +333,13 @@ const Product = () => {
                 {userReview.length > 0 ? (
                     <>
                         {userReview.slice(0, 3).map((review, index) => (
-
-                            <Box key={index} mb={4} p={4} >
-
-                                {review?.userComment != "" && (
+                            <Box key={index} mb={4} p={4}>
+                                {review?.userComment !== "" && (
                                     <>
                                         <Flex alignItems="center" mb={2}>
                                             <Avatar name={review.userFullName} size="md" mr={2} />
                                             <Text fontWeight="bold">{review.userFullName}</Text>
                                         </Flex>
-
                                         <Flex alignItems="center" mb={2}>
                                             {renderStars(review.rating)}
                                             <Text ml={2} color="gray.500">
@@ -365,7 +356,7 @@ const Product = () => {
                             <>
                                 <Collapse startingHeight={0} in={showAllReviews}>
                                     {userReview.slice(3).map((review, index) => (
-                                        <Box key={index} mb={4} p={4} >
+                                        <Box key={index} mb={4} p={4}>
                                             <Flex alignItems="center" mb={2}>
                                                 <Avatar name={review.userFullName} src={review.userAvatar} size="md" mr={2} />
                                                 <Text fontWeight="bold">{review.userFullName}</Text>
@@ -385,7 +376,7 @@ const Product = () => {
                                     <IconButton
                                         icon={showAllReviews ? <ChevronUpIcon /> : <ChevronDownIcon />}
                                         onClick={() => setShowAllReviews(!showAllReviews)}
-                                        aria-label="Show more reviews"
+                                        aria-label={showAllReviews ? "Show fewer reviews" : "Show more reviews"}
                                     />
                                 </Flex>
                             </>
@@ -395,6 +386,7 @@ const Product = () => {
                     <Text>No reviews yet.</Text>
                 )}
             </Box>
+
 
             <RelatedProducts pid={pid} categoryId={category._id} />
         </>

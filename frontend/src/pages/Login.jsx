@@ -44,6 +44,7 @@ const Login = () => {
                 return;
             }
 
+            data.auth
             setUser(data);
             localStorage.setItem('user', JSON.stringify(data));
             navigate(data.isAdmin ? `/admin/${data._id}` : "/");

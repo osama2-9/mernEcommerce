@@ -4,7 +4,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 const Slider = () => {
     return (
-        <Box  mt={20} className="shadow-md" position="relative">
+        <Box w={'1400px'} left={'4%'}   mt={20} className="shadow-md" position="relative">
             
             <Carousel 
             
@@ -18,7 +18,7 @@ const Slider = () => {
             >
                 <div>
                     <Image
-                        height="600px"
+                        height="500px"
                         width="900px"
                         
                         src="/ads.jpg"
@@ -27,8 +27,8 @@ const Slider = () => {
                 </div>
                 <div>
                     <Image
-                        height="600px"
-                        width="100%"
+                        height="500px"
+                        width="900px"
                         
                         src="/ads2.jpeg"
                         alt="Slide 2"
@@ -36,8 +36,8 @@ const Slider = () => {
                 </div>
                 <div>
                     <Image
-                        height="600px"
-                        width="100%"
+                        height="500px"
+                        width="900px"
                         
                         src="/ads3.jpg"
                         alt="Slide 3"

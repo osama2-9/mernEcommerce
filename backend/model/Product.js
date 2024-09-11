@@ -55,16 +55,16 @@ const productSchema = new mongoose.Schema({
     default: 0,
   },
 });
-
 productSchema.statics.getRelatedProducts = async function (
   categoryID,
   excludeProductID,
+  returnedProductIDs = [], 
   limit = 4
 ) {
   try {
     const relatedProducts = await this.find({
       categoryID: categoryID,
-      _id: { $ne: excludeProductID },
+      _id: { $ne: excludeProductID, $nin: returnedProductIDs }, 
     }).limit(limit);
 
     return relatedProducts;

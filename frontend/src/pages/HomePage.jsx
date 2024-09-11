@@ -57,6 +57,7 @@ const HomePage = () => {
         getOnSale();
     }, []);
 
+console.log(product);
 
 
 
@@ -105,6 +106,11 @@ const HomePage = () => {
 
 
                 <Categories />
+
+
+
+
+                
 
 
 

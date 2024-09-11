@@ -141,11 +141,9 @@ const getProductById = async (req, res) => {
     const selectedProduct = await Prodcut.findById(pid);
     const categoryID = selectedProduct.categoryID;
     const getCategoryNameByProductId = await Category.findById(categoryID);
-    const getProductRate = await Rating.findOne({ pid: selectedProduct?._id });
     const fullData = data.concat(
       selectedProduct,
-      getCategoryNameByProductId,
-      getProductRate
+      getCategoryNameByProductId
     );
 
     if (!selectedProduct) {
@@ -497,6 +495,7 @@ const ProductRating = async (req, res) => {
     });
   }
 };
+
 const getTopRatedProducts = async (req, res) => {
   try {
     const products = await Prodcut.find();

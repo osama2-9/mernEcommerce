@@ -81,7 +81,7 @@ const BrandFilter = ({ setFilterdProducts, filterData }) => {
                 zIndex={10}
                 position={'relative'}
                 left={'70rem'}
-                top={'505px'}
+                top={'80px'}
                 onClick={onOpen}
                 mt={10}
                 ml={5}

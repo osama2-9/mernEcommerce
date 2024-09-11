@@ -16,6 +16,7 @@ import {
   getTopRatedProducts,
   recommendedProducts,
   getUsersReviewForProduct,
+  
 } from "../controller/productController.js";
 import { isAdmin } from "../middleware/isAdmin.js";
 import { protectRoute } from "../middleware/protectRoute.js";
@@ -26,7 +27,6 @@ productRoute.post("/create", isAdmin, createProduct);
 productRoute.get("/recommended/:uid", recommendedProducts);
 productRoute.post("/createSale", isAdmin, protectRoute, createSale);
 productRoute.get("/on-sale", getProductsOnSale);
-
 productRoute.get("/get", getAllProducts);
 productRoute.get("/:type", filterProducts);
 productRoute.get("/target/:pid", getProductById);
@@ -38,6 +38,6 @@ productRoute.get("/filter/products/:cid", getFilterdProducts);
 productRoute.put("/removeSale", isAdmin, protectRoute, removeSale);
 productRoute.post("/rate", protectRoute, ProductRating);
 productRoute.get("/getProducts/topRated", getTopRatedProducts);
-productRoute.get("/productReviews/:pid" ,getUsersReviewForProduct)
+productRoute.get("/productReviews/:pid", getUsersReviewForProduct);
 
 export default productRoute;

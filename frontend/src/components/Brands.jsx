@@ -4,7 +4,7 @@ import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import useGetBrands from "../hooks/useGetBrands";
 import { Link } from "react-router-dom";
 
-const Brands = () => {
+const Brands = () => {  
     const { homePageBrands } = useGetBrands()
 
 
@@ -20,7 +20,7 @@ const Brands = () => {
                         </Box>
                     ))
                 ) : (
-                    <Text>No brands available</Text>
+                    <Text></Text>
                 )}
             </Flex>
         </Box>
