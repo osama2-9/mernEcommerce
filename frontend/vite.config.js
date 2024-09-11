@@ -8,7 +8,6 @@ export default defineConfig({
     proxy: {
       "/api": {
         target: "https://mern-ecommerce-rust-iota.vercel.app/",
-        secure: false,
         changeOrigin: true,
       },
     },

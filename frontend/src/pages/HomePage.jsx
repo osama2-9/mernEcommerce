@@ -23,24 +23,23 @@ const HomePage = () => {
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const res = await fetch(`https://mern-ecommerce-rust-iota.vercel.app/api/product/get`);
+                const res = await fetch('/api/product/get');
                 const data = await res.json();
-                if (data.error) {
-                    toast(data.error, {
-                        type: "error",
-                        autoClose: true
-                    })
+
+                if (!res.ok) {
+                    throw new Error(data.error || "Failed to fetch products");
                 }
 
-                console.log(res);
-                console.log(data);
-                
-                
-                setProduct(data)
+                setProduct(data); 
             } catch (error) {
-                console.log(error);
+                toast(error.message || "Something went wrong", {
+                    type: "error",
+                    autoClose: true
+                });
+                console.error(error);
             }
-        }
+        };
+
         getProducts()
     }, [])
 

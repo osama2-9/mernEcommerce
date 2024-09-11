@@ -15,7 +15,9 @@ const RecommendedProducts = () => {
       try {
         const res = await fetch(`/api/product/recommended/${user.uid}`);
         const data = await res.json();
-        setProducts(data);
+        const uniqueProducts = Array.from(new Set(data.map((product) => product._id)))
+          .map((id) => data.find((product) => product._id === id));
+        setProducts(uniqueProducts);
       } catch (error) {
         console.log(error);
       }
@@ -24,15 +26,15 @@ const RecommendedProducts = () => {
     getRecommendedProducts();
   }, [user]);
 
+
   return (
     <>
-      {products && products.length > 0 && (
-        <ProductContainer mt={10} title="Recommended Products">
-          {products.map((product) => (
-            <Products key={product._id} product={product} />
-          ))}
-        </ProductContainer>
-      )}
+      <ProductContainer mt={10} title="Recommended Products">
+        {products.map((product) => (
+          <Products key={product._id} product={product} />
+        ))}
+      </ProductContainer>
+
     </>
   );
 };

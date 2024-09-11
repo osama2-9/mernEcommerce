@@ -19,24 +19,13 @@ dotenv.config();
 dbConnect();
 
 const app = express();
-const PORT = process.env.PORT || 4000;
-const __dirname = path.resolve();
-
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
-});
 
 app.use(
   cors({
-    origin: [
-      "https://ecommerce-rouge-tau-66.vercel.app",
-      "http://localhost:3000",
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    origin: "https://ecommerce-rouge-tau-66.vercel.app/",
+    methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: [
-      "Content-Type",
+      "content-type",
       "Authorization",
       "X-Requested-With",
       "Accept",
@@ -45,6 +34,15 @@ app.use(
     credentials: true,
   })
 );
+
+const PORT = process.env.PORT || 4000;
+const __dirname = path.resolve();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
