@@ -31,6 +31,11 @@ const HomePage = () => {
                         autoClose: true
                     })
                 }
+
+                console.log(res);
+                console.log(data);
+                
+                
                 setProduct(data)
             } catch (error) {
                 console.log(error);

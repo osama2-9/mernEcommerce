@@ -13,6 +13,7 @@ import cartRouter from "./router/cartRouter.js";
 import brandRouter from "./router/brandRouter.js";
 import favoriteRoute from "./router/favoriteRouter.js";
 import saleRouter from "./router/SaleRouter.js";
+import cors from "cors";
 
 dotenv.config();
 dbConnect();
@@ -27,6 +28,23 @@ cloudinary.config({
   api_secret: process.env.API_SECRET,
 });
 
+app.use(
+  cors({
+    origin: [
+      "https://ecommerce-rouge-tau-66.vercel.app",
+      "http://localhost:3000",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "Accept",
+      "Origin",
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
