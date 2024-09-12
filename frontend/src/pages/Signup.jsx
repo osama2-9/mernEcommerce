@@ -40,6 +40,7 @@ const Signup = () => {
       const res = await fetch(`${BACKEND_API}/users/signup`, {
         method: "POST",
         credentials: "include",
+
         headers: {
           "Content-Type": "application/json"
         },
