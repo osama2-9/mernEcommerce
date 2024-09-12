@@ -9,7 +9,9 @@ const useGetProduct = () => {
 
   const getProducts = useCallback(async () => {
     try {
-      const res = await fetch(`${BACKEND_API}/product/get`);
+      const res = await fetch(`${BACKEND_API}/product/get` ,{
+        credentials:"include"
+      });
       const data = await res.json();
 
       if (data.error) {

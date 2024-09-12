@@ -9,7 +9,9 @@ const useGetCustomer = () => {
   const getUsersData = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${BACKEND_API}/users/get`);
+      const res = await fetch(`${BACKEND_API}/users/get`, {
+        credentials: "include",
+      });
       const data = await res.json();
 
       if (data.error) {

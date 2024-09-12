@@ -7,7 +7,9 @@ const useGetOrders = () => {
 
   const getAllOrders = async () => {
     try {
-      const res = await fetch(`${BACKEND_API}/order/order`);
+      const res = await fetch(`${BACKEND_API}/order/order` ,{
+        credentials:"include"
+      });
       const data = await res.json();
       if (data.error) {
         // toast.error(data.error);
