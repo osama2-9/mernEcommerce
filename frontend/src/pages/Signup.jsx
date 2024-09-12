@@ -39,17 +39,17 @@ const Signup = () => {
     try {
       const res = await fetch(`${BACKEND_API}/users/signup`, {
         method: "POST",
-        credentials: "include",
-
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(inputs)
+        body: JSON.stringify(inputs),
+        credentials: 'include', 
       });
+
       const data = await res.json();
 
       if (data.error) {
-        toast.error(data.error)
+        toast.error(data.error);
         return;
       }
 
@@ -59,9 +59,9 @@ const Signup = () => {
 
     } catch (error) {
       console.log(error);
-
     }
   };
+
 
   const handleInputsChange = (e) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });

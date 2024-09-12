@@ -34,9 +34,10 @@ const Login = () => {
         try {
             const res = await fetch(`${BACKEND_API}/users/login`, {
                 method: "POST",
-                credentials: "include",
-
-                headers: { "Content-Type": "application/json" },
+                credentials: "include", 
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify(inputs)
             });
 
@@ -47,7 +48,6 @@ const Login = () => {
                 return;
             }
 
-            data.auth
             setUser(data);
             localStorage.setItem('user', JSON.stringify(data));
             navigate(data.isAdmin ? `/admin/${data._id}` : "/");
@@ -56,6 +56,7 @@ const Login = () => {
             toast.error(error.message, { autoClose: 3000 });
         }
     };
+
 
     return (
         <Flex align={'center'} justify={'center'} minH={'100vh'} bg={useColorModeValue('gray.50', 'gray.800')}>

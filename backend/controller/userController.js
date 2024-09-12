@@ -209,6 +209,7 @@ const logout = async (req, res) => {
   try {
     res.cookie("auth", "", {
       maxAge: 1,
+    
     });
     res.status(200).json({
       message: "User Logout",
