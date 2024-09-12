@@ -1,6 +1,5 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -9,6 +8,7 @@ export default defineConfig({
       "/api": {
         target: "https://mern-ecommerce-rust-iota.vercel.app/",
         changeOrigin: true,
+        secure: false,
       },
     },
   },

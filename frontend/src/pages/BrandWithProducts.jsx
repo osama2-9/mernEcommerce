@@ -6,6 +6,7 @@ import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import ProductContainer from '../components/ProductContainer';
 import Products from '../components/Products';
 import BrandFilter from '../components/BrandFilter';
+import { BACKEND_API } from '../config/config';
 
 const BrandWithProducts = () => {
     const { bid } = useParams();
@@ -17,7 +18,7 @@ const BrandWithProducts = () => {
     useEffect(() => {
         const getSpecificBrandProducts = async () => {
             try {
-                const res = await fetch(`/api/brand/brand/${bid}`);
+                const res = await fetch(`${BACKEND_API}/brand/brand/${bid}`);
                 const data = await res.json();
                 console.log(data);
 

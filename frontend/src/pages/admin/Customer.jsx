@@ -4,6 +4,7 @@ import { FaCheck, FaTimes } from "react-icons/fa";
 import useGetCustomer from "../../hooks/useGetCustomer";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { BACKEND_API } from "../../config/config";
 
 const Customer = () => {
     const { users, loading, refresh } = useGetCustomer();
@@ -19,7 +20,7 @@ const Customer = () => {
     const deleteUser = async () => {
         setDeleting(true);
         try {
-            const res = await fetch('/api/users/deleteByAdmin', {
+            const res = await fetch(`${BACKEND_API}/users/deleteByAdmin`, {
                 method: "DELETE",
                 headers: {
                     'content-type': "application/json"
@@ -48,7 +49,7 @@ const Customer = () => {
     const sendVerificationCode = async (userId) => {
        
         try {
-            const res = await fetch('/api/users/sendVerificationCode', {
+            const res = await fetch(`${BACKEND_API}/users/sendVerificationCode`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

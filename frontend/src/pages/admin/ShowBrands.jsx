@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import useGetCategories from '../../hooks/useGetCategories';
+import { BACKEND_API } from '../../config/config';
 
 const ShowBrands = () => {
     const [brands, setBrands] = useState([]);
@@ -23,7 +24,7 @@ const ShowBrands = () => {
     useEffect(() => {
         const fetchBrands = async () => {
             try {
-                const res = await fetch('/api/brand');
+                const res = await fetch(`${BACKEND_API}/brand`);
                 const data = await res.json();
                 setBrands(data.brands);
                 setFilteredBrands(data.brands);
@@ -49,7 +50,7 @@ const ShowBrands = () => {
 
     const handleDelete = async (brandId) => {
         try {
-            const res = await fetch('/api/brand/delete', {
+            const res = await fetch(`${BACKEND_API}/brand/delete`, {
                 method: "DELETE",
                 headers: {
                     'content-type': "application/json"
@@ -74,7 +75,7 @@ const ShowBrands = () => {
 
     const handleUpdate = async () => {
         try {
-            const res = await fetch('/api/brand/update', {
+            const res = await fetch(`${BACKEND_API}/brand/update`, {
                 method: "PUT",
                 headers: {
                     'content-type': "application/json"

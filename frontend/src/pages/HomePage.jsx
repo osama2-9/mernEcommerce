@@ -15,22 +15,27 @@ import Footer from "../components/Footer";
 import TopRate from "../components/TopRate";
 import RecommendedProducts from "../components/RecommendedProducts";
 import ShowTimedSaleProducts from "../components/ShowTimedSaleProducts";
-
+import { BACKEND_API } from '../config/config.js'
 const HomePage = () => {
+
+
+
     const { topSell } = useGetTopSells()
     const [product, setProduct] = useState([])
     const [onSale, setOnSale] = useState([])
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const res = await fetch('/api/product/get');
+                const res = await fetch(`${BACKEND_API}/product/get`);
+                console.log(res);
+
                 const data = await res.json();
 
                 if (!res.ok) {
                     throw new Error(data.error || "Failed to fetch products");
                 }
 
-                setProduct(data); 
+                setProduct(data);
             } catch (error) {
                 toast(error.message || "Something went wrong", {
                     type: "error",
@@ -50,7 +55,7 @@ const HomePage = () => {
     useEffect(() => {
         const getOnSale = async () => {
             try {
-                const res = await fetch('/api/product/on-sale');
+                const res = await fetch(`${BACKEND_API}/product/on-sale`);
                 const data = await res.json();
                 setOnSale(data);
             } catch (error) {
@@ -61,7 +66,6 @@ const HomePage = () => {
         getOnSale();
     }, []);
 
-    console.log(product);
 
 
 

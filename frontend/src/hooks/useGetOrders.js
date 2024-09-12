@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import { BACKEND_API } from "../config/config";
 
 const useGetOrders = () => {
   const [orders, setOrders] = useState([]);
 
   const getAllOrders = async () => {
     try {
-      const res = await fetch("/api/order/order");
+      const res = await fetch(`${BACKEND_API}/order/order`);
       const data = await res.json();
       if (data.error) {
         // toast.error(data.error);

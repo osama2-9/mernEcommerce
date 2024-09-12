@@ -26,6 +26,7 @@ import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 
 import userAtom from '../atoms/userAtom';
 import RelatedProducts from './RelatedProducts';
+import { BACKEND_API } from '../config/config';
 
 const Product = () => {
     const [selectedProduct, setSelectedProduct] = useState({});
@@ -43,7 +44,7 @@ const Product = () => {
 
     const getProductById = useCallback(async () => {
         try {
-            const res = await fetch(`/api/product/target/${pid}`);
+            const res = await fetch(`${BACKEND_API}/product/target/${pid}`);
             const data = await res.json();
             const productData = data.data[0];
             const categoryName = data.data[1];
@@ -60,7 +61,7 @@ const Product = () => {
 
     const getUsersReview = useCallback(async () => {
         try {
-            const res = await fetch(`/api/product/productReviews/${pid}`);
+            const res = await fetch(`${BACKEND_API}/product/productReviews/${pid}`);
             const data = await res.json();
             if (!data.error) {
                 setUserReview(data);
@@ -89,7 +90,7 @@ const Product = () => {
 
     const handleAddToCart = async () => {
         try {
-            const res = await fetch(`/api/cart/cart/${selectedProduct?._id}`, {
+            const res = await fetch(`${BACKEND_API}/cart/cart/${selectedProduct?._id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

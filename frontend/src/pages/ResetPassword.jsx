@@ -2,6 +2,7 @@ import { Box, Button, Checkbox, Flex, FormControl, FormLabel, Heading, Input, In
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { BACKEND_API } from "../config/config";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
@@ -18,7 +19,7 @@ const ResetPassword = () => {
         toast.error("Password Not Match !")
       } else {
 
-        const res = await fetch(`/api/users/reset-password/${token}`, {
+        const res = await fetch(`${BACKEND_API}/users/reset-password/${token}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

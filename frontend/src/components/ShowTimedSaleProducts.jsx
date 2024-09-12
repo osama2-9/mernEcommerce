@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import CountdownTimer from './CountdownTimer';
 import { Link } from 'react-router-dom';
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
+import { BACKEND_API } from '../config/config';
 
 const ShowTimedSaleProducts = () => {
     const [timedSaleProducts, setTimedSaleProducts] = useState([]);
@@ -13,7 +14,7 @@ const ShowTimedSaleProducts = () => {
     useEffect(() => {
         const getTimedSaleProducts = async () => {
             try {
-                const res = await fetch('/api/sale/timedSale');
+                const res = await fetch(`${BACKEND_API}/sale/timedSale`);
                 const data = await res.json();
                 if (data.error) {
                     toast.error(data.error);

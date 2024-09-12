@@ -20,12 +20,13 @@ import {
     Button,
     Link
 } from '@chakra-ui/react';
-import { MdMessage } from 'react-icons/md'; // Icon for message
+import { MdMessage } from 'react-icons/md'; 
+import { BACKEND_API } from '../config/config.js'
 
 const Messages = () => {
     const [messages, setMessages] = useState([]);
-    const { isOpen, onOpen, onClose } = useDisclosure(); // Hook for modal control
-    const { isOpen: isDrawerOpen, onOpen: onDrawerOpen, onClose: onDrawerClose } = useDisclosure(); // Hook for drawer control
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isDrawerOpen, onOpen: onDrawerOpen, onClose: onDrawerClose } = useDisclosure(); 
     const [selectedMessage, setSelectedMessage] = useState(null);
 
     useEffect(() => {
@@ -34,7 +35,7 @@ const Messages = () => {
 
     const getAllMessages = async () => {
         try {
-            const res = await fetch('/api/users/messages');
+            const res = await fetch(`${BACKEND_API}users/messages`);
             const data = await res.json();
             if (data.error) {
                 console.error('Error fetching messages:', data.error);

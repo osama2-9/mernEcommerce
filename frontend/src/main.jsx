@@ -5,20 +5,19 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react"
 import { RecoilRoot } from "recoil"
 
 
+
 const config = {
   initialColorMode: "light",
   useSystemColorMode: false,
 }
 
-
 const theme = extendTheme({ config })
 
+
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <ChakraProvider theme={theme}>
-      <RecoilRoot>
-
-        <App />
-      </RecoilRoot>
-
-    </ChakraProvider>
+  <ChakraProvider theme={theme}>
+    <RecoilRoot>
+      <App />
+    </RecoilRoot>
+  </ChakraProvider>
 )

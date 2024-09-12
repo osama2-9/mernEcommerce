@@ -39,6 +39,8 @@ function App() {
   const user = useRecoilValue(userAtom);
   const location = useLocation();
   const navigate = useNavigate();
+  
+  
 
   useEffect(() => {
     if (location.pathname.includes('/admin') && !user?.isAdmin) {
@@ -63,7 +65,7 @@ function App() {
         <Route path='/product/:pid' element={<Product />} />
         <Route path='/cart/:uid' element={user ? <Cart /> : <HomePage />} />
         <Route path='/dashboard/:uid' element={user ? <DashBored /> : <HomePage />} />
-        <Route path='/admin/:uid' element={user?.isAdmin ? <Admin /> : <Navigate to='/' replace />} />
+        <Route path='/admin/:uid' element={user?.isAdmin ? <Admin /> : <Navigate to='/'  />} />
         <Route path='/admin/product/create' element={user?.isAdmin ? <CreateProduct /> : <HomePage />} />
         <Route path='/admin/product/show' element={user?.isAdmin ? <ShowProduct /> : <HomePage />} />
         <Route path='/admin/product/timedSale' element={user?.isAdmin ? <TimedSaleProducts /> : <HomePage />} />

@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import Products from '../components/Products';
 import ProductContainer from '../components/ProductContainer';
 import FilterProducts from '../components/FilterProducts';
+import { BACKEND_API } from '../config/config';
 
 const SpecificProducts = () => {
     const { categoryName, categoryId } = useParams();
@@ -13,7 +14,7 @@ const SpecificProducts = () => {
     useEffect(() => {
         const getProductsInCategory = async () => {
             try {
-                const res = await fetch(`/api/category/products/${categoryName}/${categoryId}`);
+                const res = await fetch(`${BACKEND_API}/category/products/${categoryName}/${categoryId}`);
                 const data = await res.json();
                 if (res.status !== 200) {
                     toast.error(data.error || "Failed to fetch products");

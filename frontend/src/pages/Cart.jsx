@@ -4,6 +4,7 @@ import userAtom from '../atoms/userAtom';
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
+import { BACKEND_API } from '../config/config';
 
 const Cart = () => {
     const logged = useRecoilValue(userAtom);
@@ -15,7 +16,7 @@ const Cart = () => {
     useEffect(() => {
         const getCartItems = async () => {
             try {
-                const res = await fetch(`/api/cart/cart/${uid}`);
+                const res = await fetch(`${BACKEND_API}/cart/cart/${uid}`);
                 const data = await res.json();
                 if (data.error) {
                     toast.error(data.error);
@@ -38,7 +39,7 @@ const Cart = () => {
 
 
         try {
-            const res = await fetch('/api/order/order', {
+            const res = await fetch(`${BACKEND_API}/order/order`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -72,7 +73,7 @@ const Cart = () => {
             if (!iid) {
                 toast.error("Product Not Found");
             }
-            const res = await fetch('/api/cart/cart/delete', {
+            const res = await fetch('${BACKEND_API}/cart/cart/delete', {
                 method: "DELETE",
                 headers: {
                     "content-type": "application/json",

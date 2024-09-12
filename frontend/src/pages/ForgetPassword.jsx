@@ -2,13 +2,14 @@ import { Box, Button, Flex, FormControl, FormLabel, Heading, Input, Stack } from
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { BACKEND_API } from "../config/config";
 
 const ForgetPassword = () => {
     const [email, setEmail] = useState('');
 
     const handleSendEmail = async () => {
         try {
-            const res = await fetch('/api/users/forget-password', {
+            const res = await fetch(`${BACKEND_API}/users/forget-password`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'

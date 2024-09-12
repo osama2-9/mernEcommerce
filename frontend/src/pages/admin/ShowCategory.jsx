@@ -27,6 +27,7 @@ import { MdDelete, MdEditNote } from "react-icons/md";
 import useGetCategories from '../../hooks/useGetCategories';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
+import { BACKEND_API } from '../../config/config';
 
 const ShowCategory = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -36,7 +37,7 @@ const ShowCategory = () => {
 
   const deleteCategory = async (cid) => {
     try {
-      const res = await fetch('/api/category/delete', {
+      const res = await fetch(`${BACKEND_API}/category/delete`, {
         method: "DELETE",
         headers: {
           'Content-Type': 'application/json',
@@ -56,7 +57,7 @@ const ShowCategory = () => {
 
   const updateCategory = async () => {
     try {
-      const res = await fetch('/api/category/update', {
+      const res = await fetch(`${BACKEND_API}/category/update`, {
         method: "PUT",
         headers: {
           'content-type': "application/json"

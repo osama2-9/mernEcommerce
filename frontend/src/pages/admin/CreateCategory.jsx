@@ -1,6 +1,7 @@
 import { Box, Button, Flex, FormControl, FormLabel, Input, Text, Textarea } from "@chakra-ui/react";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { BACKEND_API } from "../../config/config";
 
 const CreateCategory = () => {
     const [Inputs, setInputs] = useState({
@@ -15,7 +16,7 @@ const CreateCategory = () => {
 
     const handleSubmit = async () => {
         try {
-            const res = await fetch('/api/category/create', {
+            const res = await fetch(`${BACKEND_API}/category/create`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

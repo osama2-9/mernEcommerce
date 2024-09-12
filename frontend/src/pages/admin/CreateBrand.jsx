@@ -4,6 +4,7 @@ import useGetCategories from '../../hooks/useGetCategories';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 import useImgPreview from '../../hooks/useImgPreview';
+import { BACKEND_API } from '../../config/config';
 
 const CreateBrand = () => {
   const { categories, loading } = useGetCategories();
@@ -30,7 +31,7 @@ const CreateBrand = () => {
   const handleCreateBrand = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/brand/create', {
+      const res = await fetch(`${BACKEND_API}/brand/create`, {
         method: "POST",
         headers: {
           'Content-Type': "application/json"

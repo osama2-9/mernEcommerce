@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { BsTrash } from "react-icons/bs";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { BACKEND_API } from "../config/config";
 
 const UserLastOrders = () => {
     const [orders, setOrders] = useState([]);
@@ -31,7 +32,7 @@ const UserLastOrders = () => {
     useEffect(() => {
         const getUserOrders = async () => {
             try {
-                const res = await fetch(`/api/order/userOrder/${logged.uid}`);
+                const res = await fetch(`${BACKEND_API}/order/userOrder/${logged.uid}`);
                 const data = await res.json();
                 if (data.error) {
                     toast.error(data.error);
@@ -49,7 +50,7 @@ const UserLastOrders = () => {
 
     const deleteOrder = async (orderId) => {
         try {
-            const res = await fetch('/api/order/deleteUserOrder', {
+            const res = await fetch(`${BACKEND_API}/order/deleteUserOrder`, {
                 method: "DELETE",
                 headers: {
                     'content-type': "application/json",

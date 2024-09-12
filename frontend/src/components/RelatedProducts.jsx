@@ -2,6 +2,7 @@
 import { Flex, Box, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import Produts from './Products'
+import { BACKEND_API } from "../config/config";
 
 const RelatedProducts = ({ categoryId, pid }) => {
     const [rProducts, setRProducts] = useState([]);
@@ -9,7 +10,7 @@ const RelatedProducts = ({ categoryId, pid }) => {
     useEffect(() => {
         const fetchRelatedProducts = async () => {
             try {
-                const res = await fetch(`/api/product/related/${categoryId}/${pid}`);
+                const res = await fetch(`${BACKEND_API}/product/related/${categoryId}/${pid}`);
                 const data = await res.json();
                 setRProducts(data);
             } catch (error) {

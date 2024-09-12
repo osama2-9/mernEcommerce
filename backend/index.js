@@ -22,7 +22,9 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://ecommerce-rouge-tau-66.vercel.app/",
+    origin: [
+      "*",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: [
       "content-type",

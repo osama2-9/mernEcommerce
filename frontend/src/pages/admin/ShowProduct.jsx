@@ -10,6 +10,7 @@ import { MdDelete, MdEditNote } from "react-icons/md";
 import { toast } from "react-toastify";
 import useGetCategories from '../../hooks/useGetCategories';
 import useImgPreview from "../../hooks/useImgPreview";
+import { BACKEND_API } from "../../config/config";
 
 const ShowProduct = () => {
     const { img, handleImgChange } = useImgPreview()
@@ -49,7 +50,7 @@ const ShowProduct = () => {
 
     const deleteProducts = async (pid) => {
         try {
-            const res = await fetch('/api/product/delete', {
+            const res = await fetch(`${BACKEND_API}/product/delete`, {
                 method: "DELETE",
                 headers: {
                     'content-type': "application/json"
@@ -70,7 +71,7 @@ const ShowProduct = () => {
 
     const updateProductData = async () => {
         try {
-            const res = await fetch('/api/product/update', {
+            const res = await fetch(`${BACKEND_API}/product/update`, {
                 method: "PUT",
                 headers: {
                     'content-type': "application/json"

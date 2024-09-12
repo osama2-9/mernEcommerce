@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import userAtom from '../../atoms/userAtom';
+import { BACKEND_API } from '../../config/config';
 
 const Profile = () => {
     const logged = useRecoilValue(userAtom)
@@ -33,7 +34,7 @@ const Profile = () => {
 
     const updateUserData = async () => {
         try {
-            const res = await fetch('/api/users/updateUserData', {
+            const res = await fetch(`${BACKEND_API}/users/updateUserData`, {
                 method: "PUT",
                 headers: {
                     'content-type': "application/json"

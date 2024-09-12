@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom';
 import USidebar from '../components/USidebar';
+import { BACKEND_API } from '../config/config';
 
 const countryOptions = countries
     .filter((c) => c.name.common !== 'Israel')
@@ -50,7 +51,7 @@ const Address = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch('/api/users/addAddress', {
+            const res = await fetch(`${BACKEND_API}/users/addAddress`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom.js';
 import USidebar from '../components/USidebar.jsx';
+import { BACKEND_API } from '../config/config.js';
 
 const UserProfile = () => {
     const logged = useRecoilValue(userAtom);
@@ -35,7 +36,7 @@ const UserProfile = () => {
 
     const updateUserData = async () => {
         try {
-            const res = await fetch('/api/users/updateUserData', {
+            const res = await fetch(`${BACKEND_API}/users/updateUserData`, {
                 method: "PUT",
                 headers: {
                     'content-type': "application/json"

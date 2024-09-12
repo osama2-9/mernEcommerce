@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import ProductContainer from "../components/ProductContainer";
 import Products from "../components/Products";
-
+import { BACKEND_API } from '../config/config.js'
 const RecommendedProducts = () => {
   const [products, setProducts] = useState([]);
   const user = useRecoilValue(userAtom);
@@ -13,7 +13,7 @@ const RecommendedProducts = () => {
       if (!user) return;
 
       try {
-        const res = await fetch(`/api/product/recommended/${user.uid}`);
+        const res = await fetch(`${BACKEND_API}/product/recommended/${user.uid}`);
         const data = await res.json();
         const uniqueProducts = Array.from(new Set(data.map((product) => product._id)))
           .map((id) => data.find((product) => product._id === id));

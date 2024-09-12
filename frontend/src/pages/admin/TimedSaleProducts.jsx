@@ -28,6 +28,7 @@ import { toast } from 'react-toastify';
 import { FaRegClock, FaCheckCircle, FaRegCircle, FaTrash } from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { BACKEND_API } from '../../config/config';
 
 const TimedSaleProducts = () => {
     const [onSale, setOnSale] = useState([]);
@@ -56,7 +57,7 @@ const TimedSaleProducts = () => {
 
     const getOnSaleProducts = async () => {
         try {
-            const res = await fetch(`/api/product/on-sale`);
+            const res = await fetch(`${BACKEND_API}/product/on-sale`);
             const data = await res.json();
             if (data.error) {
                 toast.error(data.error);
@@ -71,7 +72,7 @@ const TimedSaleProducts = () => {
 
     const handleAddTimedSale = async () => {
         try {
-            const res = await fetch("/api/sale/create", {
+            const res = await fetch(`${BACKEND_API}/sale/create`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -97,7 +98,7 @@ const TimedSaleProducts = () => {
 
     const handleActivationStatus = async (productId) => {
         try {
-            const res = await fetch('/api/sale/activationStatus', {
+            const res = await fetch(`${BACKEND_API}/sale/activationStatus`, {
                 method: "POST",
                 headers: {
                     'Content-Type': "application/json"
@@ -120,7 +121,7 @@ const TimedSaleProducts = () => {
 
     const handleDeleteProductFromTimedSale = async (productId) => {
         try {
-            const res = await fetch('/api/sale/delete', {
+            const res = await fetch(`${BACKEND_API}/sale/delete`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json"
@@ -140,7 +141,6 @@ const TimedSaleProducts = () => {
             console.log(error);
         }
     };
-// console.log(onSale);
 
     return (
         <Box position={'absolute'} top={'100'} left={'250'} p={4}>

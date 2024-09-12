@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Box, Button, FormControl, FormLabel, Input, Text, VStack } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { BACKEND_API } from '../config/config';
 
 const VerifyEmail = () => {
     const [code, setCode] = useState('');
@@ -16,7 +17,7 @@ const VerifyEmail = () => {
         e.preventDefault();
         try {
             setLoading(true)
-            const res = await fetch('/api/users/verifiy-email', {
+            const res = await fetch(`${BACKEND_API}/users/verifiy-email`, {
                 method: "POST",
                 headers: {
                     'Content-Type': "application/json"

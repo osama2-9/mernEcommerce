@@ -20,6 +20,7 @@ import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import useGetFavoriteProducts from "../hooks/useGetFavoriteProducts";
 import { toast } from "react-toastify";
+import { BACKEND_API } from "../config/config";
 
 const Products = ({ product, isLoading }) => {
     const [saved, setSaved] = useState(false);
@@ -39,7 +40,7 @@ const Products = ({ product, isLoading }) => {
 
     const handleFavorite = async () => {
         try {
-            const endpoint = saved ? '/api/favorite/remove' : '/api/favorite/add';
+            const endpoint = saved ? `${BACKEND_API}/favorite/remove` : `${BACKEND_API}/favorite/add`;
             const method = saved ? "DELETE" : "POST";
             const body = JSON.stringify({ uid: user?.uid, pid: product?._id });
             const res = await fetch(endpoint, { method, headers: { 'Content-Type': "application/json" }, body });

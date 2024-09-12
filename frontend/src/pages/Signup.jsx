@@ -21,6 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useSetRecoilState } from 'recoil';
 import userAtom from '../atoms/userAtom';
 import { toast } from 'react-toastify';
+import { BACKEND_API } from '../config/config';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ const Signup = () => {
 
   const handleSignup = async () => {
     try {
-      const res = await fetch('/api/users/signup', {
+      const res = await fetch(`${BACKEND_API}/users/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

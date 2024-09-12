@@ -26,6 +26,7 @@ import { StarIcon, SearchIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
 import userAtom from "../atoms/userAtom";
 import { useRecoilValue } from "recoil";
+import { BACKEND_API } from "../config/config";
 
 const MyOrders = () => {
     const [userOrders, setUserOrders] = useState([]);
@@ -44,7 +45,7 @@ const MyOrders = () => {
         const getUserOrders = async () => {
             setLoading(true);
             try {
-                const res = await fetch(`/api/order/userOrder/${uid}`);
+                const res = await fetch(`${BACKEND_API}/order/userOrder/${uid}`);
                 const data = await res.json();
                 if (data.error) {
                     toast.error(data.error);
@@ -82,7 +83,7 @@ const MyOrders = () => {
     const handleSubmitRating = async () => {
         if (rating > 0) {
             try {
-                const res = await fetch(`/api/product/rate`, {
+                const res = await fetch(`${BACKEND_API}/product/rate`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

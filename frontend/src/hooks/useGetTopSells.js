@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { BACKEND_API } from "../config/config";
 const useGetTopSells = () => {
   const [topSell, setTopSell] = useState([]);
 
   const getTopSellProducts = useCallback(async () => {
     try {
-      const res = await fetch("/api/order/topSell");
+      const res = await fetch(`${BACKEND_API}/order/topSell`);
       const data = await res.json();
       if (data.error) {
         toast.error(data.error);

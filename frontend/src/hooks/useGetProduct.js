@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { BACKEND_API } from "../config/config";
 
 const useGetProduct = () => {
   const [products, setProducts] = useState([]);
   const [numberOfProduct, setNumberOfProduct] = useState(0);
   const getProducts = async () => {
     try {
-      const res = await fetch("/api/product/get");
+      const res = await fetch(`${BACKEND_API}/product/get`);
       const data = await res.json();
       const productCount = data.length;
 

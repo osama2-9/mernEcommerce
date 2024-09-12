@@ -5,6 +5,7 @@ import { useState } from "react";
 import ImgUploader from "../../hooks/ImgUploder";
 import useGetCategories from "../../hooks/useGetCategories";
 import useGetBrands from "../../hooks/useGetBrands";
+import { BACKEND_API } from "../../config/config";
 
 const CreateProduct = () => {
     const { brands, loading: brandsLoading } = useGetBrands();
@@ -32,7 +33,7 @@ const CreateProduct = () => {
         e.preventDefault();
 
         try {
-            const res = await fetch('/api/product/create/', {
+            const res = await fetch(`${BACKEND_API}/product/create/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

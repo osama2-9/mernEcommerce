@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 import { useSetRecoilState } from 'recoil';
 import userAtom from '../atoms/userAtom';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
+import { BACKEND_API } from '../config/config';
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -31,7 +32,7 @@ const Login = () => {
 
     const handleLogin = async () => {
         try {
-            const res = await fetch('/api/users/login', {
+            const res = await fetch(`${BACKEND_API}/users/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(inputs)

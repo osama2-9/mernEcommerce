@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { BACKEND_API } from "../config/config";
 
 const useGetCustomer = () => {
   const [users, setUsers] = useState([]);
@@ -8,7 +9,7 @@ const useGetCustomer = () => {
   const getUsersData = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/users/get");
+      const res = await fetch(`${BACKEND_API}/users/get`);
       const data = await res.json();
 
       if (data.error) {

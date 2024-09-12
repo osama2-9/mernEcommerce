@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { BACKEND_API } from "../config/config";
 
 const useGetBrands = () => {
   const [brands, setBrands] = useState([]);
@@ -10,7 +11,7 @@ const useGetBrands = () => {
     const getBrands = async () => {
       setLoading(true);
       try {
-        const res = await fetch("/api/brand");
+        const res = await fetch(`${BACKEND_API}/brand`);
 
         const data = await res.json();
         const brand = data.brands;

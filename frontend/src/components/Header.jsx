@@ -32,6 +32,7 @@ import userAtom from '../atoms/userAtom';
 import { toast } from 'react-toastify';
 import useGetCategories from '../hooks/useGetCategories';
 import CategoreisWithBrands from './CategoreisWithBrands';
+import { BACKEND_API } from '../config/config.js'
 
 const Header = () => {
     const Nav = useNavigate();
@@ -46,7 +47,7 @@ const Header = () => {
 
     const handleLogout = async () => {
         try {
-            const res = await fetch('/api/users/logout', {
+            const res = await fetch(`${BACKEND_API}/users/logout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -73,7 +74,7 @@ const Header = () => {
     const searchData = async (query) => {
         try {
             setLoading(true);
-            const res = await fetch(`/api/product/search/${query}`);
+            const res = await fetch(`${BACKEND_API}/product/search/${query}`);
             const data = await res.json();
             if (Array.isArray(data)) {
                 setSearchResult(data);

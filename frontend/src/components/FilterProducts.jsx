@@ -3,7 +3,7 @@
 import { Box, IconButton, List, ListItem, Switch, Stack, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-
+import { BACKEND_API } from '../config/config.js'
 
 const FilterProducts = ({ categoryId, products, setFilterdProducts }) => {
     const [showMoreColors, setShowMoreColors] = useState(false);
@@ -23,7 +23,7 @@ const FilterProducts = ({ categoryId, products, setFilterdProducts }) => {
     useEffect(() => {
         const filter = async () => {
             try {
-                const res = await fetch(`/api/product/filter/products/${categoryId}`);
+                const res = await fetch(`${BACKEND_API}/product/filter/products/${categoryId}`);
                 const data = await res.json();
                 setSizes(data.sizes);
                 setColors(data.colors);

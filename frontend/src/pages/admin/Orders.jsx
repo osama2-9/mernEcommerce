@@ -29,6 +29,7 @@ import useGetOrders from "../../hooks/useGetOrders";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { BsTrash } from 'react-icons/bs';
+import { BACKEND_API } from "../../config/config";
 
 const Orders = () => {
     const { orders, refreshOrders } = useGetOrders();
@@ -50,7 +51,7 @@ const Orders = () => {
 
     const handleUpdateStatus = async () => {
         try {
-            const res = await fetch('/api/order/updateStatus', {
+            const res = await fetch(`${BACKEND_API}/order/updateStatus`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -76,7 +77,7 @@ const Orders = () => {
 
     const handleDeleteOrder = async (id) => {
         try {
-            const res = await fetch('/api/order/delete', {
+            const res = await fetch(`${BACKEND_API}/order/delete`, {
                 method: "DELETE",
                 headers: {
                     'content-type': "application/json"

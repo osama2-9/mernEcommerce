@@ -28,6 +28,7 @@ import {
 import { TbPencilDollar } from "react-icons/tb";
 import { toast } from "react-toastify";
 import { TbHomeDollar } from "react-icons/tb";
+import { BACKEND_API } from "../../config/config";
 
 const Sales = () => {
     const { products } = useGetProduct();
@@ -81,7 +82,7 @@ const Sales = () => {
 
     const createSale = async () => {
         try {
-            const res = await fetch('/api/product/createSale', {
+            const res = await fetch(`${BACKEND_API}/product/createSale`, {
                 method: "POST",
                 headers: {
                     'Content-Type': "application/json"
@@ -106,7 +107,7 @@ const Sales = () => {
     };
     const removeSale = async (pid) => {
         try {
-            const res = await fetch('/api/product/removeSale', {
+            const res = await fetch(`${BACKEND_API}/product/removeSale`, {
                 method: "PUT",
                 headers: {
                     'content-type': "application/json"
