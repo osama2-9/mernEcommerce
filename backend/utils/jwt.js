@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-
 const generateToken = (uid, res) => {
   try {
     const token = jwt.sign({ uid }, process.env.JWT_SECRET, {
@@ -9,8 +8,8 @@ const generateToken = (uid, res) => {
     res.cookie("auth", token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24,
-      secure: true,
-      sameSite: "strict",
+      secure: true, 
+      sameSite: "None", 
     });
 
     return token;
@@ -20,5 +19,7 @@ const generateToken = (uid, res) => {
     });
   }
 };
+
+
 
 export { generateToken };

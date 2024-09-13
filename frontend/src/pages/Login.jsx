@@ -15,7 +15,7 @@ import {
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import userAtom from '../atoms/userAtom';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import { BACKEND_API } from '../config/config';
@@ -25,20 +25,20 @@ const Login = () => {
     const [inputs, setInputs] = useState({ email: "", password: "" });
     const navigate = useNavigate();
     const setUser = useSetRecoilState(userAtom);
+    const user = useRecoilValue(userAtom);
 
     const handleInputsChange = (e) => {
         setInputs({ ...inputs, [e.target.name]: e.target.value });
     };
-
     const handleLogin = async () => {
         try {
             const res = await fetch(`${BACKEND_API}/users/login`, {
                 method: "POST",
-                credentials: "include", 
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(inputs)
+                body: JSON.stringify(inputs),
+                credentials: "include",
             });
 
             const data = await res.json();
@@ -49,13 +49,14 @@ const Login = () => {
             }
 
             setUser(data);
-            localStorage.setItem('user', JSON.stringify(data));
-            navigate(data.isAdmin ? `/admin/${data._id}` : "/");
+            localStorage.setItem("user", JSON.stringify(data));
 
+            navigate(user && data.isAdmin ? `/admin/${user?.uid}` : "/");
         } catch (error) {
             toast.error(error.message, { autoClose: 3000 });
         }
     };
+
 
 
     return (

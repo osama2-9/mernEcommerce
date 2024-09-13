@@ -19,10 +19,9 @@ dotenv.config();
 dbConnect();
 
 const app = express();
-
 app.use(
   cors({
-    origin: true,
+    origin: "https://ecommerce-sigma-liard.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: [
       "content-type",

@@ -3,6 +3,8 @@ import User from "../model/User.js";
 
 const isAdmin = async (req, res, next) => {
   try {
+    res.header("Access-Control-Allow-Credentials", "true");
+
     const token = req.cookies.auth;
 
     if (!token) {

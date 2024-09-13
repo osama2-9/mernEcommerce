@@ -29,11 +29,14 @@ const RecommendedProducts = () => {
 
   return (
     <>
+    {user && (
+
       <ProductContainer mt={10} title="Recommended Products">
         {products.map((product) => (
           <Products key={product._id} product={product} />
         ))}
       </ProductContainer>
+      )}
 
     </>
   );

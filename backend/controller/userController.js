@@ -207,9 +207,10 @@ const sendVerificationCodeByAdmin = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
+    res.header("Access-Control-Allow-Credentials", "true");
+
     res.cookie("auth", "", {
       maxAge: 1,
-    
     });
     res.status(200).json({
       message: "User Logout",
