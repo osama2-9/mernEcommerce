@@ -14,7 +14,9 @@ const ShowTimedSaleProducts = () => {
     useEffect(() => {
         const getTimedSaleProducts = async () => {
             try {
-                const res = await fetch(`${BACKEND_API}/sale/timedSale`);
+                const res = await fetch(`${BACKEND_API}/sale/timedSale` ,{
+                    credentials:"include"
+                });
                 const data = await res.json();
                 if (data.error) {
                     toast.error(data.error);

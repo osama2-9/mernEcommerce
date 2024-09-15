@@ -100,7 +100,8 @@ const Product = () => {
                     quantity: quantity,
                     color: color,
                     size: size,
-                })
+                }),
+                credentials: "include"
             });
             const data = await res.json();
             if (data.error) {
@@ -155,7 +156,7 @@ const Product = () => {
     }, []);
 
 
-console.log(selectedProduct);
+    console.log(selectedProduct);
 
     return (
         <>

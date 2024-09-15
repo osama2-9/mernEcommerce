@@ -55,7 +55,8 @@ const ShowProduct = () => {
                 headers: {
                     'content-type': "application/json"
                 },
-                body: JSON.stringify({ pid })
+                body: JSON.stringify({ pid }),
+                credentials:"include"
             });
             const data = await res.json();
             if (data.error) {
@@ -86,7 +87,8 @@ const ShowProduct = () => {
                     productDesc: inputs.productDesc,
                     categoryID: inputs.categoryID,
                     productImg: img
-                })
+                }),
+                credentials:"include"
             });
             const data = await res.json();
             if (data.error) {

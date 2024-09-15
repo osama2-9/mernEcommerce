@@ -18,7 +18,9 @@ const BrandWithProducts = () => {
     useEffect(() => {
         const getSpecificBrandProducts = async () => {
             try {
-                const res = await fetch(`${BACKEND_API}/brand/brand/${bid}`);
+                const res = await fetch(`${BACKEND_API}/brand/brand/${bid}` ,{
+                    credentials:"include"
+                });
                 const data = await res.json();
                 console.log(data);
 

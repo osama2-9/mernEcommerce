@@ -26,7 +26,8 @@ const ResetPassword = () => {
           },
           body: JSON.stringify({
             password: password
-          })
+          }),
+          credentials:"include"
 
         })
         const data = await res.json()

@@ -80,7 +80,8 @@ const ShowBrands = () => {
                 headers: {
                     'content-type': "application/json"
                 },
-                body: JSON.stringify(selectedBrand)
+                body: JSON.stringify(selectedBrand),
+                credentials:"include"
             });
             const data = await res.json();
             if (data.error) {

@@ -1,6 +1,6 @@
-import { Box, Button, Flex, Input,  Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
 import { MdDelete } from "react-icons/md";
-import { FaCheck, FaTimes } from "react-icons/fa"; 
+import { FaCheck, FaTimes } from "react-icons/fa";
 import useGetCustomer from "../../hooks/useGetCustomer";
 import { toast } from "react-toastify";
 import { useState } from "react";
@@ -27,7 +27,9 @@ const Customer = () => {
                 },
                 body: JSON.stringify({
                     uid: selectedUser
-                })
+                }),
+                credentials: "include"
+
             });
             const data = await res.json();
             if (data.error) {
@@ -47,7 +49,7 @@ const Customer = () => {
 
 
     const sendVerificationCode = async (userId) => {
-       
+
         try {
             const res = await fetch(`${BACKEND_API}/users/sendVerificationCode`, {
                 method: "POST",
@@ -56,7 +58,8 @@ const Customer = () => {
                 },
                 body: JSON.stringify({
                     uid: userId
-                })
+                }),
+                credentials: "include"
             })
             const data = await res.json()
             if (data.error) {

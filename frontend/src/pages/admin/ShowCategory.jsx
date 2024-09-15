@@ -43,6 +43,7 @@ const ShowCategory = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ cid: cid }),
+        credentials:"include"
       });
       const data = await res.json();
       if (data.error) {
@@ -66,7 +67,8 @@ const ShowCategory = () => {
           cid: selectedCategory,
           categoryName,
           categoryDesc
-        })
+        }),
+        credentials:"include"
       })
       const data = await res.json();
       if (data.error) {

@@ -41,7 +41,8 @@ const CreateProduct = () => {
                 body: JSON.stringify({
                     ...inputs,
                     productImg: img || null
-                })
+                }),
+                credentials:"include"
             });
             const data = await res.json();
             if (data.error) {

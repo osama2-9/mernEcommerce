@@ -41,7 +41,8 @@ const CreateBrand = () => {
           brandFor: inputs.brandFor,
           brandImg: img,
           brandDesc: inputs.brandDesc
-        })
+        }),
+        credentials:"include"
       });
       const data = await res.json();
       if (data.error) {

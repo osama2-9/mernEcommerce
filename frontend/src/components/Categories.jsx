@@ -10,7 +10,9 @@ const Categories = () => {
     const handleGetCategories = async () => {
         try {
             setLoading(true);
-            const res = await fetch(`${BACKEND_API}/category/getCategories`);
+            const res = await fetch(`${BACKEND_API}/category/getCategories` ,{
+                credentials:"include"
+            });
             const data = await res.json();
 
             if (res.status !== 200) {

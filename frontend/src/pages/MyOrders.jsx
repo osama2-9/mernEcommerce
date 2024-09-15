@@ -93,7 +93,8 @@ const MyOrders = () => {
                         pid: selectedOrder?.pid,
                         rating: rating,
                         userComment: comment
-                    })
+                    }),
+                    credentials:"include"
                 });
                 const data = await res.json();
                 if (data.error) {

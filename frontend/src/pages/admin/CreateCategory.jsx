@@ -25,7 +25,8 @@ const CreateCategory = () => {
                 body: JSON.stringify({
                     categoryName: Inputs.categoryName,
                     categoryDesc: Inputs.categoryDesc
-                })
+                }),
+                credentials:"include"
             });
             const data = await res.json();
             if (data.error) {

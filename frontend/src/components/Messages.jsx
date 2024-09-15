@@ -35,7 +35,9 @@ const Messages = () => {
 
     const getAllMessages = async () => {
         try {
-            const res = await fetch(`${BACKEND_API}users/messages`);
+            const res = await fetch(`${BACKEND_API}users/messages` ,{
+                credentials:"include"
+            });
             const data = await res.json();
             if (data.error) {
                 console.error('Error fetching messages:', data.error);

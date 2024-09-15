@@ -45,6 +45,7 @@ const Cart = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ uid: logged.uid, paymentMethod: paymentMethod }),
+                credentials:"include"
             });
 
             const data = await res.json();
@@ -82,7 +83,9 @@ const Cart = () => {
                     pid: pid,
                     uid: logged.uid,
                 }),
+                credentials:"include"
             });
+            
             const data = await res.json();
             if (data.error) {
                 toast.error(data.error);

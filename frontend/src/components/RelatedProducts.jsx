@@ -10,7 +10,9 @@ const RelatedProducts = ({ categoryId, pid }) => {
     useEffect(() => {
         const fetchRelatedProducts = async () => {
             try {
-                const res = await fetch(`${BACKEND_API}/product/related/${categoryId}/${pid}`);
+                const res = await fetch(`${BACKEND_API}/product/related/${categoryId}/${pid}` ,{
+                    credentials:"include"
+                });
                 const data = await res.json();
                 setRProducts(data);
             } catch (error) {

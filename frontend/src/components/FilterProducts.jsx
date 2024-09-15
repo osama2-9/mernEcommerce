@@ -23,7 +23,9 @@ const FilterProducts = ({ categoryId, products, setFilterdProducts }) => {
     useEffect(() => {
         const filter = async () => {
             try {
-                const res = await fetch(`${BACKEND_API}/product/filter/products/${categoryId}`);
+                const res = await fetch(`${BACKEND_API}/product/filter/products/${categoryId}` ,{
+                    credentials:"include"
+                });
                 const data = await res.json();
                 setSizes(data.sizes);
                 setColors(data.colors);

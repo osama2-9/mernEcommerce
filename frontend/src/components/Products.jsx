@@ -43,7 +43,7 @@ const Products = ({ product, isLoading }) => {
             const endpoint = saved ? `${BACKEND_API}/favorite/remove` : `${BACKEND_API}/favorite/add`;
             const method = saved ? "DELETE" : "POST";
             const body = JSON.stringify({ uid: user?.uid, pid: product?._id });
-            const res = await fetch(endpoint, { method, headers: { 'Content-Type': "application/json" }, body });
+            const res = await fetch(endpoint, { method, headers: { 'Content-Type': "application/json" }, body  ,credentials:"include"} );
             const data = await res.json();
             if (data.error) {
                 toast.error(data.error);

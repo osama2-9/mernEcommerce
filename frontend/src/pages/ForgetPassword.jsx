@@ -17,6 +17,8 @@ const ForgetPassword = () => {
                 body: JSON.stringify({
                     email: email
                 })
+                ,
+                credentials:"include"
             });
             const data = await res.json();
             if (data.error) {

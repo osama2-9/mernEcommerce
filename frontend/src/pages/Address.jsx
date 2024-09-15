@@ -64,7 +64,8 @@ const Address = () => {
                     street: street,
                     apartmentFloor: apartmentFloor,
                     apartmentNumber: apartmentNumber
-                })
+                }),
+                 credentials:"include"
             });
 
             const data = await res.json();

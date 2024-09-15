@@ -46,7 +46,8 @@ const Profile = () => {
                     email: inputs.email,
                     phone: inputs.phone
 
-                })
+                }),
+                credentials:"include"
             })
 
             const data = await res.json()

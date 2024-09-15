@@ -90,7 +90,8 @@ const Sales = () => {
                 body: JSON.stringify({
                     pid: selectedProduct._id,
                     discount: customDiscount !== 0 ? customDiscount : selectedDiscount
-                })
+                }),
+                credentials: "include"
             });
 
             const data = await res.json();
@@ -114,8 +115,10 @@ const Sales = () => {
                 },
                 body: JSON.stringify({
                     pid: pid
-                })
+                }),
+                credentials: "include"
             })
+
             const data = await res.json();
             if (data.error) {
                 toast.error(data.error)

@@ -10,7 +10,9 @@ const TopRate = () => {
 
     const getTopRated = async () => {
         try {
-            const res = await fetch(`${BACKEND_API}/product/getProducts/topRated`);
+            const res = await fetch(`${BACKEND_API}/product/getProducts/topRated` ,{
+                credentials:"include"
+            });
             const data = await res.json();
             if (data.error) {
                 toast.error(data.error);

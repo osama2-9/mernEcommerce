@@ -32,7 +32,9 @@ const UserLastOrders = () => {
     useEffect(() => {
         const getUserOrders = async () => {
             try {
-                const res = await fetch(`${BACKEND_API}/order/userOrder/${logged.uid}`);
+                const res = await fetch(`${BACKEND_API}/order/userOrder/${logged.uid}` ,{
+                    credentials:"include"
+                });
                 const data = await res.json();
                 if (data.error) {
                     toast.error(data.error);
@@ -59,6 +61,7 @@ const UserLastOrders = () => {
                     uid: logged.uid,
                     oid: orderId,
                 }),
+                credentials:"include"
             });
 
             const data = await res.json();

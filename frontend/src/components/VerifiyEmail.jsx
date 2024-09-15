@@ -24,7 +24,8 @@ const VerifyEmail = () => {
                 },
                 body: JSON.stringify({
                     code: code
-                })
+                }),
+                credentials:"include"
             })
             const data = await res.json()
             if (data.error) {

@@ -39,7 +39,7 @@ const TimedSaleProducts = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     // console.log(onSale);
-    
+
     useEffect(() => {
         getOnSaleProducts();
 
@@ -57,7 +57,9 @@ const TimedSaleProducts = () => {
 
     const getOnSaleProducts = async () => {
         try {
-            const res = await fetch(`${BACKEND_API}/product/on-sale`);
+            const res = await fetch(`${BACKEND_API}/product/on-sale`, {
+                credentials: "include"
+            });
             const data = await res.json();
             if (data.error) {
                 toast.error(data.error);

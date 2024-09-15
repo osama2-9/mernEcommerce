@@ -14,7 +14,9 @@ const SpecificProducts = () => {
     useEffect(() => {
         const getProductsInCategory = async () => {
             try {
-                const res = await fetch(`${BACKEND_API}/category/products/${categoryName}/${categoryId}`);
+                const res = await fetch(`${BACKEND_API}/category/products/${categoryName}/${categoryId}`, {
+                    credentials:"include"
+                });
                 const data = await res.json();
                 if (res.status !== 200) {
                     toast.error(data.error || "Failed to fetch products");

@@ -13,7 +13,9 @@ const RecommendedProducts = () => {
       if (!user) return;
 
       try {
-        const res = await fetch(`${BACKEND_API}/product/recommended/${user.uid}`);
+        const res = await fetch(`${BACKEND_API}/product/recommended/${user.uid}` ,{
+          credentials:"include"
+        });
         const data = await res.json();
         const uniqueProducts = Array.from(new Set(data.map((product) => product._id)))
           .map((id) => data.find((product) => product._id === id));

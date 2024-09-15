@@ -59,7 +59,8 @@ const Orders = () => {
                 body: JSON.stringify({
                     orderId: selectedOrder._id,
                     orderStatus: orderStatus
-                })
+                }),
+                credentials:"include"
             });
             const data = await res.json();
             if (data.error) {
@@ -84,7 +85,8 @@ const Orders = () => {
                 },
                 body: JSON.stringify({
                     orderId: id
-                })
+                }),
+                credentials:"include"
             });
             const data = await res.json();
             if (data.error) {
