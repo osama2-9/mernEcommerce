@@ -21,7 +21,7 @@ dbConnect();
 const app = express();
 app.use(
   cors({
-    origin: "https://ecommerce-sigma-liard.vercel.app",
+    origin: ["https://ecommerce-sigma-liard.vercel.app" ,"http://localhost:3000"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: [
       "content-type",
