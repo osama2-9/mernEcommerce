@@ -16,22 +16,34 @@ const Cart = () => {
     useEffect(() => {
         const getCartItems = async () => {
             try {
-                const res = await fetch(`${BACKEND_API}/cart/cart/${uid}`);
+                const res = await fetch(`${BACKEND_API}/cart/cart/${uid}`, {
+                    credentials:"include"
+                });
                 const data = await res.json();
+
                 if (data.error) {
                     toast.error(data.error);
                 }
-                setCartItems(data);
+
+                if (Array.isArray(data)) {
+                    setCartItems(data);
+                } else {
+                    setCartItems([]); 
+                }
             } catch (error) {
                 console.log(error);
+                toast.error('Failed to fetch cart items');
             }
         };
-
 
         getCartItems();
     }, [uid]);
 
-    const subtotal = cartItems?.reduce((total, item) => total + item.price * item.quantity, 0);
+
+    const subtotal = Array.isArray(cartItems)
+        ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+        : 0;
+
     const shipping = 5;
     const totalPrice = subtotal + shipping;
 
