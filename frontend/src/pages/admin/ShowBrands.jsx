@@ -10,6 +10,7 @@ import {
 import { toast } from 'react-toastify';
 import useGetCategories from '../../hooks/useGetCategories';
 import { BACKEND_API } from '../../config/config';
+import Sidebar from '../../components/Sidebar';
 
 const ShowBrands = () => {
     const [brands, setBrands] = useState([]);
@@ -115,6 +116,8 @@ const ShowBrands = () => {
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     return (
+        <>
+        <Sidebar />
         <Box p={4} position={'absolute'} top={100} left={'300'} width={'1000px'}>
             <h1>Brands</h1>
             <Input
@@ -123,7 +126,7 @@ const ShowBrands = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 mb={4}
-            />
+                />
             <TableContainer>
                 <Table variant="simple">
                     <Thead>
@@ -191,6 +194,7 @@ const ShowBrands = () => {
                 </ModalContent>
             </Modal>
         </Box>
+                                </>
     );
 };
 

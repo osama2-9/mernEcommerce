@@ -48,7 +48,7 @@ const UserProfile = () => {
                     email: inputs.email,
                     phone: inputs.phone
                 }),
-                credentials:"include"
+                credentials: "include"
             });
 
             const data = await res.json();
@@ -68,7 +68,7 @@ const UserProfile = () => {
 
     return (
         <>
-        <USidebar />
+            <USidebar />
             <Box position={'absolute'} top={'100px'} left={'35%'} width={'500px'} >
                 <Flex align={'center'} justify={'center'}>
                     <Stack

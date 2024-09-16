@@ -1,73 +1,70 @@
-import { Badge, Box, Flex, Image, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import useGetOrders from "../hooks/useGetOrders";
+
 import useGetTopSells from "../hooks/useGetTopSells";
 
-const PeroductsReport = () => {
+const ProductsReport = () => {
   const { lastThreeOrders } = useGetOrders();
-  const { topSell } = useGetTopSells()
-
+  const { topSell } = useGetTopSells();
 
   return (
-    <div>
-      <Flex position={'absolute'} top={'500px'} left={'320px'}>
-        <Box mb={2} position={'relative'} right={'25px'}>
-          <Badge bg={'purple.400'} color={'white'} fontSize={'18'} p={1} ml={2} mb={2} >Last Orders</Badge>
+    <div className="flex flex-col md:flex-row justify-center mt-10 space-y-8 md:space-y-0 md:space-x-8">
 
-          <TableContainer className="shadow-md" w={'800px'}>
-            <Table variant='simple'>
-              <Thead>
-                <Tr>
-                  <Th> Img</Th>
-                  <Th>User Email</Th>
-                  <Th>Product Name</Th>
-                  <Th>Quantity</Th>
-                  <Th>Price</Th>
-                  <Th>Ordered At</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {lastThreeOrders.map((product, i) => (
-                  <Tr key={i}>
-                    <Td><Image src={product.prodcutImg} w={7} h={10} /></Td>
-                    <Td>{product.email}</Td>
-                    <Td>{product.productName.length >= 18 ? product.productName.slice(0, 18).concat('...') : product.productName}</Td>
-                    <Td>{product.quantity}</Td>
-                    <Td>{product.price}$</Td>
-                    <Td>{new Date(product.createdAt).toLocaleDateString()}</Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </TableContainer>
-        </Box>
+      <div className="w-full md:w-2/3 bg-white shadow-lg rounded-lg p-6">
+        <h2 className="text-xl font-semibold text-purple-600 mb-4">Last Orders</h2>
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-left">
+            <thead>
+              <tr>
+                <th className="px-4 py-2 border-b-2">Image</th>
+                <th className="px-4 py-2 border-b-2">User Email</th>
+                <th className="px-4 py-2 border-b-2">Product Name</th>
+                <th className="px-4 py-2 border-b-2">Quantity</th>
+                <th className="px-4 py-2 border-b-2">Price</th>
+                <th className="px-4 py-2 border-b-2">Ordered At</th>
+              </tr>
+            </thead>
+            <tbody>
+              {lastThreeOrders.map((order, i) => (
+                <tr key={i} className="border-b">
+                  <td className="px-4 py-2"><img src={order.prodcutImg} alt="Product" className="w-10 h-12 object-cover" /></td>
+                  <td className="px-4 py-2">{order.email}</td>
+                  <td className="px-4 py-2">{order.productName.length >= 18 ? order.productName.slice(0, 18).concat('...') : order.productName}</td>
+                  <td className="px-4 py-2">{order.quantity}</td>
+                  <td className="px-4 py-2">{order.price}$</td>
+                  <td className="px-4 py-2">{new Date(order.createdAt).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-        <Box mb={2} className="shadow-md">
-          <Badge bg={'teal.500'} color={'white'} fontSize={'18'} p={1} ml={2} mb={2} >Top Sell</Badge>
-          <TableContainer>
-            <Table w={'380px'}>
-              <Thead>
-                <Tr>
-                  <Th>Img</Th>
-                  <Th>Product Name</Th>
-                  <Th>Sells</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {topSell.slice(0, 3).map((product, i) => (
-                  <Tr key={i}>
-                    <Td><Image w={30} src={product.productImg} /></Td>
-                    <Td>{product.productName.length >= 18 ? product.productName.slice(0, 18).concat('...') : product.productName}</Td>
 
-                    <Td>{product.sells}</Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </TableContainer>
-        </Box>
-      </Flex>
+      <div className="w-full md:w-1/3 bg-white shadow-lg rounded-lg p-6">
+        <h2 className="text-xl font-semibold text-teal-600 mb-4">Top Sells</h2>
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-left">
+            <thead>
+              <tr>
+                <th className="px-4 py-2 border-b-2">Image</th>
+                <th className="px-4 py-2 border-b-2">Product Name</th>
+                <th className="px-4 py-2 border-b-2">Sales</th>
+              </tr>
+            </thead>
+            <tbody>
+              {topSell.slice(0, 3).map((product, i) => (
+                <tr key={i} className="border-b">
+                  <td className="px-4 py-2"><img src={product.productImg} alt="Product" className="w-10 h-12 object-cover" /></td>
+                  <td className="px-4 py-2">{product.productName.length >= 18 ? product.productName.slice(0, 18).concat('...') : product.productName}</td>
+                  <td className="px-4 py-2">{product.sells}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default PeroductsReport;
+export default ProductsReport;

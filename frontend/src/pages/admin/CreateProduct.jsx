@@ -6,6 +6,7 @@ import ImgUploader from "../../hooks/ImgUploder";
 import useGetCategories from "../../hooks/useGetCategories";
 import useGetBrands from "../../hooks/useGetBrands";
 import { BACKEND_API } from "../../config/config";
+import Sidebar from "../../components/Sidebar";
 
 const CreateProduct = () => {
     const { brands, loading: brandsLoading } = useGetBrands();
@@ -71,6 +72,8 @@ const CreateProduct = () => {
     };
 
     return (
+        <>
+        <Sidebar />
         <Box p={5} className="shadow-md rounded-md" width="1200px" position="absolute" top="80px" left="280px">
             <Text mb={4} className="text-2xl font-bold">Create Product</Text>
             <form encType="multipart/form-data" onSubmit={handleSubmit}>
@@ -85,7 +88,7 @@ const CreateProduct = () => {
                                 placeholder="Product name"
                                 value={inputs.productName}
                                 onChange={handleChange}
-                            />
+                                />
                         </FormControl>
                     </Box>
 
@@ -113,7 +116,7 @@ const CreateProduct = () => {
                                 placeholder="Price"
                                 value={inputs.productPrice}
                                 onChange={handleChange}
-                            />
+                                />
                         </FormControl>
                     </Box>
                 </Flex>
@@ -129,7 +132,7 @@ const CreateProduct = () => {
                                 placeholder="Put ( , ) between sizes"
                                 value={inputs.productSize}
                                 onChange={handleChange}
-                            />
+                                />
                         </FormControl>
                     </Box>
 
@@ -143,7 +146,7 @@ const CreateProduct = () => {
                                 placeholder="Put ( , ) between colors"
                                 value={inputs.productColors}
                                 onChange={handleChange}
-                            />
+                                />
                         </FormControl>
                     </Box>
 
@@ -154,7 +157,7 @@ const CreateProduct = () => {
                                 name="productImg"
                                 type="file"
                                 onChange={handleImageChange}
-                            />
+                                />
                         </FormControl>
                     </Box>
                 </Flex>
@@ -165,11 +168,11 @@ const CreateProduct = () => {
                         <Spinner ml={9} />
                     ) : (
                         <Select
-                            name="categoryID"
-                            w="1000px"
-                            ml={9}
-                            value={inputs.categoryID}
-                            onChange={handleChange}
+                        name="categoryID"
+                        w="1000px"
+                        ml={9}
+                        value={inputs.categoryID}
+                        onChange={handleChange}
                         >
                             <option value="">Select Category</option>
                             {categories.map((category) => (
@@ -185,11 +188,11 @@ const CreateProduct = () => {
                         <Spinner ml={9} />
                     ) : (
                         <Select
-                            name="brandID"
-                            w="1000px"
-                            ml={9}
-                            value={inputs.brandID}
-                            onChange={handleChange}
+                        name="brandID"
+                        w="1000px"
+                        ml={9}
+                        value={inputs.brandID}
+                        onChange={handleChange}
                         >
                             <option value="">Select Brand</option>
                             {brands.map((brand) => (
@@ -206,7 +209,7 @@ const CreateProduct = () => {
                         name="productDesc"
                         value={inputs.productDesc}
                         onChange={handleChange}
-                    />
+                        />
                 </Box>
 
                 <Flex mt={5} justifyContent="flex-end">
@@ -214,6 +217,7 @@ const CreateProduct = () => {
                 </Flex>
             </form>
         </Box>
+                        </>
     );
 };
 

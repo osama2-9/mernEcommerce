@@ -30,6 +30,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { BsTrash } from 'react-icons/bs';
 import { BACKEND_API } from "../../config/config";
+import Sidebar from "../../components/Sidebar";
 
 const Orders = () => {
     const { orders, refreshOrders } = useGetOrders();
@@ -151,6 +152,8 @@ const Orders = () => {
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     return (
+        <>
+        <Sidebar />
         <Box bg={"gray.50"} position={"absolute"} top={100} left={260} p={4} borderRadius="md" shadow="md" width="calc(100% - 300px)">
             <Flex gap={2} mb={4}>
                 <Input
@@ -162,7 +165,7 @@ const Orders = () => {
                         setSearchTerm(e.target.value);
                         if (!e.target.value) handleResetFilters();
                     }}
-                />
+                    />
                 <Input
                     type="text"
                     border={'2px solid teal'}
@@ -172,7 +175,7 @@ const Orders = () => {
                         setSearchId(e.target.value);
                         if (!e.target.value) handleResetFilters();
                     }}
-                />
+                    />
                 <Button w={'170px'} onClick={handleFindOrderById} colorScheme="teal">
                     Find by ID
                 </Button>
@@ -286,7 +289,7 @@ const Orders = () => {
                                         mt={3}
                                         value={orderStatus}
                                         onChange={handleOrderStatusChange}
-                                    >
+                                        >
                                         <option value="Pending">Pending</option>
                                         <option value="Processing">Processing</option>
                                         <option value="Shipped">Shipped</option>
@@ -320,6 +323,7 @@ const Orders = () => {
                 </Box>
             </Flex>
         </Box>
+                    </>
     );
 };
 

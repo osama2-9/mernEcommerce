@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import useGetCategories from '../../hooks/useGetCategories';
 import useImgPreview from "../../hooks/useImgPreview";
 import { BACKEND_API } from "../../config/config";
+import Sidebar from "../../components/Sidebar";
 
 const ShowProduct = () => {
     const { img, handleImgChange } = useImgPreview()
@@ -137,6 +138,7 @@ const ShowProduct = () => {
 
     return (
         <>
+        <Sidebar />
             <Box position="absolute" top="80px" left="300px">
                 <Flex mb={4}>
                     <Input

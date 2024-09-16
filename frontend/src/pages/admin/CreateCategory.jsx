@@ -2,6 +2,7 @@ import { Box, Button, Flex, FormControl, FormLabel, Input, Text, Textarea } from
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { BACKEND_API } from "../../config/config";
+import Sidebar from "../../components/Sidebar";
 
 const CreateCategory = () => {
     const [Inputs, setInputs] = useState({
@@ -45,6 +46,8 @@ const CreateCategory = () => {
     }
 
     return (
+        <>
+        <Sidebar />
         <Box p={5} className="shadow-md rounded-md" width="700px" position="absolute" top="120px" left="280px">
             <Flex direction="column">
                 <Box mb={4}>
@@ -58,7 +61,7 @@ const CreateCategory = () => {
                         type="text"
                         id="categoryName"
                         name="categoryName"
-                    />
+                        />
                 </FormControl>
                 <FormControl mb={3}>
                     <FormLabel htmlFor="categoryDescription">Description (Optional)</FormLabel>
@@ -69,6 +72,7 @@ const CreateCategory = () => {
                 </Button>
             </Flex>
         </Box>
+                        </>
     );
 };
 

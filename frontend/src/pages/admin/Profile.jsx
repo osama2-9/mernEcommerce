@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import userAtom from '../../atoms/userAtom';
 import { BACKEND_API } from '../../config/config';
+import Sidebar from '../../components/Sidebar';
 
 const Profile = () => {
     const logged = useRecoilValue(userAtom)
@@ -73,6 +74,7 @@ const Profile = () => {
 
     return (
         <>
+        <Sidebar />
             <Box position={'absolute'} top={'80px'} left={'600px'}>
                 <Flex
                     w={'600px'}

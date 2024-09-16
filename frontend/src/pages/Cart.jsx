@@ -17,7 +17,7 @@ const Cart = () => {
         const getCartItems = async () => {
             try {
                 const res = await fetch(`${BACKEND_API}/cart/cart/${uid}`, {
-                    credentials:"include"
+                    credentials: "include"
                 });
                 const data = await res.json();
 
@@ -28,7 +28,7 @@ const Cart = () => {
                 if (Array.isArray(data)) {
                     setCartItems(data);
                 } else {
-                    setCartItems([]); 
+                    setCartItems([]);
                 }
             } catch (error) {
                 console.log(error);
@@ -57,7 +57,7 @@ const Cart = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ uid: logged.uid, paymentMethod: paymentMethod }),
-                credentials:"include"
+                credentials: "include"
             });
 
             const data = await res.json();
@@ -86,7 +86,7 @@ const Cart = () => {
             if (!iid) {
                 toast.error("Product Not Found");
             }
-            const res = await fetch('${BACKEND_API}/cart/cart/delete', {
+            const res = await fetch(`${BACKEND_API}/cart/cart/delete`, {
                 method: "DELETE",
                 headers: {
                     "content-type": "application/json",
@@ -95,9 +95,9 @@ const Cart = () => {
                     pid: pid,
                     uid: logged.uid,
                 }),
-                credentials:"include"
+                credentials: "include"
             });
-            
+
             const data = await res.json();
             if (data.error) {
                 toast.error(data.error);
@@ -108,12 +108,12 @@ const Cart = () => {
             console.log(error);
         }
     };
-    
+
 
 
 
     return (
-        <Box  p={5}>
+        <Box p={5}>
             <Text fontSize="2xl" mb={5}>Shopping Cart ({cartItems.length}) ({logged.email})</Text>
             <Stack spacing={5}>
                 {cartItems.map(item => (

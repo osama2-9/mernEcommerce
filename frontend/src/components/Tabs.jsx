@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { CiBadgeDollar } from "react-icons/ci";
 import { AiOutlineRise } from "react-icons/ai";
 import { HiUserGroup } from "react-icons/hi";
@@ -9,7 +9,6 @@ import useGetProduct from "../hooks/useGetProduct";
 import useGetCategories from "../hooks/useGetCategories";
 import useGetCustomer from "../hooks/useGetCustomer";
 import useGetOrders from "../hooks/useGetOrders";
-import { useEffect, useState } from "react";
 
 const Tabs = () => {
     const { numberOfProduct } = useGetProduct();
@@ -35,70 +34,75 @@ const Tabs = () => {
 
     return (
         <>
-            <Text></Text>
-            <Flex flexDirection={'row'} gap={50} position={'absolute'} left={'300px'} ml={4} p={1} top={"120px"} justifyContent={'space-around'}>
-                <Box w={'350px'} h={'150px'} className="rounded-md shadow-md bg-white">
-                    <Flex justifyContent={'space-between'} alignItems={'center'} p={4}>
-                        <Text className="text-2xl font-bold text-gray-800">Total Orders</Text>
-                        <AiOutlineRise className="text-purple-600" size={35} />
-                    </Flex>
-                    <Text className="mt-4 text-center text-3xl text-gray-800 font-semibold">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-6">
+                {/* Total Orders */}
+                <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-8">
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-2xl font-semibold text-gray-800">Total Orders</h2>
+                        <AiOutlineRise className="text-purple-600" size={40} />
+                    </div>
+                    <p className="mt-4 text-center text-4xl font-bold text-gray-700">
                         {totalOrders}
-                    </Text>
-                </Box>
+                    </p>
+                </div>
 
-                <Box w={'350px'} h={'150px'} className="rounded-md shadow-md bg-white">
-                    <Flex justifyContent={'space-between'} alignItems={'center'} p={4}>
-                        <Text className="text-2xl font-bold text-gray-800">Total Income</Text>
-                        <CiBadgeDollar className="text-green-600" size={35} />
-                    </Flex>
-                    <Text className="mt-4 text-center text-3xl text-gray-800 font-semibold">
+                {/* Total Income */}
+                <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-8">
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-2xl font-semibold text-gray-800">Total Income</h2>
+                        <CiBadgeDollar className="text-green-600" size={40} />
+                    </div>
+                    <p className="mt-4 text-center text-4xl font-bold text-gray-700">
                         {ordersTotalPrice}$
-                    </Text>
-                </Box>
+                    </p>
+                </div>
 
-                <Box w={'350px'} h={'150px'} className="rounded-md shadow-md bg-white">
-                    <Flex justifyContent={'space-between'} alignItems={'center'} p={4}>
-                        <Text className="text-2xl font-bold text-gray-800">Customer Number</Text>
-                        <HiUserGroup className="text-black" size={35} />
-                    </Flex>
-                    <Text className="mt-4 text-center text-3xl text-gray-800 font-semibold">
+                {/* Customer Number */}
+                <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-8">
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-2xl font-semibold text-gray-800">Customer Number</h2>
+                        <HiUserGroup className="text-black" size={40} />
+                    </div>
+                    <p className="mt-4 text-center text-4xl font-bold text-gray-700">
                         {customerNumber}
-                    </Text>
-                </Box>
-            </Flex>
+                    </p>
+                </div>
+            </div>
 
-            <Flex flexDirection={'row'} gap={50} position={'absolute'} left={'300px'} ml={4} p={1} top={"300px"} justifyContent={'space-around'}>
-                <Box w={'350px'} h={'150px'} className="rounded-md shadow-md bg-white">
-                    <Flex justifyContent={'space-between'} alignItems={'center'} p={4}>
-                        <Text className="text-2xl font-bold text-gray-800">Total Products</Text>
-                        <GoStack className="text-emerald-500" size={35} />
-                    </Flex>
-                    <Text className="mt-4 text-center text-3xl text-gray-800 font-semibold">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-6 mt-6">
+                {/* Total Products */}
+                <div className="bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-8">
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-2xl font-semibold text-gray-800">Total Products</h2>
+                        <GoStack className="text-emerald-500" size={40} />
+                    </div>
+                    <p className="mt-4 text-center text-4xl font-bold text-gray-700">
                         {numberOfProduct}
-                    </Text>
-                </Box>
+                    </p>
+                </div>
 
-                <Box w={'350px'} h={'150px'} className="rounded-md shadow-md bg-white">
-                    <Flex justifyContent={'space-between'} alignItems={'center'} p={4}>
-                        <Text className="text-2xl font-bold text-gray-800">Total Categories</Text>
-                        <BiCategory className="text-cyan-700" size={35} />
-                    </Flex>
-                    <Text className="mt-4 text-center text-3xl text-gray-800 font-semibold">
+                {/* Total Categories */}
+                <div className="bg-gradient-to-r from-cyan-50 to-cyan-100 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-8">
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-2xl font-semibold text-gray-800">Total Categories</h2>
+                        <BiCategory className="text-cyan-700" size={40} />
+                    </div>
+                    <p className="mt-4 text-center text-4xl font-bold text-gray-700">
                         {numberOfCategories}
-                    </Text>
-                </Box>
+                    </p>
+                </div>
 
-                <Box w={'350px'} h={'150px'} className="rounded-md shadow-md bg-white">
-                    <Flex justifyContent={'space-between'} alignItems={'center'} p={4}>
-                        <Text className="text-2xl font-bold text-gray-800">USD to ILS</Text>
-                        <AiOutlineRise className="text-red-600" size={35} />
-                    </Flex>
-                    <Text className="mt-4 text-center text-3xl text-gray-800 font-semibold">
+                {/* USD to ILS */}
+                <div className="bg-gradient-to-r from-red-50 to-red-100 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-8">
+                    <div className="flex justify-between items-center">
+                        <h2 className="text-2xl font-semibold text-gray-800">USD to ILS</h2>
+                        <AiOutlineRise className="text-red-600" size={40} />
+                    </div>
+                    <p className="mt-4 text-center text-4xl font-bold text-gray-700">
                         {currency ? `1 USD = ${currency.toFixed(3)} ILS` : "Loading..."}
-                    </Text>
-                </Box>
-            </Flex>
+                    </p>
+                </div>
+            </div>
         </>
     );
 };

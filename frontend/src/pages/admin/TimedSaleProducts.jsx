@@ -29,6 +29,7 @@ import { FaRegClock, FaCheckCircle, FaRegCircle, FaTrash } from 'react-icons/fa'
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { BACKEND_API } from '../../config/config';
+import Sidebar from '../../components/Sidebar';
 
 const TimedSaleProducts = () => {
     const [onSale, setOnSale] = useState([]);
@@ -145,6 +146,8 @@ const TimedSaleProducts = () => {
     };
 
     return (
+        <>
+        <Sidebar />
         <Box position={'absolute'} top={'100'} left={'250'} p={4}>
             <TableContainer>
                 <Table variant="simple">
@@ -190,13 +193,13 @@ const TimedSaleProducts = () => {
                                             label="Set Timed Sale"
                                             aria-label="Timed Sale Tooltip"
                                             placement="top"
-                                        >
+                                            >
                                             <Button
                                                 onClick={() => handleTimedSaleClick(product)}
                                                 textAlign={'center'}
                                                 colorScheme="teal"
                                                 variant="outline"
-                                            >
+                                                >
                                                 <FaRegClock />
                                             </Button>
                                         </Tooltip>
@@ -205,7 +208,7 @@ const TimedSaleProducts = () => {
                                             label={product?.saleDetails?.isActive ? "Hide in home page" : "Show in home page"}
                                             aria-label="Activation Status Tooltip"
                                             placement="top"
-                                        >
+                                            >
                                             <Button
                                                 ml={2}
                                                 onClick={() => handleActivationStatus(product._id)}
@@ -221,7 +224,7 @@ const TimedSaleProducts = () => {
                                             label="Delete from flash sale"
                                             aria-label="Delete Tooltip"
                                             placement="top"
-                                        >
+                                            >
                                             <Button
                                                 ml={2}
                                                 onClick={() => handleDeleteProductFromTimedSale(product._id)}
@@ -229,7 +232,7 @@ const TimedSaleProducts = () => {
                                                 bg={'red.500'}
                                                 color={'white'}
                                                 variant="outline"
-                                            >
+                                                >
                                                 <FaTrash />
                                             </Button>
                                         </Tooltip>
@@ -265,7 +268,7 @@ const TimedSaleProducts = () => {
                                 wrapperClassName="chakra-date-picker-wrapper"
                                 calendarClassName="chakra-calendar"
                                 popperPlacement="bottom"
-                            />
+                                />
                         </FormControl>
                         <FormControl mb={4}>
                             <FormLabel>End Date</FormLabel>
@@ -278,7 +281,7 @@ const TimedSaleProducts = () => {
                                 wrapperClassName="chakra-date-picker-wrapper"
                                 calendarClassName="chakra-calendar"
                                 popperPlacement="bottom"
-                            />
+                                />
                         </FormControl>
                         <Flex justifyContent="space-between" alignItems="center" mb={4}>
                             <Text fontWeight="bold">Current Date and Time:</Text>
@@ -296,6 +299,7 @@ const TimedSaleProducts = () => {
                 </ModalContent>
             </Modal>
         </Box>
+                                </>
     );
 };
 

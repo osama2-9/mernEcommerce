@@ -8,8 +8,8 @@ const generateToken = (uid, res) => {
     res.cookie("auth", token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24,
-      secure: true, 
-      sameSite: "None", 
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "None",
     });
 
     return token;
@@ -19,7 +19,5 @@ const generateToken = (uid, res) => {
     });
   }
 };
-
-
 
 export { generateToken };

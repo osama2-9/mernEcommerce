@@ -179,7 +179,7 @@ const Header = () => {
                         
                             <Spacer />
                             {logged.isAdmin && (
-                                <Link to={`admin/${logged.uid}`}>
+                                <Link to={`admin/${logged?.uid}`}>
                                     <Tooltip label="Admin Panel" aria-label="Admin Panel">
                                         <IconButton
                                             icon={<MdOutlineAdminPanelSettings />}
@@ -268,7 +268,7 @@ const Header = () => {
                                         </Tooltip>
                                     </Link>
                                     {logged?.isAdmin && (
-                                        <Link to={`admin/${logged.uid}`} onClick={onClose}>
+                                        <Link to={`admin/${logged?.uid}`} onClick={onClose}>
                                             Admin
                                             <Tooltip label="Admin Panel" aria-label="Admin Panel">
                                                 <IconButton

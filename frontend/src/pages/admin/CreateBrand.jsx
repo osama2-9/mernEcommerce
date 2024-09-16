@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useState } from 'react';
 import useImgPreview from '../../hooks/useImgPreview';
 import { BACKEND_API } from '../../config/config';
+import Sidebar from '../../components/Sidebar';
 
 const CreateBrand = () => {
   const { categories, loading } = useGetCategories();
@@ -63,6 +64,8 @@ const CreateBrand = () => {
   };
 
   return (
+    <>
+    <Sidebar />
     <Box
       position={'absolute'}
       top={'80px'}
@@ -75,7 +78,7 @@ const CreateBrand = () => {
       as="form"
       encType="multipart/form-data"
       onSubmit={handleCreateBrand}
-    >
+      >
       <FormControl isRequired id="brand-name" mb={4}>
         <FormLabel color={'black'}>Brand Name</FormLabel>
         <Input value={inputs.brandName} placeholder='Brand name, Defacto, LC, Nike' onChange={onInputsChange} type="text" name='brandName' />
@@ -87,12 +90,12 @@ const CreateBrand = () => {
           <Spinner color='black' />
         ) : (
           <Select
-            isMulti
-            name='brandFor'
-            value={categoryOptions.filter(option => inputs.brandFor.includes(option.value))}
-            onChange={handleCategoryChange}
-            options={categoryOptions}
-            placeholder="Select categories"
+          isMulti
+          name='brandFor'
+          value={categoryOptions.filter(option => inputs.brandFor.includes(option.value))}
+          onChange={handleCategoryChange}
+          options={categoryOptions}
+          placeholder="Select categories"
           />
         )}
       </FormControl>
@@ -114,6 +117,7 @@ const CreateBrand = () => {
         Create Brand
       </Button>
     </Box>
+        </>
   );
 };
 

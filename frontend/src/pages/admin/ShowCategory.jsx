@@ -28,6 +28,7 @@ import useGetCategories from '../../hooks/useGetCategories';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { BACKEND_API } from '../../config/config';
+import Sidebar from '../../components/Sidebar';
 
 const ShowCategory = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -93,6 +94,8 @@ const ShowCategory = () => {
   const { categories } = useGetCategories();
 
   return (
+    <>
+    <Sidebar/>
     <Box position={'absolute'} top={'80px'} left={'300px'}>
       <TableContainer w={'1100px'}>
         <Table variant="striped">
@@ -118,13 +121,13 @@ const ShowCategory = () => {
                       icon={<MdEditNote className="text-blue-600" size={30} />}
                       variant="ghost"
                       onClick={() => onClickUpdate(category)}
-                    />
+                      />
                     <IconButton
                       aria-label="Delete category"
                       icon={<MdDelete className="text-red-500" size={30} />}
                       variant="ghost"
                       onClick={() => deleteCategory(category._id)}
-                    />
+                      />
                   </Flex>
                 </Td>
               </Tr>
@@ -144,14 +147,14 @@ const ShowCategory = () => {
               <Input
                 value={categoryName}
                 onChange={(e) => setCategoryName(e.target.value)}
-              />
+                />
             </FormControl>
             <FormControl mt={4}>
               <FormLabel>Category Description</FormLabel>
               <Input
                 value={categoryDesc}
                 onChange={(e) => setCategoryDesc(e.target.value)}
-              />
+                />
             </FormControl>
           </ModalBody>
           <ModalFooter>
@@ -164,6 +167,7 @@ const ShowCategory = () => {
         </ModalContent>
       </Modal>
     </Box>
+                </>
   );
 };
 

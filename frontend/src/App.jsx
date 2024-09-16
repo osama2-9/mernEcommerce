@@ -1,6 +1,5 @@
 import './App.css';
-import { useEffect } from 'react';
-import { Routes, Route, useLocation, useNavigate, BrowserRouter, Navigate } from 'react-router-dom';
+import { Routes, Route, BrowserRouter, Navigate, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import HomePage from './pages/HomePage';
 import Login from './pages/Login';
@@ -15,7 +14,6 @@ import Admin from './pages/admin/Admin';
 import CreateProduct from './pages/admin/CreateProduct';
 import CreateCategory from './pages/admin/CreateCategory';
 import ShowProduct from './pages/admin/ShowProduct';
-import Sidebar from './components/Sidebar';
 import ShowCategory from './pages/admin/ShowCategory';
 import Customer from './pages/admin/Customer';
 import Profile from './pages/admin/Profile';
@@ -28,7 +26,6 @@ import Sales from './pages/admin/Sales';
 import UserProfile from './pages/UserProfile';
 import MyOrders from './pages/MyOrders';
 import CreateBrand from './pages/admin/CreateBrand';
-import AdminHeader from './components/AdminHeader';
 import ShowBrands from './pages/admin/ShowBrands';
 import BrandWithProducts from './pages/BrandWithProducts';
 import Favorite from './pages/Favorite';
@@ -38,23 +35,18 @@ import TimedSaleProducts from './pages/admin/TimedSaleProducts';
 function App() {
   const user = useRecoilValue(userAtom);
   const location = useLocation();
-  const navigate = useNavigate();
-  
-  
 
-  useEffect(() => {
-    if (location.pathname.includes('/admin') && !user?.isAdmin) {
-      navigate('/');
-    }
-  }, [location, user, navigate]);
-  const showHeader = !['/login', '/register', '/forget-password', '/reset-password', '/my-orders', '/user-profile', '/dashboard', '/address', '/favorite', '/verify-email'].some(path => location.pathname.includes(path));
-
+  // Determine if Header should be shown
+  const shouldShowHeader = !(
+    location.pathname.includes('/admin') ||
+    location.pathname.includes('/login') ||
+    location.pathname.includes('/register') ||
+    location.pathname.includes('/dashboard')
+  );
 
   return (
     <div>
-      {location.pathname.includes('/admin') ? <AdminHeader /> : showHeader && <Header />}
-
-      {location.pathname.includes('/admin') && user?.isAdmin && <Sidebar />}
+      {shouldShowHeader && <Header />}
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/login' element={<Login />} />
@@ -65,7 +57,7 @@ function App() {
         <Route path='/product/:pid' element={<Product />} />
         <Route path='/cart/:uid' element={user ? <Cart /> : <HomePage />} />
         <Route path='/dashboard/:uid' element={user ? <DashBored /> : <HomePage />} />
-        <Route path='/admin/:uid' element={user?.isAdmin ? <Admin /> : <Navigate to='/'  />} />
+        <Route path='/admin/:uid' element={user?.isAdmin ? <Admin /> : <Navigate to='/' />} />
         <Route path='/admin/product/create' element={user?.isAdmin ? <CreateProduct /> : <HomePage />} />
         <Route path='/admin/product/show' element={user?.isAdmin ? <ShowProduct /> : <HomePage />} />
         <Route path='/admin/product/timedSale' element={user?.isAdmin ? <TimedSaleProducts /> : <HomePage />} />

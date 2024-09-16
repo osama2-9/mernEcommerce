@@ -1,30 +1,36 @@
-import { Box, Flex, Text, Button, Spacer } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { BiSolidHome } from "react-icons/bi";
 
 const AdminHeader = () => {
-    const user = useRecoilValue(userAtom)
-
+    const user = useRecoilValue(userAtom);
     const currentDate = new Date().toLocaleDateString();
     const navigate = useNavigate();
 
-
     return (
-        <Box shadow={'md'} color="black" p={4}>
-            <Flex align="center">
-                <Text fontSize={'18'} fontWeight={'bold'}> Email: {user?.email}</Text>
-                <Spacer />
-                <Text fontWeight={'bold'} fontSize={'18'}>Date: {currentDate}</Text>
-                <Spacer />
+        <header className="bg-gray-100 shadow-md p-4">
+            <div className="flex items-center justify-between">
+                {/* Email Section */}
+                <p className="text-lg font-semibold text-gray-800">
+                    Email: {user?.email}
+                </p>
 
-                <Spacer />
-                <Button colorScheme="gray" onClick={() => navigate('/')}><BiSolidHome /></Button>
-               
-            </Flex>
-        </Box>
+                {/* Current Date */}
+                <p className="text-lg font-semibold text-gray-800">
+                    Date: {currentDate}
+                </p>
+
+                {/* Home Button */}
+                <button
+                    className="bg-gray-600 hover:bg-gray-500 text-white p-2 rounded-md flex items-center"
+                    onClick={() => navigate('/')}
+                >
+                    <BiSolidHome size={20} />
+                </button>
+            </div>
+        </header>
     );
-}
+};
 
 export default AdminHeader;

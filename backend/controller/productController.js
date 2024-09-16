@@ -61,7 +61,7 @@ const createProduct = async (req, res) => {
       productData.productColors = colorsArray;
     }
 
-    const createProduct = new Product(productData);
+    const createProduct = new Prodcut(productData);
 
     await createProduct.save();
     return res.status(201).json({
@@ -141,10 +141,7 @@ const getProductById = async (req, res) => {
     const selectedProduct = await Prodcut.findById(pid);
     const categoryID = selectedProduct.categoryID;
     const getCategoryNameByProductId = await Category.findById(categoryID);
-    const fullData = data.concat(
-      selectedProduct,
-      getCategoryNameByProductId
-    );
+    const fullData = data.concat(selectedProduct, getCategoryNameByProductId);
 
     if (!selectedProduct) {
       return res.status(404).json({
@@ -250,7 +247,7 @@ const deleteProduct = async (req, res) => {
         error: "Product Id is required",
       });
     }
-    const findProduct = await Product.findById(pid);
+    const findProduct = await Prodcut.findById(pid);
     if (!findProduct) {
       return res.status(404).json({
         error: "No product found",
@@ -295,7 +292,7 @@ const updateProductData = async (req, res) => {
       });
     }
 
-    const findProduct = await Product.findById(pid);
+    const findProduct = await Prodcut.findById(pid);
 
     if (!findProduct) {
       return res.status(404).json({

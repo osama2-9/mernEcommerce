@@ -1,31 +1,36 @@
-/* eslint-disable no-unused-vars */
-
-import { useRecoilValue } from "recoil"
-import PeroductsReport from "../../components/PeroductsReport"
-import Sidebar from "../../components/Sidebar"
-import Tabs from "../../components/Tabs"
-import userAtom from "../../atoms/userAtom"
-import { Navigate } from "react-router-dom"
-
+import Sidebar from "../../components/Sidebar";
+import Tabs from "../../components/Tabs";
+import ProductsReport from "../../components/PeroductsReport";
+import AdminHeader from "../../components/AdminHeader"; // Import AdminHeader
+import { useRecoilValue } from "recoil";
+import userAtom from "../../atoms/userAtom";
+import { Navigate } from "react-router-dom";
 
 const Admin = () => {
-    const user = useRecoilValue(userAtom)
-    if (!user) {
-        return <Navigate to={'/'} />
+    const user = useRecoilValue(userAtom);
+
+    if (!user?.isAdmin) {
+        return <Navigate to="/" />;
     }
 
-
     return (
-        <>
-            <Tabs />
-            <PeroductsReport />
+        <div className="flex h-screen">
+            {/* Sidebar */}
+            <Sidebar />
 
+            {/* Main Content */}
+            <div className="flex-1 flex flex-col">
+                {/* Admin Header */}
+                <AdminHeader />
 
+                {/* Admin Page Content */}
+                <div className="p-4">
+                    <Tabs />
+                    <ProductsReport />
+                </div>
+            </div>
+        </div>
+    );
+};
 
-
-
-        </>
-    )
-}
-
-export default Admin
+export default Admin;

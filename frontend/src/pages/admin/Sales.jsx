@@ -29,6 +29,7 @@ import { TbPencilDollar } from "react-icons/tb";
 import { toast } from "react-toastify";
 import { TbHomeDollar } from "react-icons/tb";
 import { BACKEND_API } from "../../config/config";
+import Sidebar from "../../components/Sidebar";
 
 const Sales = () => {
     const { products } = useGetProduct();
@@ -135,6 +136,7 @@ const Sales = () => {
     }
     return (
         <>
+    <Sidebar />
             <Box position="absolute" top="80px" left="300px">
                 <Flex mb={4}>
                     <Input

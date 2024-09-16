@@ -5,6 +5,7 @@ import useGetCustomer from "../../hooks/useGetCustomer";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { BACKEND_API } from "../../config/config";
+import Sidebar from "../../components/Sidebar";
 
 const Customer = () => {
     const { users, loading, refresh } = useGetCustomer();
@@ -99,6 +100,7 @@ const Customer = () => {
 
     return (
         <>
+        <Sidebar/>
             <Box position={'absolute'} top={'80px'} left={'300px'} p={4} width={'80%'} maxW={'1200px'} mx={'auto'}>
                 {loading ? (
                     <Flex justifyContent={'center'}>

@@ -1,143 +1,131 @@
-/* eslint-disable no-unused-vars */
-import {
-    Box,
-    VStack,
-    Text,
-    Link,
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-
-    Spacer,
-    Flex,
-} from '@chakra-ui/react';
-import { BiSolidHome } from 'react-icons/bi';
-import { TbCategory } from "react-icons/tb";
-import { PiStackSimple } from "react-icons/pi";
-import { MdManageAccounts } from "react-icons/md";
-import { IoIosLogOut } from "react-icons/io";
-import { AiOutlineStock } from "react-icons/ai";
-import { CiBadgeDollar } from "react-icons/ci";
-import { MdGroups2 } from "react-icons/md";
-
-
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom';
 import Messages from './Messages';
-import { useRef } from 'react';
+import { BiSolidHome } from 'react-icons/bi';
+import { TbCategory } from 'react-icons/tb';
+import { PiStackSimple } from 'react-icons/pi';
+import { MdManageAccounts } from 'react-icons/md';
+import { IoIosLogOut } from 'react-icons/io';
+import { AiOutlineStock } from 'react-icons/ai';
+import { CiBadgeDollar } from 'react-icons/ci';
+import { MdGroups2 } from 'react-icons/md';
+
 const Sidebar = () => {
-    const admin = useRecoilValue(userAtom)
-    const message = useRef()
+    const admin = useRecoilValue(userAtom);
+    if(!admin){
+        return;
+    }
+
     return (
-        <Box color={'white'} w="250px" h={770} bg={'teal.500'} p="5"  >
-            <VStack align="start" spacing="10">
-                <Link to={`admin/${admin.uid}`} as={RouterLink} >
-                    <Flex alignItems={'center'} gap={2} flexDirection={'row'}>
-                        <BiSolidHome size={22} />
-                        <Text fontSize="xl" fontWeight="bold">Home</Text>
-
-                    </Flex>
-
+        <div className="w-64 h-full bg-gray-800 text-white p-6">
+            <nav className="space-y-8">
+                {/* Home */}
+                <Link to={`/admin/${admin.uid}`} className="flex items-center gap-4 p-3 hover:bg-gray-700 rounded-md">
+                    <BiSolidHome size={22} />
+                    <span className="text-lg font-semibold">Home</span>
                 </Link>
-                <Menu>
-                    <MenuButton variant="ghost">
-                        <Flex alignItems={'center'} flexDirection={'row'} gap={2}>
-                            <PiStackSimple size={22} />
 
-                            <Text fontSize="xl" fontWeight="bold">Products</Text>
-                        </Flex>
-                    </MenuButton>
-                    <MenuList>
-                        <MenuItem color={'black'} as={RouterLink} to="/admin/product/create">Create Product</MenuItem>
-                        <MenuItem color={'black'} as={RouterLink} to="/admin/product/show">Show Products</MenuItem>
-                    </MenuList>
+                {/* Products Dropdown */}
+                <div className="group p-3">
+                    <div className="flex items-center gap-4 cursor-pointer">
+                        <PiStackSimple size={22} />
+                        <span className="text-lg font-semibold">Products</span>
+                    </div>
+                    <div className="hidden group-hover:block absolute left-0 mt-2 bg-white text-black w-56 rounded-md shadow-lg transition-all duration-200">
+                        <Link to="/admin/product/create" className="block p-2 hover:bg-gray-200">
+                            Create Product
+                        </Link>
+                        <Link to="/admin/product/show" className="block p-2 hover:bg-gray-200">
+                            Show Products
+                        </Link>
+                    </div>
+                </div>
 
-                </Menu>
-                <Menu>
-                    <MenuButton variant="ghost">
-                        <Flex alignItems={'center'} gap={2}>
-                            <TbCategory size={22} />
-                            <Text fontSize="xl" fontWeight="bold">Categorys</Text>
+                {/* Categories Dropdown */}
+                <div className="group p-3">
+                    <div className="flex items-center gap-4 cursor-pointer">
+                        <TbCategory size={22} />
+                        <span className="text-lg font-semibold">Categories</span>
+                    </div>
+                    <div className="hidden group-hover:block absolute left-0 mt-2 bg-white text-black w-56 rounded-md shadow-lg transition-all duration-200">
+                        <Link to="/admin/category/create" className="block p-2 hover:bg-gray-200">
+                            Create Categories
+                        </Link>
+                        <Link to="/admin/category/show" className="block p-2 hover:bg-gray-200">
+                            Show Categories
+                        </Link>
+                    </div>
+                </div>
 
-                        </Flex>
-                    </MenuButton>
-                    <MenuList >
-                        <MenuItem color={'black'} as={RouterLink} to="admin/category/create">Create Categorys</MenuItem>
-                        <MenuItem color={'black'} as={RouterLink} to="/admin/category/show">Show Categorys</MenuItem>
-                    </MenuList>
+                {/* Brands Dropdown */}
+                <div className="group p-3">
+                    <div className="flex items-center gap-4 cursor-pointer">
+                        <TbCategory size={22} />
+                        <span className="text-lg font-semibold">Brands</span>
+                    </div>
+                    <div className="hidden group-hover:block absolute left-0 mt-2 bg-white text-black w-56 rounded-md shadow-lg transition-all duration-200">
+                        <Link to="/admin/brand/create" className="block p-2 hover:bg-gray-200">
+                            Create Brand
+                        </Link>
+                        <Link to="/admin/brand/show" className="block p-2 hover:bg-gray-200">
+                            Show Brand
+                        </Link>
+                    </div>
+                </div>
 
-                </Menu>
-                <Menu>
-                    <MenuButton variant="ghost">
-                        <Flex alignItems={'center'} gap={2}>
-                            <TbCategory size={22} />
-                            <Text fontSize="xl" fontWeight="bold">Brands</Text>
+                {/* Sales Dropdown */}
+                <div className="group p-3">
+                    <div className="flex items-center gap-4 cursor-pointer">
+                        <AiOutlineStock size={22} />
+                        <span className="text-lg font-semibold">Sales</span>
+                    </div>
+                    <div className="hidden group-hover:block absolute left-0 mt-2 bg-white text-black w-56 rounded-md shadow-lg transition-all duration-200">
+                        <Link to="/admin/sales" className="block p-2 hover:bg-gray-200">
+                            Sales
+                        </Link>
+                        <Link to="/admin/product/timedSale" className="block p-2 hover:bg-gray-200">
+                            Timed Sale
+                        </Link>
+                    </div>
+                </div>
 
-                        </Flex>
-                    </MenuButton>
-                    <MenuList >
-                        <MenuItem color={'black'} as={RouterLink} to="admin/brand/create">Create Brand</MenuItem>
-                        <MenuItem color={'black'} as={RouterLink} to="/admin/brand/show">Show Brand</MenuItem>
-                    </MenuList>
-
-                </Menu>
-                <Menu>
-                    <MenuButton>
-                        <Flex gap={2} alignItems={'center'}>
-                            <AiOutlineStock size={22} />
-                            <Text fontSize="xl" fontWeight="bold">Sales</Text>
-
-                        </Flex>
-                    </MenuButton>
-                    <MenuList>
-                        <MenuItem color={'black'} as={RouterLink} to="admin/sales">Sales</MenuItem>
-                        <MenuItem color={'black'} as={RouterLink} to="/admin/product/timedSale">Timed Sale</MenuItem>
-
-                    </MenuList>
-                </Menu>
-
-                <Link as={RouterLink} to="admin/customer">
-                    <Flex gap={2} alignItems={'center'}>
-                        <MdGroups2 size={22} />
-
-                        <Text fontSize="xl" fontWeight="bold">Customers</Text>
-
-                    </Flex>
+                {/* Customers */}
+                {/* Customers */}
+                <Link to="/admin/customer" className="flex items-center gap-4 p-3 hover:bg-gray-700 rounded-md">
+                    <MdGroups2 size={22} />
+                    <span className="text-lg font-semibold">Customers</span>
                 </Link>
-                <Link as={RouterLink} to="admin/order">
-                    <Flex gap={2} alignItems={'center'}>
-                        <CiBadgeDollar size={22} />
-                        <Text fontSize="xl" fontWeight="bold">Orders</Text>
 
-                    </Flex>
+                {/* Orders */}
+                <Link to="/admin/order" className="flex items-center gap-4 p-3 hover:bg-gray-700 rounded-md">
+                    <CiBadgeDollar size={22} />
+                    <span className="text-lg font-semibold">Orders</span>
                 </Link>
-                <Link as={RouterLink} to={`admin/profile/${admin.uid}`}>
-                    <Flex gap={2} alignItems={'center'}>
-                        <MdManageAccounts size={22} />
-                        <Text fontSize="xl" fontWeight="bold">Profile</Text>
 
-                    </Flex>
+                {/* Profile */}
+                <Link to={`/admin/profile/${admin.uid}`} className="flex items-center gap-4 p-3 hover:bg-gray-700 rounded-md">
+                    <MdManageAccounts size={22} />
+                    <span className="text-lg font-semibold">Profile</span>
                 </Link>
-                <Link >
-                    <Flex gap={2}>
-                        <Messages />
 
 
-                    </Flex>
+                {/* Messages */}
+                <div className="flex items-center gap-4 p-3">
+                    <Messages />
+                </div>
 
+                {/* Spacer */}
+                <div className="flex-1"></div>
+
+                {/* Logout */}
+                <Link to="admin/logout" className="flex items-center gap-4 p-3 hover:bg-gray-700 rounded-md mt-auto">
+                    <IoIosLogOut size={22} />
+                    <span className="text-lg font-semibold">Logout</span>
                 </Link>
-                <Spacer />
-                <Link as={RouterLink} to="admin/logout" mt="auto">
-                    <Flex alignItems={'center'} gap={2}>
-                        <IoIosLogOut size={22} />
-                        <Text fontSize="xl" fontWeight="bold">Logout</Text>
-                    </Flex>
-                </Link>
-            </VStack>
-        </Box>
-    )
-}
+            </nav>
+        </div>
+    );
+};
 
-export default Sidebar
+export default Sidebar;
