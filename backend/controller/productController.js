@@ -259,7 +259,7 @@ const deleteProduct = async (req, res) => {
       await cloudinary.uploader.destroy(imgId);
     }
 
-    await Product.findByIdAndDelete(pid);
+    await Prodcut.findByIdAndDelete(pid);
 
     return res.status(200).json({
       message: "Product deleted",
