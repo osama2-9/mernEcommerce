@@ -11,6 +11,7 @@ import {
     InputGroup,
     Text,
     useColorModeValue,
+    Spinner,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -21,6 +22,7 @@ import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import { BACKEND_API } from '../config/config';
 
 const Login = () => {
+    const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [inputs, setInputs] = useState({ email: "", password: "" });
     const navigate = useNavigate();
@@ -30,8 +32,10 @@ const Login = () => {
     const handleInputsChange = (e) => {
         setInputs({ ...inputs, [e.target.name]: e.target.value });
     };
+
     const handleLogin = async () => {
         try {
+            setLoading(true);
             const res = await fetch(`${BACKEND_API}/users/login`, {
                 method: "POST",
                 headers: {
@@ -54,10 +58,10 @@ const Login = () => {
             navigate(user && data.isAdmin ? `/admin/${user?.uid}` : "/");
         } catch (error) {
             toast.error(error.message, { autoClose: 3000 });
+        } finally {
+            setLoading(false);
         }
     };
-
-
 
     return (
         <Flex align={'center'} justify={'center'} minH={'100vh'} bg={useColorModeValue('gray.50', 'gray.800')}>
@@ -115,8 +119,9 @@ const Login = () => {
                                 color={'white'}
                                 _hover={{ bg: 'blue.500' }}
                                 onClick={handleLogin}
+                                isDisabled={loading}
                             >
-                                Login
+                                {loading ? <Spinner size="sm" /> : 'Login'}
                             </Button>
                         </Stack>
                     </Stack>
@@ -124,6 +129,6 @@ const Login = () => {
             </Stack>
         </Flex>
     );
-}
+};
 
 export default Login;

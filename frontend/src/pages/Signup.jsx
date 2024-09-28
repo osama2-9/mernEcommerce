@@ -13,6 +13,7 @@ import {
   Heading,
   Text,
   useColorModeValue,
+  Spinner,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
@@ -26,24 +27,26 @@ import { BACKEND_API } from '../config/config';
 const Signup = () => {
   const navigate = useNavigate();
   const setUser = useSetRecoilState(userAtom);
+  const [loading, setLoading] = useState(false); // Manage loading state
   const [inputs, setInputs] = useState({
-    fname: "",
-    lname: "",
-    email: "",
-    password: "",
-    phone: ""
+    fname: '',
+    lname: '',
+    email: '',
+    password: '',
+    phone: '',
   });
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSignup = async () => {
     try {
+      setLoading(true); // Start loading spinner
       const res = await fetch(`${BACKEND_API}/users/signup`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(inputs),
-        credentials: 'include', 
+        credentials: 'include',
       });
 
       const data = await res.json();
@@ -54,14 +57,14 @@ const Signup = () => {
       }
 
       setUser(data);
-      localStorage.setItem("user", JSON.stringify(data));
+      localStorage.setItem('user', JSON.stringify(data));
       navigate('/');
-
     } catch (error) {
-      console.log(error);
+      toast.error('Signup failed');
+    } finally {
+      setLoading(false); // Stop loading spinner
     }
   };
-
 
   const handleInputsChange = (e) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
@@ -71,7 +74,9 @@ const Signup = () => {
     <Flex align={'center'} justify={'center'} minH={'100vh'} bg={useColorModeValue('gray.50', 'gray.800')}>
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack align={'center'}>
-          <Heading fontSize={'4xl'} textAlign={'center'}>Sign up</Heading>
+          <Heading fontSize={'4xl'} textAlign={'center'}>
+            Sign up
+          </Heading>
           <Text fontSize={'lg'} color={'gray.600'}>
             Create your account to get started
           </Text>
@@ -86,7 +91,7 @@ const Signup = () => {
                     type="text"
                     value={inputs.fname}
                     onChange={handleInputsChange}
-                    name='fname'
+                    name="fname"
                     borderColor="blue.500"
                     _hover={{ borderColor: 'blue.600' }}
                     _focus={{ borderColor: 'blue.600', boxShadow: '0 0 0 1px blue.600' }}
@@ -99,7 +104,7 @@ const Signup = () => {
                   <Input
                     value={inputs.lname}
                     onChange={handleInputsChange}
-                    name='lname'
+                    name="lname"
                     type="text"
                     borderColor="blue.500"
                     _hover={{ borderColor: 'blue.600' }}
@@ -112,7 +117,7 @@ const Signup = () => {
               <FormLabel>Email Address</FormLabel>
               <Input
                 type="email"
-                name='email'
+                name="email"
                 value={inputs.email}
                 onChange={handleInputsChange}
                 borderColor="blue.500"
@@ -124,7 +129,7 @@ const Signup = () => {
               <FormLabel>Phone Number</FormLabel>
               <Input
                 type="tel"
-                name='phone'
+                name="phone"
                 value={inputs.phone}
                 onChange={handleInputsChange}
                 borderColor="blue.500"
@@ -136,7 +141,7 @@ const Signup = () => {
               <FormLabel>Password</FormLabel>
               <InputGroup>
                 <Input
-                  name='password'
+                  name="password"
                   value={inputs.password}
                   onChange={handleInputsChange}
                   borderColor="blue.500"
@@ -145,25 +150,22 @@ const Signup = () => {
                   type={showPassword ? 'text' : 'password'}
                 />
                 <InputRightElement h={'full'}>
-                  <Button
-                    variant={'ghost'}
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <BsEyeSlash size={24} color='gray.500' /> : <BsEye size={24} color='gray.500' />}
+                  <Button variant={'ghost'} onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? <BsEyeSlash size={24} color="gray.500" /> : <BsEye size={24} color="gray.500" />}
                   </Button>
                 </InputRightElement>
               </InputGroup>
             </FormControl>
             <Stack spacing={10} pt={2}>
               <Button
-                loadingText="Submitting"
                 size="lg"
                 bg={'blue.400'}
                 color={'white'}
                 _hover={{ bg: 'blue.500' }}
                 onClick={handleSignup}
+                isDisabled={loading}
               >
-                Sign up
+                {loading ? <Spinner size="sm" /> : 'Sign up'}
               </Button>
             </Stack>
             <Stack pt={6}>
@@ -176,6 +178,6 @@ const Signup = () => {
       </Stack>
     </Flex>
   );
-}
+};
 
 export default Signup;

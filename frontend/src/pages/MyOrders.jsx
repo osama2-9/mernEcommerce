@@ -45,13 +45,19 @@ const MyOrders = () => {
         const getUserOrders = async () => {
             setLoading(true);
             try {
-                const res = await fetch(`${BACKEND_API}/order/userOrder/${uid}`);
+                const res = await fetch(`${BACKEND_API}/order/userOrder/${uid}`,{
+                    credentials:"include"
+                });
                 const data = await res.json();
                 if (data.error) {
                     toast.error(data.error);
+                } else if (Array.isArray(data)) {
+                    setUserOrders(data);  
+                    setFilteredOrders(data);
+                } else {
+                    setUserOrders([]);  
+                    setFilteredOrders([]);
                 }
-                setUserOrders(data);
-                setFilteredOrders(data);
             } catch (error) {
                 console.log(error);
                 toast.error("Failed to fetch orders");
@@ -62,12 +68,18 @@ const MyOrders = () => {
         getUserOrders();
     }, [uid]);
 
+
     useEffect(() => {
-        const results = userOrders?.filter(order =>
-            order.productName.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-        setFilteredOrders(results);
+        if (Array.isArray(userOrders)) {
+            const results = userOrders.filter(order =>
+                order.productName.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredOrders(results);
+        } else {
+            setFilteredOrders([]);
+        }
     }, [searchQuery, userOrders]);
+
 
     const handleRateNow = (order) => {
         setSelectedOrder(order);
@@ -94,7 +106,7 @@ const MyOrders = () => {
                         rating: rating,
                         userComment: comment
                     }),
-                    credentials:"include"
+                    credentials: "include"
                 });
                 const data = await res.json();
                 if (data.error) {
@@ -118,6 +130,9 @@ const MyOrders = () => {
         }
     };
 
+    if(!userOrders){
+        return null;
+    }
     return (
         <>
             <USidebar />
@@ -150,7 +165,7 @@ const MyOrders = () => {
                         <Spinner size="lg" />
                     </Flex>
                 ) : filteredOrders.length > 0 ? (
-                    filteredOrders.map((order) => (
+                    filteredOrders?.map((order) => (
                         <Box
                             key={order._id}
                             borderWidth="1px"

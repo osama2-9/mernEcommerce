@@ -29,7 +29,7 @@ const HomePage = () => {
                 const res = await fetch(`${BACKEND_API}/product/get` ,{
                     credentials:"include"
                 });
-                console.log(res);
+                
 
                 const data = await res.json();
 

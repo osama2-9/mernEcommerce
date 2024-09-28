@@ -52,7 +52,7 @@ const Header = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                credentials:"include"
+                credentials: "include"
             });
             const data = await res.json();
             if (data.error) {
@@ -107,7 +107,7 @@ const Header = () => {
                     <Image src="/logo.png" alt="Logo" w={70} />
                 </Link>
                 <Flex justifyContent={'center'}>
-                    
+
                     <Input
                         value={search}
                         onChange={handleChange}
@@ -176,7 +176,7 @@ const Header = () => {
                                     />
                                 </Tooltip>
                             </Link>
-                        
+
                             <Spacer />
                             {logged.isAdmin && (
                                 <Link to={`admin/${logged?.uid}`}>
@@ -190,7 +190,7 @@ const Header = () => {
                                     </Tooltip>
                                 </Link>
                             )}
-                                <Link to={`/dashboard/${logged?.uid}`}>
+                            <Link to={`/dashboard/${logged?.uid}`}>
                                 <Tooltip label="Dashboard" aria-label="Dashboard">
                                     <IconButton
                                         icon={<BsSpeedometer />}
@@ -254,7 +254,7 @@ const Header = () => {
                                             />
                                         </Tooltip>
                                     </Link>
-                                
+
                                     <Link to={`/cart/${logged?.uid}`} onClick={onClose}>
                                         Cart
                                         <Tooltip label="Cart" aria-label="Cart">
@@ -281,7 +281,7 @@ const Header = () => {
                                             </Tooltip>
                                         </Link>
                                     )}
-                                        <Link to={`/dashboard/${logged?.uid}`} onClick={onClose}>
+                                    <Link to={`/dashboard/${logged?.uid}`} onClick={onClose}>
                                         Dashboard
                                         <Tooltip label="Dashboard" aria-label="Dashboard">
                                             <IconButton

@@ -165,7 +165,9 @@ const Cart = () => {
                         <Link as={RouterLink} to="/address" color="blue.500">Add Delivery Location</Link>
                     </Box>
                 )}
-                <Button onClick={handleCheckout} bg={'black'} size="lg" mt={5} color={'white'} width="100%">Checkout</Button>
+                <Button onClick={handleCheckout} bg={'black'} _hover={{
+                    'bg': "gray.700"
+                }} size="lg" mt={5} color={'white'} width="100%">Checkout</Button>
             </Box>
         </Box>
     );

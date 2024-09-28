@@ -8,12 +8,14 @@ const useGetFavoriteProducts = () => {
   const [favoriteProducts, setFavoriteProducts] = useState([]);
 
   useEffect(() => {
-    let isMounted = true; 
+    let isMounted = true;
 
     const getFavoriteProducts = async () => {
       if (!uid) return;
       try {
-        const res = await fetch(`${BACKEND_API}/favorite/get/${uid}`);
+        const res = await fetch(`${BACKEND_API}/favorite/get/${uid}`, {
+          credentials: "include",
+        });
         const data = await res.json();
         if (data.error) {
           toast.error(data.error);

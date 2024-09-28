@@ -5,7 +5,7 @@ import CountdownTimer from './CountdownTimer';
 import { Link } from 'react-router-dom';
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import { BACKEND_API } from '../config/config';
-import Sidebar from './Sidebar';
+
 
 const ShowTimedSaleProducts = () => {
     const [timedSaleProducts, setTimedSaleProducts] = useState([]);
@@ -56,7 +56,7 @@ const ShowTimedSaleProducts = () => {
 
     return (
         <>
-        <Sidebar />
+        
             {timedSaleProducts.length > 0 && (
                 <Box maxWidth={'100%'} p={4} bg="gray.50" color="black" borderRadius="md" shadow="sm">
                     {timedSaleProducts.length > productsPerPage && (

@@ -1,7 +1,8 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import path from "path";
 
-import dotenv from "dotenv";
 import { dbConnect } from "./config/db.js";
 import cookieParser from "cookie-parser";
 import userRouter from "./router/userRouter.js";
@@ -15,13 +16,15 @@ import favoriteRoute from "./router/favoriteRouter.js";
 import saleRouter from "./router/SaleRouter.js";
 import cors from "cors";
 
-dotenv.config();
 dbConnect();
 
 const app = express();
 app.use(
   cors({
-    origin: ["https://ecommerce-sigma-liard.vercel.app" ,"http://localhost:3000"],
+    origin: [
+      "https://ecommerce-sigma-liard.vercel.app",
+      "http://localhost:3000",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: [
       "content-type",
@@ -61,6 +64,7 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
   });
 }
+console.log(process.env.JWT_SECRET);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

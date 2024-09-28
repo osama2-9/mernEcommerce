@@ -311,17 +311,14 @@ const Product = () => {
                             </Stack>
                             <Button
                                 onClick={handleAddToCart}
-                                w={'200px'}
-                                fontSize={'sm'}
-                                rounded={'full'}
-                                bg={'black'}
+                                bg={
+                                    'black'
+                                }
                                 color={'white'}
                                 _hover={{
-                                    bg: 'blue.500',
+                                    bg: "gray.700"
                                 }}
-                                _focus={{
-                                    bg: 'blue.500',
-                                }}
+                                w={'150px'}
                             >
                                 Add to Cart
                             </Button>

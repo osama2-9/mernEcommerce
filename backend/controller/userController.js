@@ -84,13 +84,13 @@ const signup = async (req, res) => {
     });
   }
 };
-
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     if (!email || !password) {
       return res.status(404).json({
-        error: "Please Fill All Fields !",
+        error: "Please Fill All Fields!",
       });
     }
 
@@ -100,27 +100,29 @@ const login = async (req, res) => {
         error: "No User Found",
       });
     }
-    const hashedPasswordCompare = await bcrypt.compare(
-      password,
-      user?.password || ""
-    );
-    if (!hashedPasswordCompare) {
+
+    const isPasswordMatch = await bcrypt.compare(password, user.password || "");
+    if (!isPasswordMatch) {
       return res.status(404).json({
-        error: "Password not Match !",
+        error: "Password does not match!",
       });
     }
 
-    if (!user || !hashedPasswordCompare) {
-      return res.status(404).json({
-        error: "Invaild Email or Password",
-      });
-    }
+    const token = generateToken(user._id);
 
-    generateToken(user._id, res);
+    const cookieOptions = {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+    };
+
+    res.cookie("auth", token, cookieOptions);
+
     user.lastLogin = new Date();
     await user.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       uid: user._id,
       fname: user.fname,
       lname: user.lname,
@@ -130,8 +132,10 @@ const login = async (req, res) => {
       isAdmin: user.isAdmin,
     });
   } catch (error) {
+    console.error("Error during login:", error);
+
     return res.status(500).json({
-      error: error,
+      error: "Server error. Please try again later.",
     });
   }
 };

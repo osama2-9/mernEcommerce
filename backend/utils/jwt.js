@@ -1,23 +1,15 @@
 import jwt from "jsonwebtoken";
-const generateToken = (uid, res) => {
+
+const generateToken = (uid) => {
   try {
     const token = jwt.sign({ uid }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
-
-    res.cookie("auth", token, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "None",
-    });
-
     return token;
   } catch (error) {
-    return res.status(500).json({
-      error: error,
-    });
+    console.error("Error generating token:", error);
   }
 };
+console.log(process.env.JWT_SECRET);
 
 export { generateToken };

@@ -36,12 +36,14 @@ function App() {
   const user = useRecoilValue(userAtom);
   const location = useLocation();
 
-  // Determine if Header should be shown
+  
   const shouldShowHeader = !(
     location.pathname.includes('/admin') ||
     location.pathname.includes('/login') ||
     location.pathname.includes('/register') ||
-    location.pathname.includes('/dashboard')
+    location.pathname.includes('/dashboard')||
+    location.pathname.includes('/user-profile')||
+    location.pathname.includes('/my-orders')
   );
 
   return (
