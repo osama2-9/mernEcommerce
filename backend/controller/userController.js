@@ -204,7 +204,7 @@ const sendVerificationCodeByAdmin = async (req, res) => {
     user.verificationTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000;
     user.verificationToken = generateCode;
 
-    const verificationCodeURL = `${process.env.CLIENT_URL}verify-email/${veificationCodeToken}`;
+    const verificationCodeURL = `https://ecommerce-sigma-liard.vercel.app/verify-email/${veificationCodeToken}`;
     await user.save();
     await resendVerificationCodeByAdmin(
       user.email,
@@ -411,7 +411,7 @@ const forgetPassword = async (req, res) => {
 
     await findUser.save();
 
-    const resetURL = `${process.env.CLIENT_URL}reset-password/${resetPasswordToken}`;
+    const resetURL = `https://ecommerce-sigma-liard.vercel.app/reset-password/${resetPasswordToken}`;
 
     await sendResetPasswordURL(findUser, findUser?.email, resetURL);
 

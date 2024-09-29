@@ -5,7 +5,7 @@ import {
     useColorModeValue,
     IconButton,
     Tooltip,
-    Spacer,
+
     Input,
     Button,
     Text,
@@ -30,9 +30,8 @@ import { BiSolidHome } from 'react-icons/bi';
 import { FaBars } from 'react-icons/fa';
 import userAtom from '../atoms/userAtom';
 import { toast } from 'react-toastify';
-import useGetCategories from '../hooks/useGetCategories';
-import CategoreisWithBrands from './CategoreisWithBrands';
-import { BACKEND_API } from '../config/config.js'
+
+import { BACKEND_API } from '../config/config.js';
 
 const Header = () => {
     const Nav = useNavigate();
@@ -42,8 +41,6 @@ const Header = () => {
     const [searchResult, setSearchResult] = useState([]);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [loading, setLoading] = useState(false);
-    const { categories } = useGetCategories()
-
 
     const handleLogout = async () => {
         try {
@@ -52,7 +49,7 @@ const Header = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                credentials: "include"
+                credentials: 'include',
             });
             const data = await res.json();
             if (data.error) {
@@ -103,11 +100,13 @@ const Header = () => {
     return (
         <Box w="100%" shadow="sm">
             <Flex justify="space-between" align="center" h="16" px={10}>
+                {/* Logo */}
                 <Link to="/">
                     <Image src="/logo.png" alt="Logo" w={70} />
                 </Link>
-                <Flex justifyContent={'center'}>
 
+                {/* Search Bar */}
+                <Flex justifyContent="center" position="relative">
                     <Input
                         value={search}
                         onChange={handleChange}
@@ -129,18 +128,31 @@ const Header = () => {
                     <Button bg="gray.300" h="35px" ml={2} type="submit">
                         <BsSearch />
                     </Button>
-                    {searchResult.length > 0 && search != "" && (
-                        <Flex position={'absolute'} mt={'35px'} zIndex={10}>
-                            <Box p={1} w={'400px'} me={10} color={'black'} bg={'gray.50'} rounded={'sm'}>
+
+                    {/* Search Results */}
+                    {searchResult.length > 0 && search !== '' && (
+                        <Flex position="absolute" mt="35px" zIndex={10}>
+                            <Box
+                                p={1}
+                                w="400px"
+                                me={10}
+                                color="black"
+                                bg="gray.50"
+                                rounded="sm"
+                            >
                                 {loading ? (
-                                    <Flex flexDir={'column'} gap={2}>
-                                        <Skeleton h={'30px'} mb={2} />
-                                        <Skeleton h={'30px'} mb={2} />
-                                        <Skeleton h={'30px'} mb={2} />
+                                    <Flex flexDir="column" gap={2}>
+                                        <Skeleton h="30px" mb={2} />
+                                        <Skeleton h="30px" mb={2} />
+                                        <Skeleton h="30px" mb={2} />
                                     </Flex>
                                 ) : (
                                     searchResult.map((product, i) => (
-                                        <Box onClick={() => setSearch("")} key={i} p={2}>
+                                        <Box
+                                            onClick={() => setSearch('')}
+                                            key={i}
+                                            p={2}
+                                        >
                                             <Link to={`/product/${product._id}`}>
                                                 <Text>{product.productName}</Text>
                                             </Link>
@@ -152,6 +164,8 @@ const Header = () => {
                         </Flex>
                     )}
                 </Flex>
+
+                {/* Navigation Links */}
                 <Flex align="center" display={{ base: 'none', md: 'flex' }}>
                     {!logged ? (
                         <Link to="/login">
@@ -176,9 +190,17 @@ const Header = () => {
                                     />
                                 </Tooltip>
                             </Link>
-
-                            <Spacer />
-                            {logged.isAdmin && (
+                            <Link to={`/dashboard/${logged?.uid}`}>
+                                <Tooltip label="Dashboard" aria-label="Dashboard">
+                                    <IconButton
+                                        icon={<BsSpeedometer />}
+                                        size="md"
+                                        variant="ghost"
+                                        aria-label="Dashboard"
+                                    />
+                                </Tooltip>
+                            </Link>
+                            {logged?.isAdmin && (
                                 <Link to={`admin/${logged?.uid}`}>
                                     <Tooltip label="Admin Panel" aria-label="Admin Panel">
                                         <IconButton
@@ -190,16 +212,6 @@ const Header = () => {
                                     </Tooltip>
                                 </Link>
                             )}
-                            <Link to={`/dashboard/${logged?.uid}`}>
-                                <Tooltip label="Dashboard" aria-label="Dashboard">
-                                    <IconButton
-                                        icon={<BsSpeedometer />}
-                                        size="md"
-                                        variant="ghost"
-                                        aria-label="Dashboard"
-                                    />
-                                </Tooltip>
-                            </Link>
                             <Tooltip label="Logout" aria-label="Logout">
                                 <IconButton
                                     icon={<IoIosLogOut />}
@@ -212,6 +224,8 @@ const Header = () => {
                         </>
                     )}
                 </Flex>
+
+                {/* Mobile Menu */}
                 <IconButton
                     icon={<FaBars />}
                     size="md"
@@ -221,6 +235,8 @@ const Header = () => {
                     onClick={onOpen}
                 />
             </Flex>
+
+            {/* Drawer for Mobile Menu */}
             <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
                 <DrawerOverlay />
                 <DrawerContent>
@@ -242,8 +258,7 @@ const Header = () => {
                                 </Link>
                             ) : (
                                 <>
-                                    <Link to={`/`} onClick={onClose}>
-                                        Home
+                                    <Link to={`/`}>
                                         <Tooltip label="Home" aria-label="Home">
                                             <IconButton
                                                 icon={<BiSolidHome />}
@@ -254,9 +269,7 @@ const Header = () => {
                                             />
                                         </Tooltip>
                                     </Link>
-
                                     <Link to={`/cart/${logged?.uid}`} onClick={onClose}>
-                                        Cart
                                         <Tooltip label="Cart" aria-label="Cart">
                                             <IconButton
                                                 icon={<BsCart />}
@@ -269,7 +282,6 @@ const Header = () => {
                                     </Link>
                                     {logged?.isAdmin && (
                                         <Link to={`admin/${logged?.uid}`} onClick={onClose}>
-                                            Admin
                                             <Tooltip label="Admin Panel" aria-label="Admin Panel">
                                                 <IconButton
                                                     icon={<MdOutlineAdminPanelSettings />}
@@ -282,7 +294,6 @@ const Header = () => {
                                         </Link>
                                     )}
                                     <Link to={`/dashboard/${logged?.uid}`} onClick={onClose}>
-                                        Dashboard
                                         <Tooltip label="Dashboard" aria-label="Dashboard">
                                             <IconButton
                                                 icon={<BsSpeedometer />}
@@ -293,19 +304,16 @@ const Header = () => {
                                             />
                                         </Tooltip>
                                     </Link>
-                                    <Link>
-                                        Logout
-                                        <Tooltip label="Logout" aria-label="Logout">
-                                            <IconButton
-                                                icon={<IoIosLogOut />}
-                                                size="md"
-                                                variant="ghost"
-                                                aria-label="Logout"
-                                                onClick={handleLogout}
-                                                mb={2}
-                                            />
-                                        </Tooltip>
-                                    </Link>
+                                    <Tooltip label="Logout" aria-label="Logout">
+                                        <IconButton
+                                            icon={<IoIosLogOut />}
+                                            size="md"
+                                            variant="ghost"
+                                            aria-label="Logout"
+                                            onClick={handleLogout}
+                                            mb={2}
+                                        />
+                                    </Tooltip>
                                 </>
                             )}
                         </Flex>
@@ -317,8 +325,6 @@ const Header = () => {
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
-            <CategoreisWithBrands categories={categories} />
-
         </Box>
     );
 };

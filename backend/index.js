@@ -49,6 +49,8 @@ app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+console.log(process.env.CLIENT_URL);
+
 app.use("/api/users", userRouter);
 app.use("/api/category", categoryRoute);
 app.use("/api/product", productRoute);

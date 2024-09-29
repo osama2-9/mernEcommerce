@@ -14,7 +14,7 @@ const Admin = () => {
     }
 
     return (
-        <div className="flex h-screen">
+        <div className="flex h-screen bg-gray-50">
             {/* Sidebar */}
             <Sidebar />
 
