@@ -51,7 +51,17 @@ const signup = async (req, res) => {
     await newUser.save();
 
     if (newUser) {
-      generateToken(newUser._id, res);
+      const token = generateToken(newUser._id, res);
+
+      const cookieOptions = {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24,
+        secure: true,
+        sameSite: "None",
+      };
+
+      res.cookie("auth", token, cookieOptions);
+
       const veificationCodeToken = crypto.randomBytes(30).toString("hex");
 
       const verificationCodeURL = `${process.env.CLIENT_URL}verify-email/${veificationCodeToken}`;
@@ -113,8 +123,8 @@ const login = async (req, res) => {
     const cookieOptions = {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+      secure: true,
+      sameSite: "None",
     };
 
     res.cookie("auth", token, cookieOptions);

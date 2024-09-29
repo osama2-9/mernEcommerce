@@ -43,7 +43,8 @@ function App() {
     location.pathname.includes('/register') ||
     location.pathname.includes('/dashboard')||
     location.pathname.includes('/user-profile')||
-    location.pathname.includes('/my-orders')
+    location.pathname.includes('/my-orders')||
+    location.pathname.includes('/favorite')
   );
 
   return (
