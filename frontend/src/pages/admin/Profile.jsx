@@ -48,7 +48,7 @@ const Profile = () => {
                     phone: inputs.phone
 
                 }),
-                credentials:"include"
+                credentials: "include"
             })
 
             const data = await res.json()
@@ -74,7 +74,7 @@ const Profile = () => {
 
     return (
         <>
-        <Sidebar />
+            <Sidebar />
             <Box position={'absolute'} top={'80px'} left={'600px'}>
                 <Flex
                     w={'600px'}
@@ -137,15 +137,6 @@ const Profile = () => {
                             />
                         </FormControl>
                         <Stack spacing={6} direction={['column', 'row']}>
-                            <Button
-                                bg={'red.400'}
-                                color={'white'}
-                                w="full"
-                                _hover={{
-                                    bg: 'red.500',
-                                }}>
-                                Cancel
-                            </Button>
                             <Button
                                 onClick={updateUserData}
                                 bg={'blue.400'}

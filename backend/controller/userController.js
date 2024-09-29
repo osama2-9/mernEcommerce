@@ -455,30 +455,50 @@ const resetPassword = async (req, res) => {
     });
   }
 };
-
 const updateUserData = async (req, res) => {
   try {
     const { uid, fname, lname, email, phone } = req.body;
+
     if (!uid) {
       return res.status(404).json({
         error: "User not found",
       });
     }
+
     const user = await User.findById(uid);
     if (!user) {
       return res.status(404).json({
-        error: "Error while get user data",
+        error: "Error while getting user data",
       });
+    }
+
+    if (email) {
+      const emailExists = await User.findOne({ email, _id: { $ne: uid } });
+      if (emailExists) {
+        return res.status(400).json({
+          error: "Email is already taken by another user",
+        });
+      }
+    }
+
+    if (phone) {
+      const phoneExists = await User.findOne({ phone, _id: { $ne: uid } });
+      if (phoneExists) {
+        return res.status(400).json({
+          error: "Phone number is already taken by another user",
+        });
+      }
     }
 
     user.fname = fname || user.fname;
     user.lname = lname || user.lname;
     user.email = email || user.email;
     user.phone = phone || user.phone;
-    user.isAdmin = user.isAdmin;
 
     await user.save();
+
     user.password = null;
+
     return res.status(200).json({
       uid: user._id,
       fname: user.fname,
@@ -489,8 +509,12 @@ const updateUserData = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({
+      error: "Server error",
+    });
   }
 };
+
 const deleteUserByAdmin = async (req, res) => {
   try {
     const { uid } = req.body;
