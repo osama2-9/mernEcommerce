@@ -59,12 +59,14 @@ app.use("/api/favorite", favoriteRoute);
 app.use("/api/sale", saleRouter);
 
 if (process.env.NODE_ENV === "production") {
+  console.log("production test");
+
   app.use(express.static(path.join(__dirname, "/frontend/dist")));
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
   });
 }
-console.log(process.env.JWT_SECRET);
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

@@ -10,6 +10,6 @@ const generateToken = (uid) => {
     console.error("Error generating token:", error);
   }
 };
-console.log(process.env.JWT_SECRET);
+
 
 export { generateToken };

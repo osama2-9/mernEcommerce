@@ -100,7 +100,7 @@ const Customer = () => {
 
     return (
         <>
-        <Sidebar/>
+            <Sidebar />
             <Box position={'absolute'} top={'80px'} left={'300px'} p={4} width={'80%'} maxW={'1200px'} mx={'auto'}>
                 {loading ? (
                     <Flex justifyContent={'center'}>
