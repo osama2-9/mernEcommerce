@@ -58,7 +58,7 @@ const getUserFavoriteList = async (req, res) => {
 
     const getFavoriteProductsId = await Favorite.find({ uid });
 
-    if (!getFavoriteProductsId || getFavoriteProductsId.length === 0) {
+    if (!getFavoriteProductsId) {
       return res.status(400).json({
         error: "Can't get products",
       });

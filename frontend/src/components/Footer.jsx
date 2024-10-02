@@ -18,7 +18,7 @@ const Footer = () => {
                 </div>
             </div>
             <div className="w-full bg-black mt-10 py-6">
-                <div className="flex justify-center space-x-10">
+                <div className="flex justify-center space-x-5">
                     <Link to="https://github.com/osama2-9?tab=repositories">
                         <FaGithub className="text-white hover:scale-110 transition-all" size={30} />
                     </Link>

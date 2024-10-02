@@ -35,7 +35,7 @@ const useGetFavoriteProducts = () => {
     getFavoriteProducts();
 
     return () => {
-      isMounted = false; // Cleanup function to set the flag to false when unmounting
+      isMounted = false; 
     };
   }, [uid]);
 

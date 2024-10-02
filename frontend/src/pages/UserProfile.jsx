@@ -1,18 +1,4 @@
-/* eslint-disable no-unused-vars */
-import {
-    Button,
-    Flex,
-    FormControl,
-    FormLabel,
-    Heading,
-    Input,
-    Stack,
-    useColorModeValue,
-    Box,
-    VStack,
-} from '@chakra-ui/react';
-import { useEffect, useState, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import {  useState } from "react";
 import { toast } from "react-toastify";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom.js';
@@ -21,7 +7,6 @@ import { BACKEND_API } from '../config/config.js';
 
 const UserProfile = () => {
     const logged = useRecoilValue(userAtom);
-    const { uid } = useParams();
     const [user, setUser] = useRecoilState(userAtom);
     const [inputs, setInputs] = useState({
         fname: logged.fname,
@@ -39,7 +24,7 @@ const UserProfile = () => {
             const res = await fetch(`${BACKEND_API}/users/updateUserData`, {
                 method: "PUT",
                 headers: {
-                    'content-type': "application/json"
+                    'Content-Type': "application/json"
                 },
                 body: JSON.stringify({
                     uid: logged.uid,
@@ -57,7 +42,7 @@ const UserProfile = () => {
             } else {
                 localStorage.setItem('user', JSON.stringify(data));
                 setUser(data);
-                toast.success("Profile Data Updated ");
+                toast.success("Profile Data Updated");
             }
 
         } catch (error) {
@@ -69,95 +54,90 @@ const UserProfile = () => {
     return (
         <>
             <USidebar />
-            <Box position={'absolute'} top={'100px'} left={'35%'} width={'500px'} >
-                <Flex align={'center'} justify={'center'}>
-                    <Stack
-                        spacing={6}
-                        w={'full'}
-                        maxW={'lg'}
-                        rounded={'xl'}
-                        boxShadow={'lg'}
-                        p={8}
-                        bg={useColorModeValue('white', 'gray.700')}>
-                        <Heading
-                            lineHeight={1.1}
-                            fontSize={{ base: '2xl', sm: '3xl' }}
-                            bgClip="text"
-                            bgGradient="linear(to-r, teal.500, green.500)"
-                        >
-                            Edit Your Profile
-                        </Heading>
-                        <VStack spacing={4} align="stretch">
-                            <FormControl id="firstName" isRequired>
-                                <FormLabel>First Name</FormLabel>
-                                <Input
-                                    name='fname'
-                                    placeholder="First Name"
-                                    value={inputs?.fname}
-                                    _placeholder={{ color: 'gray.500' }}
-                                    onChange={handleInputsChange}
-                                    type="text"
-                                />
-                            </FormControl>
-                            <FormControl id="lastName" isRequired>
-                                <FormLabel>Last Name</FormLabel>
-                                <Input
-                                    name='lname'
-                                    value={inputs?.lname}
-                                    placeholder="Last Name"
-                                    _placeholder={{ color: 'gray.500' }}
-                                    onChange={handleInputsChange}
-                                    type="text"
-                                />
-                            </FormControl>
-                            <FormControl id="email" isRequired>
-                                <FormLabel>Email Address</FormLabel>
-                                <Input
-                                    name='email'
-                                    value={inputs?.email}
-                                    placeholder="your-email@example.com"
-                                    _placeholder={{ color: 'gray.500' }}
-                                    onChange={handleInputsChange}
-                                    type="email"
-                                />
-                            </FormControl>
-                            <FormControl id="phone" isRequired>
-                                <FormLabel>Phone Number</FormLabel>
-                                <Input
-                                    name='phone'
-                                    value={inputs?.phone}
-                                    placeholder="Phone Number"
-                                    _placeholder={{ color: 'gray.500' }}
-                                    onChange={handleInputsChange}
-                                    type="tel"
-                                />
-                            </FormControl>
-                        </VStack>
-                        <Stack spacing={6} direction={['column', 'row']}>
-                            <Button
-                                bg={'red.400'}
-                                color={'white'}
-                                w="full"
-                                _hover={{
-                                    bg: 'red.500',
-                                }}>
+            <div className="absolute top-24 left-1/2 transform -translate-x-1/2 w-full max-w-3xl p-8">
+                <div className="bg-white shadow-lg rounded-lg p-8">
+                    <h1 className="text-3xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-green-500">
+                        Edit Your Profile
+                    </h1>
+                    <form className="space-y-6">
+                        <div>
+                            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                                First Name
+                            </label>
+                            <input
+                                id="firstName"
+                                name="fname"
+                                type="text"
+                                value={inputs?.fname}
+                                onChange={handleInputsChange}
+                                placeholder="First Name"
+                                className="mt-1 block w-full rounded-md border p-2 text-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                                Last Name
+                            </label>
+                            <input
+                                id="lastName"
+                                name="lname"
+                                type="text"
+                                value={inputs?.lname}
+                                onChange={handleInputsChange}
+                                placeholder="Last Name"
+                                className="mt-1 block w-full rounded-md border p-2 text-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                                Email Address
+                            </label>
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                value={inputs?.email}
+                                onChange={handleInputsChange}
+                                placeholder="your-email@example.com"
+                                className="mt-1 block w-full rounded-md border p-2 text-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                                Phone Number
+                            </label>
+                            <input
+                                id="phone"
+                                name="phone"
+                                type="tel"
+                                value={inputs?.phone}
+                                onChange={handleInputsChange}
+                                placeholder="Phone Number"
+                                className="mt-1 block w-full rounded-md border p-2 text-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            />
+                        </div>
+
+                        <div className="flex justify-between space-x-4">
+                            <button
+                                type="button"
+                                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md w-full"
+                            >
                                 Cancel
-                            </Button>
-                            <Button
+                            </button>
+                            <button
+                                type="button"
                                 onClick={updateUserData}
-                                bg={'blue.400'}
-                                color={'white'}
-                                p={5}
-                                w="full"
-                                _hover={{
-                                    bg: 'blue.500',
-                                }}>
+                                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md w-full"
+                            >
                                 Update Profile
-                            </Button>
-                        </Stack>
-                    </Stack>
-                </Flex>
-            </Box>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </>
     );
 };

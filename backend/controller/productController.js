@@ -5,6 +5,7 @@ import { Rating } from "../model/Rating.js";
 import Order from "../model/Order.js";
 import { v2 as cloudinary } from "cloudinary";
 import Sale from "../model/Sale.js";
+import Product from "../model/Product.js";
 const createProduct = async (req, res) => {
   try {
     const {
@@ -78,7 +79,7 @@ const createProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Prodcut.find();
+    const products = await Product.find();
 
     if (products.length === 0) {
       return res.status(404).json({
@@ -86,12 +87,17 @@ const getAllProducts = async (req, res) => {
       });
     }
 
-    res.status(200).json(products);
+    const shuffledProducts = products.sort(() => 0.5 - Math.random());
+
+    const randomProducts = shuffledProducts.slice(0, 12);
+
+    res.status(200).json(randomProducts);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 const filterProducts = async (req, res) => {
   try {
     const { type } = req.params;
@@ -523,35 +529,65 @@ const getTopRatedProducts = async (req, res) => {
     return res.status(500).json({ error: "Server error" });
   }
 };
-
 const recommendedProducts = async (req, res) => {
   try {
-    const { uid: loggeduser } = req.params;
+    const { uid: loggedUser } = req.params;
 
-    if (!loggeduser) {
-      return 0;
+    const loggedUserOrders = await Order.findOne({ uid: loggedUser })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    if (!loggedUserOrders) {
+      return res.status(200).json({
+        success: true,
+        data: [],
+      });
     }
 
-    const loggedUserOrder = await Order.find({ uid: loggeduser });
+    const product = await Product.findById(loggedUserOrders.pid).lean();
 
-    if (!loggedUserOrder || loggedUserOrder.length === 0) {
-      return 0;
+    if (!product) {
+      return res.status(200).json({
+        success: true,
+        data: [],
+      });
     }
 
-    const topSellingProducts = await Prodcut.find()
+    const topSellingProducts = await Product.find({
+      categoryID: product.categoryID,
+    })
       .sort({ sells: -1 })
-      .limit(2);
+      .limit(2)
+      .lean();
 
-    const topRatedProducts = await Prodcut.find().sort({ rating: -1 }).limit(2);
+    const topRatedProducts = await Product.find({
+      categoryID: product.categoryID,
+    })
+      .sort({ rating: -1 })
+      .limit(2)
+      .lean();
 
-    const recommendations = [...topSellingProducts, ...topRatedProducts];
+    const combinedProducts = [...topSellingProducts, ...topRatedProducts];
+    const uniqueProducts = Array.from(
+      new Set(combinedProducts.map((p) => p._id))
+    ).map((id) => combinedProducts.find((p) => p._id === id));
 
-    return res.json(recommendations);
+    return res.status(200).json({
+      success: true,
+      data: uniqueProducts,
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Server Error");
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching recommended products.",
+      error: error.message,
+    });
   }
 };
+
+
+
 const getUsersReviewForProduct = async (req, res) => {
   try {
     const { pid } = req.params;

@@ -31,6 +31,7 @@ import BrandWithProducts from './pages/BrandWithProducts';
 import Favorite from './pages/Favorite';
 import VerifyEmail from './components/VerifiyEmail';
 import TimedSaleProducts from './pages/admin/TimedSaleProducts';
+import NotFound from './pages/NotFound';
 
 function App() {
   const user = useRecoilValue(userAtom);
@@ -51,6 +52,7 @@ function App() {
     <div>
       {shouldShowHeader && <Header />}
       <Routes>
+        <Route path='*' element={<NotFound/>} />
         <Route path='/' element={<HomePage />} />
         <Route path='/login' element={<Login />} />
         <Route path='/forget-password' element={<ForgetPassword />} />

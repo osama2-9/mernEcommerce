@@ -15,6 +15,7 @@ import RecommendedProducts from "../components/RecommendedProducts";
 import ShowTimedSaleProducts from "../components/ShowTimedSaleProducts";
 import { BACKEND_API } from '../config/config.js';
 import useGetBrands from "../hooks/useGetBrands.js";
+import Promotional from "../components/Promotional.jsx";
 
 const HomePage = () => {
     const { topSell } = useGetTopSells();
@@ -61,7 +62,7 @@ const HomePage = () => {
         <div className="home">
             <Slider />
 
-            <div className="flex flex-col lg:flex-row justify-center items-center  mt-10">
+            <div className="flex flex-col lg:flex-row justify-center items-center mt-10 space-y-5 lg:space-y-0 lg:space-x-5">
                 <FeatureBox
                     icon={<BsCart2 size={40} />}
                     title="Free Delivery"
@@ -83,51 +84,34 @@ const HomePage = () => {
                 <RecommendedProducts />
 
                 <ProductContainer title="Products" className="mt-10">
-                    {product.slice(0, 12).map((product) => (
-                        <Products key={product._id} product={product} />
+                    {product.slice(0, 12).map((p) => (
+                        <Products key={p._id} product={p} />
                     ))}
                 </ProductContainer>
 
                 <Categories />
-
-                <div className="relative mt-36 max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-4xl">
-                    <div className="md:flex">
-                        <div className="md:shrink-0">
-                            <img className="h-64 w-full object-cover md:h-full md:w-64" src="/shopping.jpeg" alt="Modern building architecture" />
-                        </div>
-                        <div className="p-8">
-                            <p className="text-lg md:text-xl text-gray-500">
-                                Discover an incredible shopping experience with unbeatable deals! Explore our exclusive collection of top-quality products designed to meet all your needs. From the latest trends to everyday essentials.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-
+                <Promotional
+                    image={'shopping.jpeg'}
+                    title={'Discover an incredible shopping experience with unbeatable deals!'}
+                    description={'Explore our exclusive collection of top-quality products designed to meet all your needs. From the latest trends to everyday essentials.'}
+                />
                 <ProductContainer title="New Arrivals" className="mt-10">
                     {product.slice(-4).map((p) => (
                         <Products key={p._id} product={p} />
                     ))}
                 </ProductContainer>
 
-                <div className="relative mt-36 max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-4xl mb-20">
-                    <div className="flex flex-col lg:flex-row">
-                        <div className="md:shrink-0">
-                            <img className=" w-full object-cover md:h-full md:w-64" src="/main.png" alt="Modern building architecture" />
-                        </div>
-                        <div className="p-8">
-                            <p className="text-lg md:text-xl text-gray-500">
-                                Discover an incredible shopping experience with unbeatable deals! Explore our exclusive collection of top-quality products designed to meet all your needs. From the latest trends to everyday essentials.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
                 <ProductContainer title="Top Sells" className="mt-10">
                     {topSell.map((p) => (
                         <Products key={p._id} product={p} />
                     ))}
                 </ProductContainer>
+
+                <Promotional
+                    image={'main.png'}
+                    title={'Discover an incredible shopping experience with unbeatable deals!'}
+                    description={'Explore our exclusive collection of top-quality products designed to meet all your needs. From the latest trends to everyday essentials.'}
+                />
 
                 <ProductContainer title="On Sales" className="mt-10">
                     {onSale.slice(0, 4).map((p) => (
@@ -137,7 +121,7 @@ const HomePage = () => {
 
                 <ShowTimedSaleProducts />
 
-                <div className="font-bold w-full max-w-5xl mx-auto p-6 rounded-md shadow-md bg-white">
+                <div className="font-bold w-full max-w-5xl mx-auto p-6 rounded-md shadow-md bg-white mb-20">
                     <h2 className="text-2xl text-center mb-4">Our Brands</h2>
                     <div className="flex flex-wrap justify-center">
                         {homePageBrands.length > 0 ? (
@@ -159,8 +143,8 @@ const HomePage = () => {
                         )}
                     </div>
                 </div>
-                <TopRate />
 
+                <TopRate />
                 <Footer />
             </div>
         </div>

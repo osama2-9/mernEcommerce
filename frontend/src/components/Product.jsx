@@ -152,7 +152,8 @@ const Product = () => {
                 <div className="flex flex-col md:flex-row py-6 px-4">
                     <div className="flex flex-1 justify-center items-center  rounded-lg ">
                         <img
-                            className="w-full h-auto md:h-96 "
+                            className="w-full lg:h-[500px] rounded-md shadow-sm
+                            "
                             src={selectedProduct.productImg}
                             alt={selectedProduct.productName}
                         />
