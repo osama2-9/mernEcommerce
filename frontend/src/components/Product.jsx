@@ -1,21 +1,10 @@
 /* eslint-disable react/prop-types */
 import {
-    Badge,
-    Box,
-    Button,
-    Center,
-    Divider,
-    Flex,
-    Heading,
-    Image,
     Radio,
     RadioGroup,
-    Select,
-    Stack,
-    Text,
     Collapse,
-    IconButton,
-    Avatar
+    Avatar,
+    IconButton
 } from '@chakra-ui/react';
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
@@ -156,239 +145,194 @@ const Product = () => {
     }, []);
 
 
-    console.log(selectedProduct);
 
     return (
         <>
             {selectedProduct && (
-                <Center py={6}>
-                    <Stack
-                        direction={{ md: 'row', lg: 'row', sm: 'column' }}
-                        spacing={6}
-                    >
-                        <Flex flex={1}>
-                            <Image
-                                p={1}
-                                width={{ sm: "100%", md: "1000px" }}
-                                height={{ sm: "auto", md: "500px" }}
-                                src={selectedProduct.productImg}
-                            />
-                        </Flex>
-                        <Stack
-                            flex={2}
-                            justifyContent="center"
-                            alignItems="flex-start"
-                            p={4}
-                            pt={2}
-                            spacing={4}
-                        >
-                            <Flex justifyContent="space-between" alignItems="center" width="100%">
-                                <Heading letterSpacing={1} fontSize={'3xl'} fontFamily={'body'}>
-                                    {selectedProduct.productName}
-                                </Heading>
-                                {selectedProduct.productQuntity <= 3 && (
-                                    <Text>
-                                        <Badge p={1} bg={'black'} color={'white'} h={'30px'} textAlign={'center'}>
-                                            In Stock {selectedProduct.productQuntity}
-                                        </Badge>
-                                    </Text>
-                                )}
-                                {selectedProduct.sale > 0 ? (
-                                    <>
-                                        <Text fontWeight={700} color={'red.500'}>
-                                            ${Discount(selectedProduct.productPrice, selectedProduct.sale).toFixed(2)}
-                                        </Text>
-                                        <Text as="s" fontWeight={700} color={'gray.800'}>
-                                            ${selectedProduct.productPrice}
-                                        </Text>
-                                    </>
-                                ) : (
-                                    <Text fontWeight={700} fontSize={'20px'} color={'gray.800'}>
+                <div className="flex flex-col md:flex-row py-6 px-4">
+                    <div className="flex flex-1 justify-center items-center  rounded-lg ">
+                        <img
+                            className="w-full h-auto md:h-96 "
+                            src={selectedProduct.productImg}
+                            alt={selectedProduct.productName}
+                        />
+                    </div>
+
+                    <div className="flex flex-1 flex-col justify-center p-4">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-3xl font-semibold tracking-tight">{selectedProduct.productName}</h2>
+                            {selectedProduct.productQuantity <= 3 && (
+                                <span className="bg-black text-white px-2 py-1 rounded">
+                                    In Stock {selectedProduct.productQuantity}
+                                </span>
+                            )}
+                            {selectedProduct.sale > 0 ? (
+                                <div className="flex flex-col items-end">
+                                    <span className="text-red-500 font-bold">
+                                        ${Discount(selectedProduct.productPrice, selectedProduct.sale).toFixed(2)}
+                                    </span>
+                                    <span className="line-through text-gray-800 font-bold">
                                         ${selectedProduct.productPrice}
-                                    </Text>
-                                )}
-                            </Flex>
-                            <Flex flexDirection={'row'} gap={2} color={'gray.500'} alignItems="center">
-                                <Text fontWeight={'bold'} fontSize={'lg'}>{category.categoryName}</Text>
-                            </Flex>
-                            <Divider orientation="horizontal" borderColor="black" />
-                            <Text fontWeight={600} color={'gray.500'} size="sm">
-                                {selectedProduct.productDesc}
-                            </Text>
-                            <Divider orientation="horizontal" borderColor="black" />
-                            <Box>
-                                {hasSale && (
-                                    <Badge bg={'red.500'} color={'white'} p={2}>
-                                        On Sale
-                                    </Badge>
-                                )}
-                            </Box>
-                            <Box>
-                                <Flex alignItems="center" mt={2}>
-                                    {renderStars(selectedProduct?.rating || 0)}
-                                    <Text ml={2} color="gray.500">
-                                        ({selectedProduct?.ratingCount || 0} reviews)
-                                    </Text>
-                                </Flex>
-                            </Box>
-                            <Stack spacing={4} width="100%">
-                                {selectedProduct.prodcutSize?.length > 0 && (
-                                    <Stack spacing={1}>
-                                        <Text fontWeight={'bold'} color={'gray.500'}>Sizes</Text>
-                                        <RadioGroup value={size} onChange={handleSizeChange}>
-                                            <Stack direction="row" spacing={4}>
-                                                {selectedProduct.prodcutSize.map((product, i) => (
-                                                    <Radio
-                                                        key={i}
-                                                        value={product}
-                                                        bg={size === product ? 'black' : 'gray.200'}
-                                                        color={size === product ? 'white' : 'black'}
-                                                        borderRadius="full"
-                                                        border="1px"
-                                                        borderColor="gray.300"
-                                                        _checked={{
-                                                            bg: 'black',
-                                                            color: 'white',
-                                                            borderColor: 'black',
-                                                        }}
-                                                        _hover={{
-                                                            bg: size === product ? 'black' : 'gray.300',
-                                                        }}
-                                                        _focus={{
-                                                            boxShadow: 'outline',
-                                                        }}
-                                                        p={2}
-                                                    >
-                                                        {product.toUpperCase()}
-                                                    </Radio>
-                                                ))}
-                                            </Stack>
-                                        </RadioGroup>
-                                    </Stack>
-                                )}
-                                {selectedProduct.productColors?.length > 0 && (
-                                    <Stack spacing={1}>
-                                        <Text fontWeight={'bold'} color={'gray.500'}>Colors</Text>
-                                        <RadioGroup value={color} onChange={handleColorChange}>
-                                            <Stack direction="row" spacing={4}>
-                                                {selectedProduct.productColors.map((c, i) => (
-                                                    <Radio
-                                                        key={i}
-                                                        value={c}
-                                                        bg={c}
-                                                        border="1px"
-                                                        borderColor="gray.300"
-                                                        borderRadius="full"
-                                                        _checked={{
-                                                            boxShadow: '0 0 0 2px white, 0 0 0 4px black',
-                                                        }}
-                                                        _hover={{
-                                                            boxShadow: '0 0 0 2px white, 0 0 0 4px gray',
-                                                        }}
-                                                        _focus={{
-                                                            boxShadow: 'outline',
-                                                        }}
-                                                        size="lg"
-                                                    />
-                                                ))}
-                                            </Stack>
-                                        </RadioGroup>
-                                    </Stack>
-                                )}
-                                <Flex alignItems="center">
-                                    <Text fontWeight={'bold'} color={'gray.500'}>Quantity</Text>
-                                    <Select
-                                        ml={4}
-                                        value={quantity}
-                                        onChange={handleQuantityChange}
-                                        width="70px"
-                                    >
-                                        {[...Array(10).keys()].map(i => (
-                                            <option key={i + 1} value={i + 1}>{i + 1}</option>
-                                        ))}
-                                    </Select>
-                                </Flex>
-                            </Stack>
-                            <Button
-                                onClick={handleAddToCart}
-                                bg={
-                                    'black'
-                                }
-                                color={'white'}
-                                _hover={{
-                                    bg: "gray.700"
-                                }}
-                                w={'150px'}
+                                    </span>
+                                </div>
+                            ) : (
+                                <span className="text-gray-800 font-bold text-xl">
+                                    ${selectedProduct.productPrice}
+                                </span>
+                            )}
+                        </div>
+
+                        <span className="text-gray-500 font-medium mb-2">{category.categoryName}</span>
+                        <hr className="border-black mb-4" />
+                        <p className="text-gray-600 mb-4">{selectedProduct.productDesc}</p>
+                        <hr className="border-black mb-4" />
+
+                        {hasSale && (
+                            <span className="bg-red-500 text-white px-2 py-1 rounded mb-4">
+                                On Sale
+                            </span>
+                        )}
+
+                        <div className="flex items-center mb-4">
+                            {renderStars(selectedProduct?.rating || 0)}
+                            <span className="ml-2 text-gray-500">
+                                ({selectedProduct?.ratingCount || 0} reviews)
+                            </span>
+                        </div>
+
+                        {selectedProduct.prodcutSize?.length > 0 && (
+                            <div className="mb-4">
+                                <span className="text-gray-500 font-bold">Sizes</span>
+                                <div className="flex space-x-4 mt-2">
+                                    <RadioGroup value={size} onChange={handleSizeChange}>
+                                        <div className="flex space-x-4">
+                                            {selectedProduct.prodcutSize.map((product, i) => (
+                                                <Radio
+                                                    key={i}
+                                                    value={product}
+                                                    className={`${size === product
+                                                        ? "bg-black text-white"
+                                                        : "bg-gray-200 text-black"
+                                                        } border border-gray-300 rounded-full px-4 py-2 cursor-pointer hover:bg-gray-300 transition duration-200`}
+                                                >
+                                                    {product.toUpperCase()}
+                                                </Radio>
+                                            ))}
+                                        </div>
+                                    </RadioGroup>
+                                </div>
+                            </div>
+                        )}
+
+                        {selectedProduct.productColors?.length > 0 && (
+                            <div className="mb-4">
+                                <span className="text-gray-500 font-bold">Colors</span>
+                                <div className="flex space-x-4 mt-2">
+                                    <RadioGroup value={color} onChange={handleColorChange}>
+                                        <div className="flex space-x-4">
+                                            {selectedProduct.productColors.map((c, i) => (
+                                                <Radio
+                                                    key={i}
+                                                    value={c}
+                                                    className="rounded-full border border-gray-300 cursor-pointer"
+                                                    style={{ backgroundColor: c }}
+                                                >
+                                                    <span className="w-8 h-8 block rounded-full" />
+                                                </Radio>
+                                            ))}
+                                        </div>
+                                    </RadioGroup>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="flex items-center mb-4">
+                            <span className="text-gray-500 font-bold">Quantity</span>
+                            <select
+                                className="ml-4 border border-gray-300 rounded px-2 py-1"
+                                value={quantity}
+                                onChange={handleQuantityChange}
                             >
-                                Add to Cart
-                            </Button>
-                        </Stack>
-                    </Stack>
-                </Center>
+                                {[...Array(10).keys()].map(i => (
+                                    <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <button
+                            onClick={handleAddToCart}
+                            className="bg-black text-white rounded px-4 py-2 transition duration-200 hover:bg-gray-700 w-1/2"
+                        >
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
             )}
 
-            <Box mt={8} px={4}>
-                <Heading as="h3" size="lg" mb={4}>User Reviews</Heading>
+            <div className="mt-8 px-4">
+                <h3 className="text-lg font-semibold mb-4">User Reviews</h3>
                 {userReview.length > 0 ? (
                     <>
                         {userReview.slice(0, 3).map((review, index) => (
-                            <Box key={index} mb={4} p={4}>
+                            <div key={index} className="mb-4 p-4 border border-gray-300 rounded">
                                 {review?.userComment !== "" && (
                                     <>
-                                        <Flex alignItems="center" mb={2}>
+                                        <div className="flex items-center mb-2">
                                             <Avatar name={review.userFullName} size="md" mr={2} />
-                                            <Text fontWeight="bold">{review.userFullName}</Text>
-                                        </Flex>
-                                        <Flex alignItems="center" mb={2}>
+                                            <span className="font-bold">{review.userFullName}</span>
+                                        </div>
+                                        <div className="flex items-center mb-2">
                                             {renderStars(review.rating)}
-                                            <Text ml={2} color="gray.500">
+                                            <span className="ml-2 text-gray-500">
                                                 {review.date}
-                                            </Text>
-                                        </Flex>
+                                            </span>
+                                        </div>
+                                        <p className="mb-2">{review.userComment}</p>
+                                        <hr className="border-gray-300" />
                                     </>
                                 )}
-                                <Text mb={2}>{review.userComment}</Text>
-                                <Divider h={.4} bg={'gray.300'} />
-                            </Box>
+                            </div>
                         ))}
                         {userReview.length > 3 && (
                             <>
                                 <Collapse startingHeight={0} in={showAllReviews}>
                                     {userReview.slice(3).map((review, index) => (
-                                        <Box key={index} mb={4} p={4}>
-                                            <Flex alignItems="center" mb={2}>
+                                        <div key={index} className="mb-4 p-4 border border-gray-300 rounded">
+                                            <div className="flex items-center mb-2">
                                                 <Avatar name={review.userFullName} src={review.userAvatar} size="md" mr={2} />
-                                                <Text fontWeight="bold">{review.userFullName}</Text>
-                                            </Flex>
-                                            <Flex alignItems="center" mb={2}>
+                                                <span className="font-bold">{review.userFullName}</span>
+                                            </div>
+                                            <div className="flex items-center mb-2">
                                                 {renderStars(review.rating)}
-                                                <Text ml={2} color="gray.500">
+                                                <span className="ml-2 text-gray-500">
                                                     {review.date}
-                                                </Text>
-                                            </Flex>
-                                            <Text mb={2}>{review.userComment}</Text>
-                                            <Divider h={.4} bg={'gray.300'} />
-                                        </Box>
+                                                </span>
+                                            </div>
+                                            <p className="mb-2">{review.userComment}</p>
+                                            <hr className="border-gray-300" />
+                                        </div>
                                     ))}
                                 </Collapse>
-                                <Flex justifyContent="center">
+                                <div className="flex justify-center">
                                     <IconButton
                                         icon={showAllReviews ? <ChevronUpIcon /> : <ChevronDownIcon />}
                                         onClick={() => setShowAllReviews(!showAllReviews)}
                                         aria-label={showAllReviews ? "Show fewer reviews" : "Show more reviews"}
                                     />
-                                </Flex>
+                                </div>
                             </>
                         )}
                     </>
                 ) : (
-                    <Text>No reviews yet.</Text>
+                    <p>No reviews yet.</p>
                 )}
-            </Box>
+            </div>
 
-
+            {/* Related Products Section */}
             <RelatedProducts pid={pid} categoryId={category._id} />
         </>
+
+
     );
 };
 

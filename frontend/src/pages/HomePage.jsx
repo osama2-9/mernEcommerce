@@ -1,58 +1,48 @@
-import { Box, Button, Flex, Image, Text, } from "@chakra-ui/react"
-import { BsCart2 } from "react-icons/bs"
+import { useEffect, useState } from "react";
+import { BsCart2 } from "react-icons/bs";
 import { BiBoltCircle } from "react-icons/bi";
 import { AiOutlineFileProtect } from "react-icons/ai";
+import { toast } from 'react-toastify';
 import FeatureBox from "../components/FeatureBox";
 import Products from "../components/Products";
 import ProductContainer from "../components/ProductContainer";
-import { toast } from 'react-toastify'
-import { useEffect, useState } from "react";
 import useGetTopSells from "../hooks/useGetTopSells";
 import Categories from "../components/Categories";
 import Slider from "../components/Slider";
-import Brands from "../components/Brands";
 import Footer from "../components/Footer";
 import TopRate from "../components/TopRate";
 import RecommendedProducts from "../components/RecommendedProducts";
 import ShowTimedSaleProducts from "../components/ShowTimedSaleProducts";
-import { BACKEND_API } from '../config/config.js'
+import { BACKEND_API } from '../config/config.js';
+import useGetBrands from "../hooks/useGetBrands.js";
+
 const HomePage = () => {
+    const { topSell } = useGetTopSells();
+    const [product, setProduct] = useState([]);
+    const [onSale, setOnSale] = useState([]);
+    const { homePageBrands } = useGetBrands();
 
-
-
-    const { topSell } = useGetTopSells()
-    const [product, setProduct] = useState([])
-    const [onSale, setOnSale] = useState([])
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const res = await fetch(`${BACKEND_API}/product/get` ,{
-                    credentials:"include"
+                const res = await fetch(`${BACKEND_API}/product/get`, {
+                    credentials: "include",
                 });
-                
-
                 const data = await res.json();
-
                 if (!res.ok) {
                     throw new Error(data.error || "Failed to fetch products");
                 }
-
                 setProduct(data);
             } catch (error) {
                 toast(error.message || "Something went wrong", {
                     type: "error",
-                    autoClose: true
+                    autoClose: true,
                 });
                 console.error(error);
             }
         };
-
-        getProducts()
-    }, [])
-
-
-
-
+        getProducts();
+    }, []);
 
     useEffect(() => {
         const getOnSale = async () => {
@@ -64,181 +54,117 @@ const HomePage = () => {
                 console.error(error);
             }
         };
-
         getOnSale();
     }, []);
 
-
-
-
     return (
         <div className="home">
-            <Box>
+            <Slider />
 
+            <div className="flex flex-col lg:flex-row justify-center items-center  mt-10">
+                <FeatureBox
+                    icon={<BsCart2 size={40} />}
+                    title="Free Delivery"
+                    description="We Provide a Free Delivery Service For Our Customers"
+                />
+                <FeatureBox
+                    icon={<BiBoltCircle size={40} />}
+                    title="Quality"
+                    description="We offer the best quality for the price"
+                />
+                <FeatureBox
+                    icon={<AiOutlineFileProtect size={40} />}
+                    title="100% Secure Payment"
+                    description="Payment is secure and you can also pay upon receipt"
+                />
+            </div>
 
-
-
-                <Slider />
-
-            </Box>
-            <Box alignItems={'center'} me={{
-                lg: "0px",
-                sm: "250px"
-            }} display={'flex'} justifyContent={{
-                lg: "space-evenly",
-                sm: "center"
-            }} flexDir={{
-                base: "column",
-                lg: "row",
-                sm: "column"
-            }}>
-
-                <FeatureBox icon={<BsCart2 size={30} />} title={"Free Deleviry"} description={"We Provide a Free Deleivry Service For Our Customer"} />
-                <FeatureBox icon={<BiBoltCircle size={30} />} title={"Quality"} description={"We offer the best quality for the price"} />
-                <FeatureBox icon={<AiOutlineFileProtect size={30} />} title={"100% Secure Payment"} description={"Payment is secure and you can also pay upon receipt"} />
-            </Box>
-
-
-
-            <Box>
-
-
+            <div className="mt-10">
                 <RecommendedProducts />
 
-                <ProductContainer mt={10} title="Products" >
-                    {
-                        product.slice(0, 12).map((product) => (
-                            <Products key={product._id} product={product} />
-                        ))
-                    }
+                <ProductContainer title="Products" className="mt-10">
+                    {product.slice(0, 12).map((product) => (
+                        <Products key={product._id} product={product} />
+                    ))}
                 </ProductContainer>
-
-
 
                 <Categories />
 
+                <div className="relative mt-36 max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-4xl">
+                    <div className="md:flex">
+                        <div className="md:shrink-0">
+                            <img className="h-64 w-full object-cover md:h-full md:w-64" src="/shopping.jpeg" alt="Modern building architecture" />
+                        </div>
+                        <div className="p-8">
+                            <p className="text-lg md:text-xl text-gray-500">
+                                Discover an incredible shopping experience with unbeatable deals! Explore our exclusive collection of top-quality products designed to meet all your needs. From the latest trends to everyday essentials.
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
 
-
-
-
-
-
-                <Flex
-                    pos="relative"
-                    left={{ base: 5, sm: 5, md: 5, lg: "0%" }}
-                    top={'100px'}
-                    maxW="100%"
-                    justifyContent="center"
-                    p={{ base: 5, md: 10 }}
-                >
-                    <Box
-                        mb={5}
-                        w={{ base: "90%", md: "80%", lg: "70%" }}
-                        bgColor="gray.100"
-                        boxShadow="xl"
-                        rounded="lg"
-                        p={{ base: 5, md: 8 }}
-                    >
-                        <Flex direction={{ base: "column", md: "row" }} alignItems="center">
-                            <Image
-                                rounded="md"
-                                src="/shopping.jpeg"
-                                height={{ lg: "350px", base: "auto", md: "300px" }}
-                                width={{ lg: "350px", base: "100%", md: "300px" }}
-                                objectFit="cover"
-                                mb={{ base: 5, md: 0 }}
-                                transition="transform 0.3s"
-                                _hover={{ transform: "scale(1.05)" }}
-                            />
-                            <Box
-                                maxW={{ base: "100%", md: "300px", lg: "800px" }}
-                                ml={{ base: 0, md: 8 }}
-                                mt={{ base: 5, md: 0 }}
-                                textAlign={{ base: "center", md: "left" }}
-                            >
-                                <Flex direction="column">
-                                    <Text mb={4} fontSize={{ base: "24px", md: "28px" }} fontWeight="bold" color="black">
-                                        Discover New Horizons
-                                    </Text>
-                                    <Text color="gray.500" fontSize={{ base: "16px", md: "18px" }} mb={5}>
-                                        Experience the best shopping with free shipping on all orders. Explore a wide range of products and enjoy seamless shopping right from your home. Shop now and take advantage of our special offers.
-                                    </Text>
-                                    <Button
-                                        bg={'black'}
-                                        size="lg"
-                                        color={'white'}
-                                        mt={{ base: 4, md: 6 }}
-                                        w={'300px'}
-                                        _hover={{ bg: "gray.800", color: "white" }}
-                                    >
-                                        Shop Now
-                                    </Button>
-                                </Flex>
-                            </Box>
-                        </Flex>
-                    </Box>
-                </Flex>
-
-                <ProductContainer title="New Arrivels" >
-
-                    {
-                        product.slice(-4).map((p) => (
-                            <Products key={p._id} product={p} />
-                        ))
-                    }
+                <ProductContainer title="New Arrivals" className="mt-10">
+                    {product.slice(-4).map((p) => (
+                        <Products key={p._id} product={p} />
+                    ))}
                 </ProductContainer>
 
+                <div className="relative mt-36 max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-4xl mb-20">
+                    <div className="flex flex-col lg:flex-row">
+                        <div className="md:shrink-0">
+                            <img className=" w-full object-cover md:h-full md:w-64" src="/main.png" alt="Modern building architecture" />
+                        </div>
+                        <div className="p-8">
+                            <p className="text-lg md:text-xl text-gray-500">
+                                Discover an incredible shopping experience with unbeatable deals! Explore our exclusive collection of top-quality products designed to meet all your needs. From the latest trends to everyday essentials.
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-                <Flex justifyContent={'center'} flexDir={'row'}>
-                    <Box width="100%" maxWidth="1000px" shadow={'md'} me={2}>
-                        <Image
-                            width={'full'}
-                            className="rounded-lg"
-                            h={450}
-                            src="main.png"
-                        />
-                    </Box>
-                </Flex>
-
-
-                <ProductContainer title="Top Sells" mt={10}>
-                    {
-                        topSell.map((p) => (
-                            <Products key={p._id} product={p} />
-                        ))
-                    }
-
+                <ProductContainer title="Top Sells" className="mt-10">
+                    {topSell.map((p) => (
+                        <Products key={p._id} product={p} />
+                    ))}
                 </ProductContainer>
-                <ProductContainer title="On Sales" mt={10}>
-                    {
-                        onSale.slice(0, 4).map((p) => (
-                            <Products key={p._id} product={p} />
-                        ))
-                    }
 
+                <ProductContainer title="On Sales" className="mt-10">
+                    {onSale.slice(0, 4).map((p) => (
+                        <Products key={p._id} product={p} />
+                    ))}
                 </ProductContainer>
 
                 <ShowTimedSaleProducts />
 
-                <ProductContainer title="Some Brands" mt={10}>
-
-                    <Brands />
-                </ProductContainer>
-
+                <div className="font-bold w-full max-w-5xl mx-auto p-6 rounded-md shadow-md bg-white">
+                    <h2 className="text-2xl text-center mb-4">Our Brands</h2>
+                    <div className="flex flex-wrap justify-center">
+                        {homePageBrands.length > 0 ? (
+                            homePageBrands.map((brand) => (
+                                <div
+                                    key={brand._id}
+                                    className="m-4 p-4 text-center shadow-lg rounded-md w-64 md:w-72 lg:w-80 transition-transform transform hover:scale-105"
+                                >
+                                    <img
+                                        src={brand.brandImg}
+                                        alt={brand.brandName}
+                                        className="object-contain mx-auto h-24 md:h-28 transition-opacity duration-300 hover:opacity-80"
+                                    />
+                                    <p className="mt-2 text-lg font-semibold text-gray-700">{brand.brandName}</p>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-center text-gray-500">No brands available</p>
+                        )}
+                    </div>
+                </div>
                 <TopRate />
 
-
                 <Footer />
-
-
-
-
-            </Box>
-
-
+            </div>
         </div>
-    )
-}
+    );
+};
 
-export default HomePage
+export default HomePage;

@@ -5,7 +5,6 @@ import {
     useColorModeValue,
     IconButton,
     Tooltip,
-
     Input,
     Button,
     Text,
@@ -30,7 +29,6 @@ import { BiSolidHome } from 'react-icons/bi';
 import { FaBars } from 'react-icons/fa';
 import userAtom from '../atoms/userAtom';
 import { toast } from 'react-toastify';
-
 import { BACKEND_API } from '../config/config.js';
 
 const Header = () => {
@@ -99,19 +97,19 @@ const Header = () => {
 
     return (
         <Box w="100%" shadow="sm">
-            <Flex justify="space-between" align="center" h="16" px={10}>
+            <Flex justify="space-between" align="center" h="16" px={5}>
                 {/* Logo */}
                 <Link to="/">
                     <Image src="/logo.png" alt="Logo" w={70} />
                 </Link>
 
                 {/* Search Bar */}
-                <Flex justifyContent="center" position="relative">
+                <Flex justifyContent="center" position="relative" flexGrow={1} mx={4}>
                     <Input
                         value={search}
                         onChange={handleChange}
                         h="35px"
-                        width={{ base: '200px', md: '400px' }}
+                        width={{ base: '150px', sm: '250px', md: '400px' }}
                         border="2px solid"
                         borderColor="gray.300"
                         placeholder="Search for products"
@@ -258,7 +256,7 @@ const Header = () => {
                                 </Link>
                             ) : (
                                 <>
-                                    <Link to={`/`}>
+                                    <Link to={`/`} onClick={onClose}>
                                         <Tooltip label="Home" aria-label="Home">
                                             <IconButton
                                                 icon={<BiSolidHome />}
@@ -319,7 +317,7 @@ const Header = () => {
                         </Flex>
                     </DrawerBody>
                     <DrawerFooter>
-                        <Button variant="outline" mr={3} onClick={onClose}>
+                        <Button variant="outline" onClick={onClose}>
                             Close
                         </Button>
                     </DrawerFooter>

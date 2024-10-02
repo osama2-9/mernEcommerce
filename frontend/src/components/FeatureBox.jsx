@@ -1,28 +1,20 @@
 /* eslint-disable react/prop-types */
-import { Box, Flex, Text } from "@chakra-ui/react"
-
 const FeatureBox = ({ icon, title, description }) => {
     return (
-        <Box
-            mt={10}
-            p={2}
-            w="400px"
-            h="150px"
-            bg="gray.100"
-            rounded={'lg'}
-            shadow="md"
-            className="feature-box"
-
-        >
-            <Flex justifyContent="center" alignItems="center" className="text-green-500">
-                {icon}
-            </Flex>
-            <Text fontSize="24" mt={2} textAlign="center" >
+        <div className="mt-10 m-2 p-6 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg bg-white rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl">
+            <div className="flex justify-center items-center text-green-500 mb-4">
+                <div className="text-4xl">
+                    {icon}
+                </div>
+            </div>
+            <h2 className="text-2xl font-semibold text-gray-800 text-center mb-2">
                 {title}
-            </Text>
-            <Text className="text-gray-500" textAlign="center">{description}</Text>
-        </Box>
+            </h2>
+            <p className="text-gray-600 text-center leading-relaxed">
+                {description}
+            </p>
+        </div>
     )
 }
 
-export default FeatureBox
+export default FeatureBox;

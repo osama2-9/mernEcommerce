@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import { Flex, Box, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import Produts from './Products'
 import { BACKEND_API } from "../config/config";
@@ -27,18 +26,17 @@ const RelatedProducts = ({ categoryId, pid }) => {
 
     return (
         <>
-            <Box textAlign={'center'}>
-                <Text fontSize={'30'} fontWeight={'bold'} color={'gray.400'} >Related Products</Text>
-            </Box>
-            <Flex mt={5} flexDir={{ sm: "column", base: 'column', lg: 'row' }} gap={5} >
+            <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold text-gray-600">Related Products</h2>
+            </div>
+            <div className="flex flex-col items-center lg:flex-row gap-5 mt-5">
                 {rProducts.map((product, i) => (
-                    <Box ml={{
-                        sm: "100px"
-                    }} key={i} w={{ base: '100%', lg: '400px' }}>
-                        <Produts key={product._id} product={product} />
-                    </Box>
+                    <div className="flex-shrink-0 w-full lg:w-80 mx-auto" key={product._id+i}>
+                        <Produts product={product} />
+                    </div>
                 ))}
-            </Flex>
+            </div>
+
         </>
     );
 };
