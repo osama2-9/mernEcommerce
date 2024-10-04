@@ -12,6 +12,7 @@ import {
 } from "../emails/sendVerificationCode.js";
 import crypto from "crypto";
 import { sendResetPasswordURL } from "../emails/sendResetPasswordURL.js";
+import { sendVerificationCodeToPhone } from "../utils/sendVerficationCodeToPhone.js";
 
 const signup = async (req, res) => {
   try {
@@ -579,6 +580,80 @@ const deleteUserByAdmin = async (req, res) => {
   }
 };
 
+const sendPhoneVerificationCode = async (req, res) => {
+  const { uid } = req.body;
+  try {
+    if (!uid) {
+      return res.status(400).json({
+        error: "no user found",
+      });
+    }
+
+    const user = await User.findById(uid);
+
+    if (user) {
+      const verificationCode = generateVerificationCode();
+      const verificationToken = generateToken();
+      const pageUrl = `${process.env.CLIENT_URL}verify-phone/${verificationToken}`;
+      user.phoneVerificationCodeExpiresAt = Date.now() + 15 * 60 * 1000;
+      user.phoneVerificationCode = verificationCode;
+      user.verificationToken = verificationToken
+
+      await sendVerificationCodeToPhone(user.phone, verificationCode, pageUrl);
+      await user.save();
+
+      return res.status(200).json({
+        success: true,
+        userphone: user.phone,
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: "Intenral server error",
+    });
+  }
+};
+const verifyUserPhoneNumber = async (req, res) => {
+  const { uid, verificationCode } = req.body;
+
+  if (!uid || !verificationCode) {
+    return res.status(400).json({
+      error: !uid ? "No user found" : "Please enter the verification code",
+    });
+  }
+
+  const user = await User.findById(uid);
+  if (!user) {
+    return res.status(404).json({
+      error: "No user found",
+    });
+  }
+
+  const isCodeExpired = Date.now() > user.phoneVerificationCodeExpiresAt;
+  if (isCodeExpired) {
+    return res.status(400).json({
+      error: "Your verification code has expired",
+    });
+  }
+
+  const isVerificationCodeValid =
+    verificationCode === user.phoneVerificationCode;
+  if (!isVerificationCodeValid) {
+    return res.status(400).json({
+      error: "Invalid verification code",
+    });
+  }
+
+  user.isPhoneVerified = true;
+  user.phoneVerificationCode = undefined;
+  user.phoneVerificationCodeExpiresAt = undefined;
+  await user.save();
+
+  return res.status(200).json({
+    message: "Thanks for verifying your phone number",
+  });
+};
+
 export {
   signup,
   login,
@@ -595,4 +670,6 @@ export {
   deleteUserByAdmin,
   verifiyEmail,
   sendVerificationCodeByAdmin,
+  sendPhoneVerificationCode,
+  verifyUserPhoneNumber,
 };

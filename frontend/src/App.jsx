@@ -32,7 +32,7 @@ import Favorite from './pages/Favorite';
 import VerifyEmail from './components/VerifiyEmail';
 import TimedSaleProducts from './pages/admin/TimedSaleProducts';
 import NotFound from './pages/NotFound';
-
+import {VerifyPhoneNumber}  from './pages/VerifiyPhoneNumber';
 function App() {
   const user = useRecoilValue(userAtom);
   const location = useLocation();
@@ -45,7 +45,8 @@ function App() {
     location.pathname.includes('/dashboard')||
     location.pathname.includes('/user-profile')||
     location.pathname.includes('/my-orders')||
-    location.pathname.includes('/favorite')
+    location.pathname.includes('/favorite')||
+    location.pathname.includes('/verify-phone')
   );
 
   return (
@@ -58,6 +59,7 @@ function App() {
         <Route path='/forget-password' element={<ForgetPassword />} />
         <Route path='/reset-password/:token' element={<ResetPassword />} />
         <Route path='/verify-email/:token' element={<VerifyEmail />} />
+        <Route path='/verify-phone/:token' element={<VerifyPhoneNumber />} />
         <Route path='/register' element={<Signup />} />
         <Route path='/product/:pid' element={<Product />} />
         <Route path='/cart/:uid' element={user ? <Cart /> : <HomePage />} />

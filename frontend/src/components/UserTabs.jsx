@@ -1,5 +1,3 @@
-import { Box, Flex, Text, Icon, useColorModeValue, useBreakpointValue } from '@chakra-ui/react';
-import { FaBoxOpen } from 'react-icons/fa';
 import useGetOrders from '../hooks/useGetOrders';
 import { useRecoilValue } from 'recoil';
 import userAtom from '../atoms/userAtom';
@@ -9,43 +7,24 @@ const UserTabs = () => {
     const { orders } = useGetOrders();
     const filter = orders.filter((o) => o?.uid === logged?.uid);
 
-    const isMobile = useBreakpointValue({ base: true, md: false });
+    
+    const staticData = [
+        { title: 'My Orders', count: filter.length },
+        { title: 'Favorites', count: 5 },
+        { title: 'Cart', count: 3 },
+    ];
 
     return (
-        <Flex
-            direction={isMobile ? "column" : "row"}
-            p={4}
-            m={4}
-            justify={isMobile ? "center" : "flex-start"}
-            align="center"
-            position="relative"
-            maxW="1200px"
-            mx="auto"
-            mt={20}
-        >
-            <Box
-                w={isMobile ? 'full' : '400px'}
-                bg={useColorModeValue('white', 'gray.800')}
-                shadow="lg"
-                borderRadius="lg"
-                p={6}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                transition="transform 0.2s, box-shadow 0.2s"
-                _hover={{ transform: 'scale(1.05)', boxShadow: 'lg' }}
-            >
-                <Icon as={FaBoxOpen} boxSize={12} mr={4} color="teal.500" />
-                <Flex direction="column" textAlign="center">
-                    <Text fontSize="xl" fontWeight="bold" mb={2}>
-                        My Orders
-                    </Text>
-                    <Text fontSize="3xl" fontWeight="bold" color={useColorModeValue('gray.700', 'gray.300')}>
-                        {filter.length}
-                    </Text>
-                </Flex>
-            </Box>
-        </Flex>
+        <div className="flex flex-col md:flex-row p-4 m-4 justify-center md:justify-start items-center max-w-5xl mx-auto mt-20">
+            {staticData.map((data, index) => (
+                <div key={index} className="w-full md:w-96 bg-white  shadow-lg rounded-lg p-6 flex items-center justify-center transition-transform transform hover:scale-105 hover:shadow-xl m-2">
+                    <div className="flex flex-col text-center">
+                        <span className="text-xl font-bold mb-2">{data.title}</span>
+                        <span className="text-3xl font-bold text-blue-400 ">{data.count}</span>
+                    </div>
+                </div>
+            ))}
+        </div>
     );
 };
 

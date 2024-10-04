@@ -6,7 +6,6 @@ const userSchema = new mongoose.Schema(
     fname: {
       type: String,
       required: true,
-      
     },
     lname: {
       type: String,
@@ -42,7 +41,7 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    isVerified: {
+    isEmailVerified: {
       type: Boolean,
       default: false,
     },
@@ -50,6 +49,13 @@ const userSchema = new mongoose.Schema(
     resetPasswordExpiresAt: Date,
     verificationToken: String,
     verificationTokenExpiresAt: Date,
+    phoneVerificationCode: String,
+    phoneVerificationCodeExpiresAt: Date,
+    phoneVerificationToken:String,
+    isPhoneVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

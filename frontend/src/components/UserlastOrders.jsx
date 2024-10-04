@@ -2,26 +2,8 @@ import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { toast } from "react-toastify";
-import {
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
-    Box,
-    Text,
-    TableContainer,
-    useColorModeValue,
-    Badge,
-    Button,
-    Flex,
-    IconButton,
-    Tooltip
-} from "@chakra-ui/react";
-import { BsTrash } from "react-icons/bs";
-import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { BACKEND_API } from "../config/config";
+import { BsTrash } from "react-icons/bs";
 
 const UserLastOrders = () => {
     const [orders, setOrders] = useState([]);
@@ -32,8 +14,8 @@ const UserLastOrders = () => {
     useEffect(() => {
         const getUserOrders = async () => {
             try {
-                const res = await fetch(`${BACKEND_API}/order/userOrder/${logged.uid}` ,{
-                    credentials:"include"
+                const res = await fetch(`${BACKEND_API}/order/userOrder/${logged.uid}`, {
+                    credentials: "include"
                 });
                 const data = await res.json();
                 if (data.error) {
@@ -61,7 +43,7 @@ const UserLastOrders = () => {
                     uid: logged.uid,
                     oid: orderId,
                 }),
-                credentials:"include"
+                credentials: "include"
             });
 
             const data = await res.json();
@@ -77,9 +59,6 @@ const UserLastOrders = () => {
         }
     };
 
-    const bg = useColorModeValue("white", "gray.800");
-    const borderColor = useColorModeValue("gray.200", "gray.700");
-
     const indexOfLastOrder = currentPage * ordersPerPage;
     const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
     const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
@@ -93,82 +72,86 @@ const UserLastOrders = () => {
     };
 
     return (
-        <Box p={4} mt="20px" mx="auto" maxW="1200px">
-            <Flex justify="space-between" align="center" mb={5}>
-                <Text fontSize="2xl" fontWeight="bold">
-                    <Badge fontSize="2xl" bg="teal.500" color="white">Your Orders</Badge>
-                </Text>
-                {orders.length === 0 && <Text>No orders found.</Text>}
-            </Flex>
+        <div className="p-4 mt-20 mx-auto max-w-7xl">
+            <div className="flex justify-between items-center mb-5">
+                <h2 className="text-2xl font-bold text-gray-800">
+                    <span className="bg-black text-white py-1 px-2 rounded">Your Orders</span>
+                </h2>
+                {orders.length === 0 && <p className="text-gray-500">No orders found.</p>}
+            </div>
             {orders.length > 0 && (
-                <TableContainer borderRadius="md" bg={bg} shadow="md" border={`1px solid ${borderColor}`}>
-                    <Table variant="simple">
-                        <Thead>
-                            <Tr>
-                                <Th>Product Name</Th>
-                                <Th>Quantity</Th>
-                                <Th>Price</Th>
-                                <Th>Order Status</Th>
-                                <Th>Ordered At</Th>
-                                <Th>Action</Th>
-                            </Tr>
-                        </Thead>
-                        <Tbody>
+                <div className="overflow-hidden rounded-lg shadow-md border border-gray-200">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Product Name</th>
+                                <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Quantity</th>
+                                <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Price</th>
+                                <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Order Status</th>
+                                <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Ordered At</th>
+                                <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
                             {currentOrders.map((order) => (
-                                <Tr key={order._id} _hover={{ bg: "gray.100" }}>
-                                    <Td>{order.productName.length > 18 ? order.productName.slice(0, 18) + "..." : order.productName}</Td>
-                                    <Td>{order.quantity}</Td>
-                                    <Td>${order.price.toFixed(2)}</Td>
-                                    <Td>
-                                        <Badge colorScheme={getOrderStatusColor(order.orderStatus)}>{order.orderStatus}</Badge>
-                                    </Td>
-                                    <Td>{order.createdAt.split('T')[0]}</Td>
-                                    <Td>
-                                        <Tooltip label="Delete Order" aria-label="Delete Order">
-                                            <IconButton
-                                                aria-label="Delete Order"
-                                                icon={<BsTrash />}
-                                                bg="red.500"
-                                                color="white"
-                                                _hover={{ bg: "red.600" }}
-                                                onClick={() => deleteOrder(order._id)}
-                                                size="sm"
-                                            />
-                                        </Tooltip>
-                                    </Td>
-                                </Tr>
+                                <tr key={order._id} className="hover:bg-gray-100 transition-colors duration-150">
+                                    <td className="px-4 py-2 text-sm text-gray-700">{order.productName.length > 18 ? `${order.productName.slice(0, 18)}...` : order.productName}</td>
+                                    <td className="px-4 py-2 text-sm text-gray-700">{order.quantity}</td>
+                                    <td className="px-4 py-2 text-sm text-gray-700">${order.price.toFixed(2)}</td>
+                                    <td className="px-4 py-2 text-sm text-gray-700">
+                                        <span className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ${getOrderStatusColor(order.orderStatus)}`}>{order.orderStatus}</span>
+                                    </td>
+                                    <td className="px-4 py-2 text-sm text-gray-700">{new Date(order.createdAt).toLocaleDateString()}</td>
+                                    <td className="px-4 py-2">
+                                        <button
+                                            className="text-red-500 hover:text-red-700 focus:outline-none"
+                                            onClick={() => deleteOrder(order._id)}
+                                            aria-label="Delete Order"
+                                        >
+                                            <BsTrash className="h-5 w-5" />
+                                        </button>
+                                    </td>
+                                </tr>
                             ))}
-                        </Tbody>
-                    </Table>
-                </TableContainer>
+                        </tbody>
+                    </table>
+                </div>
             )}
-            <Flex justify="space-between" align="center" mt={4}>
-                <Button onClick={prevPage} disabled={currentPage === 1} leftIcon={<ChevronLeftIcon />} variant="outline">
-                    Previous
-                </Button>
-                <Text>Page {currentPage} of {Math.ceil(orders.length / ordersPerPage)}</Text>
-                <Button onClick={nextPage} disabled={currentPage === Math.ceil(orders.length / ordersPerPage)} rightIcon={<ChevronRightIcon />} variant="outline">
-                    Next
-                </Button>
-            </Flex>
-        </Box>
+            <div className="flex justify-between items-center mt-4">
+                <button
+                    onClick={prevPage}
+                    disabled={currentPage === 1}
+                    className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+                >
+                    <span>Previous</span>
+                </button>
+                <p className="text-sm">Page {currentPage} of {Math.ceil(orders.length / ordersPerPage)}</p>
+                <button
+                    onClick={nextPage}
+                    disabled={currentPage === Math.ceil(orders.length / ordersPerPage)}
+                    className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+                >
+                    <span>Next</span>
+                </button>
+            </div>
+        </div>
     );
 };
 
 const getOrderStatusColor = (status) => {
     switch (status) {
         case 'Pending':
-            return 'yellow';
+            return 'bg-yellow-100 text-yellow-800';
         case 'Processing':
-            return 'blue';
+            return 'bg-blue-100 text-blue-800';
         case 'Shipped':
-            return 'purple';
+            return 'bg-purple-100 text-purple-800';
         case 'Delivered':
-            return 'green';
+            return 'bg-green-100 text-green-800';
         case 'Cancelled':
-            return 'red';
+            return 'bg-red-100 text-red-800';
         default:
-            return 'gray';
+            return 'bg-gray-100 text-gray-800';
     }
 };
 

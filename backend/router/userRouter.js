@@ -11,10 +11,12 @@ import {
   login,
   logout,
   resetPassword,
+  sendPhoneVerificationCode,
   sendVerificationCodeByAdmin,
   signup,
   updateUserData,
   verifiyEmail,
+  verifyUserPhoneNumber,
 } from "../controller/userController.js";
 import { isAdmin } from "../middleware/isAdmin.js";
 import { protectRoute } from "../middleware/protectRoute.js";
@@ -25,7 +27,14 @@ const userRouter = express.Router();
 userRouter.post("/signup", signup);
 userRouter.post("/login", login);
 userRouter.post("/verifiy-email", verifiyEmail);
-userRouter.post("/sendVerificationCode", isAdmin, sendVerificationCodeByAdmin);
+userRouter.post(
+  "/sendPhoneVerificationCode",
+  protectRoute,
+  sendPhoneVerificationCode
+);
+
+userRouter.post('/verifiyPhoneNumber' ,protectRoute ,verifyUserPhoneNumber)
+userRouter.post("/sendVerificationCode", protectRoute, sendVerificationCodeByAdmin);
 userRouter.post("/logout", logout);
 userRouter.get("/messages", isAdmin, getAllMessages);
 userRouter.post("/forget-password", forgetPassword);
