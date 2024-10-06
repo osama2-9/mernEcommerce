@@ -18,10 +18,10 @@ const sendVerificationCodeToPhone = (
 
   const options = {
     method: "POST",
-    hostname: "3g994v.api.infobip.com",
+    hostname: "8kk931.api.infobip.com",
     path: "/sms/2/text/advanced",
     headers: {
-      Authorization: `App ${process.env.SMS_API}`,
+      Authorization: `App ${process.env.SMS_API_KEY}`,
       "Content-Type": "application/json",
       Accept: "application/json",
     },

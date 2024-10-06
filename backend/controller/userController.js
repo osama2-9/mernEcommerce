@@ -531,6 +531,7 @@ const deleteUserByAdmin = async (req, res) => {
         error: "User not found",
       });
     }
+    
 
     const userOrders = await Order.find({ uid: uid });
     if (userOrders.length > 0) {
@@ -597,7 +598,7 @@ const sendPhoneVerificationCode = async (req, res) => {
       const pageUrl = `${process.env.CLIENT_URL}verify-phone/${verificationToken}`;
       user.phoneVerificationCodeExpiresAt = Date.now() + 15 * 60 * 1000;
       user.phoneVerificationCode = verificationCode;
-      user.verificationToken = verificationToken
+      user.verificationToken = verificationToken;
 
       await sendVerificationCodeToPhone(user.phone, verificationCode, pageUrl);
       await user.save();
