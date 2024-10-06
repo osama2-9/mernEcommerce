@@ -4,12 +4,12 @@ import { BACKEND_API } from "../config/config";
 import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";  // Import useNavigate
+import { useNavigate } from "react-router-dom";  
 
 export const VerifyPhoneNumber = () => {
     const { handleSendCode, isLoading: isSendingCode } = useSendCode();
     const user = useRecoilValue(userAtom);
-    const navigate = useNavigate();  // Initialize useNavigate
+    const navigate = useNavigate();  
     const [verificationCode, setVerificationCode] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 

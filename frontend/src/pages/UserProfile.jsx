@@ -6,6 +6,7 @@ import userAtom from '../atoms/userAtom.js';
 import USidebar from '../components/USidebar.jsx';
 import { BACKEND_API } from '../config/config.js';
 import { useSendCode } from "../hooks/useSendCode.js";
+import { FaCheck } from "react-icons/fa";
 
 const UserProfile = () => {
     const logged = useRecoilValue(userAtom);
@@ -24,6 +25,33 @@ const UserProfile = () => {
     };
 
     const { handleSendCode, isLoading, isModalOpen, handleOpenModel, setIsModalOpen } = useSendCode();
+
+    const requestVerifiyEmail = async () => {
+        try {
+            const res = await fetch(`${BACKEND_API}/users/requestVerificationCode`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    uid: logged.uid
+                })
+            })
+
+            const data = await res.json()
+            if (data.error) {
+                toast.error(data.error)
+            }
+            localStorage.setItem('user', JSON.stringify())
+            toast.success(data.message)
+
+        } catch (error) {
+            console.log(error);
+
+            toast.error("Internal server error")
+        }
+    }
 
     const updateUserData = async () => {
         try {
@@ -56,7 +84,9 @@ const UserProfile = () => {
             toast.error('An error occurred while updating the profile data.');
         }
     };
-
+    if (!logged) {
+        return null
+    }
 
     return (
         <>
@@ -114,6 +144,22 @@ const UserProfile = () => {
                                 className="mt-1 block w-full rounded-md border border-gray-300 p-2 text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent sm:text-sm"
                             />
                         </div>
+                        {logged?.ev === false ? (<>
+                            <button
+                                type="button"
+                                onClick={requestVerifiyEmail}
+                                className="text-black mt-2"
+                            >
+                                Verify My Email
+                            </button>
+
+                        </>) : (<>
+                            <div className="flex flex-row items-center gap-2 text-green-500">
+                                <p>Verifyid </p>
+                                <FaCheck />
+
+                            </div>
+                        </>)}
 
                         <div>
                             <label htmlFor="phone" className="text-lg font-medium text-gray-800 mb-2 flex items-center">
@@ -133,14 +179,22 @@ const UserProfile = () => {
                             />
                         </div>
 
-                        <button
-                            type="button"
-                            onClick={handleOpenModel}
-                            className="text-black mt-2"
-                        >
-                            Verify My Phone
-                        </button>
+                        {logged?.pv === false ? (<>
+                            <button
+                                type="button"
+                                onClick={handleOpenModel}
+                                className="text-black mt-2"
+                            >
+                                Verify My Phone
+                            </button>
 
+                        </>) : (<>
+                            <div className="flex flex-row items-center gap-2 text-green-500">
+                                <p>Verifyid </p>
+                                <FaCheck />
+
+                            </div>
+                        </>)}
                         <div className="flex justify-between space-x-4">
                             <button
                                 type="button"

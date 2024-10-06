@@ -141,6 +141,8 @@ const login = async (req, res) => {
       phone: user.phone,
       address: user.address,
       isAdmin: user.isAdmin,
+      ev: user.isEmailVerified,
+      pv: user.isPhoneVerified,
     });
   } catch (error) {
     console.error("Error during login:", error);
@@ -166,7 +168,7 @@ const verifiyEmail = async (req, res) => {
       });
     }
 
-    user.isVerified = true;
+    user.isEmailVerified = true;
     user.verificationToken = undefined;
     user.verificationTokenExpiresAt = undefined;
     await user.save();
@@ -178,12 +180,12 @@ const verifiyEmail = async (req, res) => {
   }
 };
 
-const sendVerificationCodeByAdmin = async (req, res) => {
+const requestEmailVerifiy = async (req, res) => {
   try {
     const { uid } = req.body;
     if (!uid) {
       return res.status(400).json({
-        error: "Can't send code ",
+        error: "No user found",
       });
     }
     const user = await User.findById(uid);
@@ -193,9 +195,9 @@ const sendVerificationCodeByAdmin = async (req, res) => {
       });
     }
 
-    if (user.isVerified == true) {
+    if (user.isEmailVerified == true) {
       return res.status(400).json({
-        error: "User Already Verified",
+        error: "This account already verified",
       });
     }
 
@@ -213,7 +215,7 @@ const sendVerificationCodeByAdmin = async (req, res) => {
       verificationCodeURL
     );
     return res.status(200).json({
-      message: "Verification Code Send Successfully",
+      message: "We sent email to you please check your mail box",
     });
   } catch (error) {
     console.log(error);
@@ -531,7 +533,6 @@ const deleteUserByAdmin = async (req, res) => {
         error: "User not found",
       });
     }
-    
 
     const userOrders = await Order.find({ uid: uid });
     if (userOrders.length > 0) {
@@ -670,7 +671,7 @@ export {
   updateUserData,
   deleteUserByAdmin,
   verifiyEmail,
-  sendVerificationCodeByAdmin,
+  requestEmailVerifiy,
   sendPhoneVerificationCode,
   verifyUserPhoneNumber,
 };

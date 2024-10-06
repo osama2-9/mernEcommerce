@@ -10,9 +10,9 @@ import {
   getUserById,
   login,
   logout,
+  requestEmailVerifiy,
   resetPassword,
   sendPhoneVerificationCode,
-  sendVerificationCodeByAdmin,
   signup,
   updateUserData,
   verifiyEmail,
@@ -26,15 +26,15 @@ const userRouter = express.Router();
 
 userRouter.post("/signup", signup);
 userRouter.post("/login", login);
-userRouter.post("/verifiy-email", verifiyEmail);
+userRouter.post("/verifiy-email", protectRoute, verifiyEmail);
 userRouter.post(
   "/sendPhoneVerificationCode",
   protectRoute,
   sendPhoneVerificationCode
 );
 
-userRouter.post('/verifiyPhoneNumber' ,protectRoute ,verifyUserPhoneNumber)
-userRouter.post("/sendVerificationCode", protectRoute, sendVerificationCodeByAdmin);
+userRouter.post("/verifiyPhoneNumber", protectRoute, verifyUserPhoneNumber);
+userRouter.post("/requestVerificationCode", protectRoute, requestEmailVerifiy);
 userRouter.post("/logout", logout);
 userRouter.get("/messages", isAdmin, getAllMessages);
 userRouter.post("/forget-password", forgetPassword);
