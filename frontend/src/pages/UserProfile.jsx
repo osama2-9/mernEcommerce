@@ -43,7 +43,7 @@ const UserProfile = () => {
             if (data.error) {
                 toast.error(data.error)
             }
-            localStorage.setItem('user', JSON.stringify())
+           
             toast.success(data.message)
 
         } catch (error) {
