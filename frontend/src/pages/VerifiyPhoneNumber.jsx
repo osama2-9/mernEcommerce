@@ -39,10 +39,9 @@ export const VerifyPhoneNumber = () => {
             } else {
                 toast.success(data.message);
 
-                // Redirect to home page after 3 seconds
                 setTimeout(() => {
-                    navigate("/");  // Redirect to home
-                }, 3000);  // 3 seconds delay
+                    navigate("/");  
+                }, 3000);  
             }
         } catch (error) {
             toast.error("Error occurred while trying to verify the code.");

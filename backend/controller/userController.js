@@ -596,7 +596,7 @@ const sendPhoneVerificationCode = async (req, res) => {
     if (user) {
       const verificationCode = generateVerificationCode();
       const verificationToken = generateToken();
-      const pageUrl = `${process.env.CLIENT_URL}verify-phone/${verificationToken}`;
+      const pageUrl = `${process.env.CLIENT_URL}/verify-phone/${verificationToken}`;
       user.phoneVerificationCodeExpiresAt = Date.now() + 15 * 60 * 1000;
       user.phoneVerificationCode = verificationCode;
       user.verificationToken = verificationToken;
